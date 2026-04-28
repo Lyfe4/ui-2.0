@@ -113,14 +113,14 @@ export function ContentPane({
       <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
         <div className="px-8 py-7">
           <div className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
-            {/* Topic name */}
-            <span className="shrink-0 font-medium text-foreground">Tracking Expenses</span>
+            {/* Topic count + name */}
+            <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
-            {/* Lesson range label + dots grouped tightly */}
+            {/* Current lesson name + dots grouped */}
             <div className="flex shrink-0 items-center gap-1.5">
-              <span>Lessons 1–5:</span>
+              <span className="font-medium text-foreground">Lesson 1: Introduction</span>
               <div className="flex items-center gap-1">
                 <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
                 <div className="h-px w-3 bg-border" />
@@ -133,13 +133,6 @@ export function ContentPane({
                 <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
               </div>
             </div>
-
-            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
-
-            {/* Current lesson name */}
-            <span className="shrink-0 font-medium text-foreground">
-              Lesson 1: Introduction
-            </span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
