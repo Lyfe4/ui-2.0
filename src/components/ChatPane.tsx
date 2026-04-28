@@ -23,7 +23,7 @@ export function ChatPane() {
   const [activeNav, setActiveNav] = useState("learn")
 
   return (
-    <div className="flex w-64 flex-shrink-0 flex-col rounded-xl bg-stone-800">
+    <div className="flex w-64 flex-shrink-0 flex-col border-r border-stone-200 bg-stone-100">
       <div className="flex items-center gap-0.5 px-3 pb-2 pt-4">
         {navItems.map(({ id, label, icon: Icon }) => (
           <button
@@ -32,8 +32,8 @@ export function ChatPane() {
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
               activeNav === id
-                ? "bg-primary/15 text-primary"
-                : "text-stone-400 hover:bg-stone-700 hover:text-stone-200",
+                ? "bg-primary/10 text-primary"
+                : "text-stone-400 hover:bg-stone-200 hover:text-stone-600",
             )}
           >
             <Icon className="h-3.5 w-3.5" />
@@ -45,26 +45,26 @@ export function ChatPane() {
       <div className="flex-1 space-y-5 overflow-y-auto px-4 py-4">
         {messages.map((msg) => (
           <div key={msg.id} className="flex gap-3">
-            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-stone-600 text-xs font-semibold text-stone-100">
+            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-stone-300 text-xs font-semibold text-stone-700">
               {msg.name[0]}
             </div>
             <div className="min-w-0">
-              <p className="mb-1 text-xs font-semibold text-stone-300">{msg.name}</p>
-              <p className="text-sm leading-relaxed text-stone-400">{msg.content}</p>
+              <p className="mb-1 text-xs font-semibold text-stone-600">{msg.name}</p>
+              <p className="text-sm leading-relaxed text-stone-500">{msg.content}</p>
             </div>
           </div>
         ))}
       </div>
 
       <div className="px-3 pb-3">
-        <div className="flex items-center gap-2 rounded-xl border border-stone-700 bg-stone-900 px-4 py-3">
+        <div className="flex items-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-3">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-transparent text-sm text-stone-100 outline-none placeholder:text-stone-600"
+            className="flex-1 bg-transparent text-sm text-stone-700 outline-none placeholder:text-stone-400"
           />
-          <button className="text-stone-600 transition-colors hover:text-primary">
+          <button className="text-stone-400 transition-colors hover:text-primary">
             <Send className="h-3.5 w-3.5" />
           </button>
         </div>
