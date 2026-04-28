@@ -45,7 +45,7 @@ function Divider() {
  
 export function CanvasPane({ onClose }: CanvasPaneProps) {
   return (
-    <div className="flex w-[420px] flex-shrink-0 flex-col rounded-2xl bg-muted shadow-sm">
+    <div className="flex w-[420px] flex-shrink-0 flex-col rounded-2xl bg-muted shadow-sm my-2 mr-2">
       <div className="flex items-center justify-between px-5 py-4">
         <span className="text-sm font-medium text-foreground">Canvas</span>
         <button onClick={onClose} className="text-muted-foreground transition-colors hover:text-foreground">

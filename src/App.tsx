@@ -8,7 +8,7 @@ export default function App() {
   const [mapOpen, setMapOpen] = useState(false)
 
   return (
-    <div className="flex h-screen gap-2 overflow-hidden bg-muted p-2">
+    <div className="flex h-screen gap-2 overflow-hidden bg-muted">
       <ChatPane />
       <ContentPane
         canvasOpen={canvasOpen}

@@ -19,7 +19,7 @@ export function ContentPane({
   onToggleMap,
 }: ContentPaneProps) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl bg-background shadow-sm">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
       {/* Header — always visible */}
       <div className="flex items-center justify-between px-8 py-4">
         {mapOpen ? (
