@@ -116,12 +116,12 @@ export function ContentPane({
             {/* Topic name */}
             <span className="shrink-0">Topic 1</span>
 
-            <ChevronRight className="size-3 shrink-0 text-border" />
+            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
             {/* Lesson range label */}
             <span className="shrink-0">Lessons 1–5</span>
 
-            <ChevronRight className="size-3 shrink-0 text-border" />
+            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
             {/* Progress dots — 5 lessons, first complete */}
             <div className="flex shrink-0 items-center gap-1">
@@ -136,21 +136,22 @@ export function ContentPane({
               <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
             </div>
 
-            <span className="shrink-0 text-border">:</span>
+            <span className="shrink-0 text-muted-foreground">:</span>
 
-            <ChevronRight className="size-3 shrink-0 text-border" />
+            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
             {/* Current lesson name */}
             <span className="shrink-0 font-medium text-foreground">
               Lesson 1: Introduction
             </span>
 
-            <ChevronRight className="size-3 shrink-0 text-border" />
+            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
             {/* Learning objective dot — one per lesson, tooltip on hover */}
-            <div className="group/objective relative flex shrink-0 items-center">
+            <div className="group/objective relative flex shrink-0 items-center gap-1">
+              <span className="text-xs text-muted-foreground">LO:</span>
               <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
-              <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden w-max -translate-x-1/2 group-hover/objective:block">
+              <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
                 <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
                   <p className="text-xs font-medium text-popover-foreground">
                     Understand budgeting basics
