@@ -1,0 +1,161 @@
+import { ArrowLeft, LayoutList } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { CourseNavigator } from "@/components/CourseNavigator"
+
+interface ContentPaneProps {
+  canvasOpen: boolean
+  onToggleCanvas: () => void
+  mapOpen: boolean
+  onToggleMap: () => void
+}
+
+export function ContentPane({
+  canvasOpen,
+  onToggleCanvas,
+  mapOpen,
+  onToggleMap,
+}: ContentPaneProps) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+      {/* Header — always visible */}
+      <div className="flex items-center justify-between px-8 py-4">
+        {mapOpen ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggleMap}
+            className="gap-2 text-muted-foreground"
+          >
+            <ArrowLeft className="size-4" />
+            Back to lesson
+          </Button>
+        ) : (
+          <h1 className="text-base font-semibold text-primary">Budgeting</h1>
+        )}
+
+        <div className="flex items-center gap-4">
+          {!mapOpen && (
+            <>
+              <div className="flex items-center gap-2 text-sm">
+                <span
+                  className={cn(
+                    "transition-colors",
+                    !canvasOpen
+                      ? "font-medium text-foreground"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  Content
+                </span>
+                <button
+                  onClick={onToggleCanvas}
+                  role="switch"
+                  aria-checked={canvasOpen}
+                  className={cn(
+                    "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    canvasOpen ? "bg-primary" : "bg-border",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform",
+                      canvasOpen ? "translate-x-4" : "translate-x-0",
+                    )}
+                  />
+                </button>
+                <span
+                  className={cn(
+                    "transition-colors",
+                    canvasOpen
+                      ? "font-medium text-foreground"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  Canvas
+                </span>
+              </div>
+
+              <span className="text-sm text-muted-foreground">
+                Objectives:{" "}
+                <span className="font-medium text-foreground">0/1</span>
+              </span>
+
+              <div className="flex items-center gap-1.5">
+                <div className="h-7 w-7 rounded-full bg-muted" />
+                <div className="h-7 w-7 rounded-full bg-muted-foreground" />
+              </div>
+
+              <div className="rounded bg-card-foreground px-2 py-0.5">
+                <span className="text-xs font-bold tracking-tight text-card">
+                  une
+                </span>
+              </div>
+            </>
+          )}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggleMap}
+            aria-pressed={mapOpen}
+            className={cn(
+              "gap-1.5",
+              mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+            )}
+          >
+            <LayoutList className="size-4" />
+            {!mapOpen && "Course Map"}
+          </Button>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Lesson content — always mounted, hidden when map is open */}
+      <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
+        <div className="px-8 py-7">
+          <div className="mb-8 flex items-center gap-2.5 text-xs text-muted-foreground">
+            <span>Topic 1</span>
+            <span>·</span>
+            <div className="flex items-center gap-1">
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
+              <div className="h-px w-4 bg-border" />
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+            </div>
+            <span>Lessons 1–2</span>
+            <span>·</span>
+            <span className="font-medium text-foreground">
+              Lesson 1: Introduction
+            </span>
+            <Button variant="link" size="sm" className="ml-auto h-auto p-0">
+              Rate lesson
+            </Button>
+          </div>
+
+          <h2 className="mb-3 text-2xl font-semibold text-foreground">
+            Welcome
+          </h2>
+          <Separator className="mb-5" />
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            intro content
+          </p>
+        </div>
+      </ScrollArea>
+
+      {/* Course navigator — always mounted, hidden when map is closed */}
+      <div className={cn("flex-1 overflow-hidden py-6", !mapOpen && "hidden")}>
+        <div className="mx-auto flex h-full max-w-2xl flex-col">
+          <h2 className="mb-4 px-6 text-lg font-semibold text-foreground">
+            Course Map
+          </h2>
+          <div className="flex-1 overflow-hidden">
+            <CourseNavigator onTopicSelect={onToggleMap} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
