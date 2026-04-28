@@ -36,7 +36,7 @@ export function ChatPane() {
   return (
     <div
       className={cn(
-        "flex flex-shrink-0 flex-col border-r border-border bg-muted transition-[width] duration-200",
+        "flex flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm transition-[width] duration-200 my-2 ml-2",
         view === "navigator" ? "w-80" : "w-64",
       )}
     >
