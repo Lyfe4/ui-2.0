@@ -19,7 +19,7 @@ export function ContentPane({
   onToggleMap,
 }: ContentPaneProps) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl bg-background shadow-sm">
       {/* Header — always visible */}
       <div className="flex items-center justify-between px-8 py-4">
         {mapOpen ? (
@@ -119,7 +119,7 @@ export function ContentPane({
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
             {/* Current lesson name + dots — pill signals this is the nav unit */}
-            <div className="flex shrink-0 items-center gap-2 rounded-full border border-border bg-muted px-3 py-1">
+            <div className="flex shrink-0 items-center gap-2 rounded-full border border-border px-3 py-1">
               <span className="font-medium text-foreground">Lesson 1: Introduction</span>
               <div className="flex items-center gap-1">
                 <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
