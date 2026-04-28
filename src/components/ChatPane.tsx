@@ -38,20 +38,21 @@ export function ChatPane() {
         view === "navigator" ? "w-80" : "w-64",
       )}
     >
-      <div className="flex items-center gap-0.5 px-3 pb-2 pt-4">
+      <div className="flex items-center gap-1 px-3 pb-2 pt-4">
         {navItems.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setActiveNav(id)}
+            aria-label={label}
+            title={label}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+              "flex items-center justify-center rounded-lg p-2 transition-colors",
               activeNav === id
                 ? "bg-primary/10 text-primary"
                 : "text-stone-400 hover:bg-stone-200 hover:text-stone-600",
             )}
           >
-            <Icon className="h-3.5 w-3.5" />
-            {label}
+            <Icon className="h-4 w-4" />
           </button>
         ))}
 
