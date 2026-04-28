@@ -33,28 +33,28 @@ interface CanvasPaneProps {
 
 function ToolbarBtn({ children }: { children: React.ReactNode }) {
   return (
-    <button className="flex h-6 w-6 items-center justify-center rounded text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700">
+    <button className="flex h-6 w-6 items-center justify-center rounded text-stone-500 transition-colors hover:bg-stone-700 hover:text-stone-200">
       {children}
     </button>
   )
 }
 
 function Divider() {
-  return <div className="mx-1 h-3.5 w-px bg-zinc-200" />
+  return <div className="mx-1 h-3.5 w-px bg-stone-700" />
 }
 
 export function CanvasPane({ onClose }: CanvasPaneProps) {
   return (
-    <div className="flex w-[440px] flex-shrink-0 flex-col border-l border-zinc-100 bg-zinc-50">
+    <div className="flex w-[420px] flex-shrink-0 flex-col rounded-xl bg-stone-800">
       <div className="flex items-center justify-between px-5 py-4">
-        <span className="text-sm font-medium text-zinc-700">Canvas</span>
-        <button onClick={onClose} className="text-zinc-400 transition-colors hover:text-zinc-700">
+        <span className="text-sm font-medium text-stone-200">Canvas</span>
+        <button onClick={onClose} className="text-stone-500 transition-colors hover:text-stone-200">
           <X className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="mx-4 mb-3 rounded-lg border border-zinc-200 bg-white">
-        <div className="flex flex-wrap items-center gap-0.5 border-b border-zinc-100 px-2 py-1.5">
+      <div className="mx-3 mb-3 flex-1 overflow-hidden rounded-lg bg-stone-900">
+        <div className="flex flex-wrap items-center gap-0.5 border-b border-stone-800 px-2 py-1.5">
           <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
           <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
           <Divider />
@@ -67,7 +67,7 @@ export function CanvasPane({ onClose }: CanvasPaneProps) {
           <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
           <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
           <Divider />
-          <button className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700">
+          <button className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-stone-500 transition-colors hover:bg-stone-700 hover:text-stone-200">
             Paragraph <ChevronDown className="h-3 w-3" />
           </button>
           <Divider />
@@ -84,7 +84,7 @@ export function CanvasPane({ onClose }: CanvasPaneProps) {
           <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
         </div>
 
-        <div className="flex items-center gap-0.5 px-2 py-1.5">
+        <div className="flex items-center gap-0.5 border-b border-stone-800 px-2 py-1.5">
           <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
           <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
           <Divider />
@@ -94,22 +94,20 @@ export function CanvasPane({ onClose }: CanvasPaneProps) {
           <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
         </div>
 
-        <div className="h-px bg-zinc-100" />
-
-        <div className="p-4">
+        <div className="h-full p-4">
           <textarea
             defaultValue="random user notes"
-            className="h-52 w-full resize-none bg-transparent text-sm leading-relaxed text-zinc-700 outline-none placeholder:text-zinc-300"
+            className="h-full min-h-48 w-full resize-none bg-transparent text-sm leading-relaxed text-stone-300 outline-none placeholder:text-stone-600"
             placeholder="Start writing your notes..."
           />
         </div>
       </div>
 
-      <div className="px-4">
-        <button className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-600 transition-colors hover:bg-zinc-100">
+      <div className="px-3 pb-3">
+        <button className="flex items-center gap-2 rounded-lg border border-stone-700 bg-stone-900 px-3 py-1.5 text-sm text-stone-300 transition-colors hover:bg-stone-700">
           <Download className="h-3.5 w-3.5" />
           Export
-          <ChevronDown className="h-3 w-3 text-zinc-400" />
+          <ChevronDown className="h-3 w-3 text-stone-500" />
         </button>
       </div>
     </div>
