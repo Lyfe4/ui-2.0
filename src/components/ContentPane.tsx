@@ -113,32 +113,18 @@ export function ContentPane({
       <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
         <div className="px-8 py-7">
           <div className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
-            {/* Topic count + name */}
+            {/* ── Context (where you are) ── */}
             <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
-            {/* Current lesson name + dots grouped */}
-            <div className="flex shrink-0 items-center gap-1.5">
-              <span className="font-medium text-foreground">Lesson 1: Introduction</span>
-              <div className="flex items-center gap-1">
-                <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
-                <div className="h-px w-3 bg-border" />
-                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-                <div className="h-px w-3 bg-border" />
-                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-                <div className="h-px w-3 bg-border" />
-                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-                <div className="h-px w-3 bg-border" />
-                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-              </div>
-            </div>
+            <span className="shrink-0 font-medium text-foreground">Lesson 1: Introduction</span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
-            {/* Learning objective dot — one per lesson, tooltip on hover */}
+            {/* Learning objective dot */}
             <div className="group/objective relative flex shrink-0 items-center gap-1">
-              <span className="text-xs text-muted-foreground">LO:</span>
+              <span className="text-muted-foreground">LO:</span>
               <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
               <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
                 <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
@@ -148,6 +134,19 @@ export function ContentPane({
                   <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
                 </div>
               </div>
+            </div>
+
+            {/* ── Navigation (where you can go) ── */}
+            <div className="ml-4 flex shrink-0 items-center gap-1">
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
+              <div className="h-px w-3 bg-border" />
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+              <div className="h-px w-3 bg-border" />
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+              <div className="h-px w-3 bg-border" />
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+              <div className="h-px w-3 bg-border" />
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
             </div>
 
             <Button variant="link" size="sm" className="ml-auto h-auto p-0">
