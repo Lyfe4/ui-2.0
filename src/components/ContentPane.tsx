@@ -88,8 +88,8 @@ export function ContentPane({
                 <div className="h-7 w-7 rounded-full bg-muted-foreground" />
               </div>
 
-              <div className="rounded bg-foreground px-2 py-0.5">
-                <span className="text-xs font-bold tracking-tight text-background">
+              <div className="rounded bg-card-foreground px-2 py-0.5">
+                <span className="text-xs font-bold tracking-tight text-card">
                   une
                 </span>
               </div>
