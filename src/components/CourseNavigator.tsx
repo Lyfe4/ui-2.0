@@ -1,6 +1,10 @@
 import { useState } from "react"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 
 interface Topic {
   id: string
@@ -82,6 +86,7 @@ function ProgressCircle({ percent }: { percent: number }) {
       height="32"
       viewBox="0 0 32 32"
       className="-rotate-90 shrink-0"
+      aria-hidden
     >
       <circle
         cx="16"
@@ -90,7 +95,7 @@ function ProgressCircle({ percent }: { percent: number }) {
         fill="none"
         strokeWidth="3"
         stroke="currentColor"
-        className="text-stone-200"
+        className="text-border"
       />
       {percent > 0 && (
         <circle
@@ -112,9 +117,9 @@ function ProgressCircle({ percent }: { percent: number }) {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="flex flex-1 flex-col items-center rounded-lg bg-white px-2 py-2">
-      <span className="text-sm font-bold text-stone-700">{value}</span>
-      <span className="text-[9px] font-semibold uppercase tracking-wider text-stone-400">
+    <div className="flex flex-1 flex-col items-center rounded-lg bg-card px-2 py-2 shadow-xs">
+      <span className="text-sm font-bold text-card-foreground">{value}</span>
+      <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </span>
     </div>
@@ -129,31 +134,28 @@ function TopicRow({
   onTopicSelect: () => void
 }) {
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={onTopicSelect}
       className={cn(
-        "flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-primary/10",
-        topic.isActive && "bg-primary/10",
+        "h-auto w-full justify-start gap-2.5 px-2 py-1.5 font-normal",
+        topic.isActive && "bg-primary/10 text-primary hover:bg-primary/15",
       )}
     >
       <div
         className={cn(
           "h-1.5 w-1.5 shrink-0 rounded-full",
-          topic.isActive ? "bg-primary" : "bg-stone-300",
+          topic.isActive ? "bg-primary" : "bg-border",
         )}
       />
-      <div className="min-w-0 flex-1">
-        <p
-          className={cn(
-            "truncate text-xs font-medium",
-            topic.isActive ? "text-primary" : "text-stone-600",
-          )}
-        >
-          {topic.title}
+      <div className="min-w-0 flex-1 text-left">
+        <p className="truncate text-xs font-medium">{topic.title}</p>
+        <p className="text-[10px] text-muted-foreground">
+          {topic.lessonCount} lessons
         </p>
-        <p className="text-[10px] text-stone-400">{topic.lessonCount} lessons</p>
       </div>
-    </button>
+    </Button>
   )
 }
 
@@ -169,45 +171,48 @@ function UnitRow({
   onTopicSelect: () => void
 }) {
   return (
-    <div className="rounded-lg border border-stone-200 bg-white overflow-hidden">
-      <button
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <Button
+        variant="ghost"
         onClick={onToggle}
-        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-stone-50"
+        className="h-auto w-full justify-start gap-2.5 rounded-none px-3 py-2.5 hover:bg-muted/50"
       >
         <ProgressCircle percent={unit.progressPercent} />
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold text-stone-700 leading-tight">
+        <div className="min-w-0 flex-1 text-left">
+          <p className="truncate text-xs font-semibold text-card-foreground leading-tight">
             {unit.title}
           </p>
-          <p className="text-[10px] text-stone-400 mt-0.5">
-            {unit.topics.length} {unit.topics.length === 1 ? "Topic" : "Topics"} · 0/
+          <p className="text-[10px] text-muted-foreground mt-0.5">
+            {unit.topics.length}{" "}
+            {unit.topics.length === 1 ? "Topic" : "Topics"} · 0/
             {unit.topics.length}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           {unit.isInProgress && (
-            <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-primary">
-              In Progress
-            </span>
+            <Badge variant="accent">In Progress</Badge>
           )}
           {isExpanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+            <ChevronDown className="size-3.5 text-muted-foreground" />
           ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
+            <ChevronRight className="size-3.5 text-muted-foreground" />
           )}
         </div>
-      </button>
+      </Button>
 
       {isExpanded && (
-        <div className="border-t border-stone-100 px-2 py-1.5 space-y-0.5">
-          {unit.topics.map((topic) => (
-            <TopicRow
-              key={topic.id}
-              topic={topic}
-              onTopicSelect={onTopicSelect}
-            />
-          ))}
-        </div>
+        <>
+          <Separator />
+          <div className="space-y-0.5 px-2 py-1.5">
+            {unit.topics.map((topic) => (
+              <TopicRow
+                key={topic.id}
+                topic={topic}
+                onTopicSelect={onTopicSelect}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   )
@@ -236,17 +241,19 @@ export function CourseNavigator({ onTopicSelect }: CourseNavigatorProps) {
         <StatCard label="Complete" value="0%" />
       </div>
 
-      <div className="flex-1 space-y-1.5 overflow-y-auto px-3 pb-3">
-        {UNITS.map((unit) => (
-          <UnitRow
-            key={unit.id}
-            unit={unit}
-            isExpanded={expandedUnits.has(unit.id)}
-            onToggle={() => toggleUnit(unit.id)}
-            onTopicSelect={onTopicSelect}
-          />
-        ))}
-      </div>
+      <ScrollArea className="flex-1 px-3 pb-3">
+        <div className="space-y-1.5">
+          {UNITS.map((unit) => (
+            <UnitRow
+              key={unit.id}
+              unit={unit}
+              isExpanded={expandedUnits.has(unit.id)}
+              onToggle={() => toggleUnit(unit.id)}
+              onTopicSelect={onTopicSelect}
+            />
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   )
 }
