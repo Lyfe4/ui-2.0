@@ -118,25 +118,21 @@ export function ContentPane({
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
-            {/* Lesson range label */}
-            <span className="shrink-0">Lessons 1–5</span>
-
-            <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
-
-            {/* Progress dots — 5 lessons, first complete */}
-            <div className="flex shrink-0 items-center gap-1">
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
-              <div className="h-px w-3 bg-border" />
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-              <div className="h-px w-3 bg-border" />
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-              <div className="h-px w-3 bg-border" />
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-              <div className="h-px w-3 bg-border" />
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+            {/* Lesson range label + dots grouped tightly */}
+            <div className="flex shrink-0 items-center gap-1.5">
+              <span>Lessons 1–5:</span>
+              <div className="flex items-center gap-1">
+                <div className="h-2.5 w-2.5 rounded-full border-2 border-primary bg-primary" />
+                <div className="h-px w-3 bg-border" />
+                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+                <div className="h-px w-3 bg-border" />
+                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+                <div className="h-px w-3 bg-border" />
+                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+                <div className="h-px w-3 bg-border" />
+                <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+              </div>
             </div>
-
-            <span className="shrink-0 text-muted-foreground">:</span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
