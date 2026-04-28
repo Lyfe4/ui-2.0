@@ -114,7 +114,7 @@ export function ContentPane({
         <div className="px-8 py-7">
           <div className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
             {/* Topic name */}
-            <span className="shrink-0">Topic 1</span>
+            <span className="shrink-0 font-medium text-foreground">Tracking Expenses</span>
 
             <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
 
