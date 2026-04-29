@@ -2,15 +2,14 @@ import { useState } from "react"
 import {
   GraduationCap,
   HelpCircle,
-  LayoutList,
-  MessageSquare,
+  PanelLeftClose,
+  PanelLeftOpen,
   Send,
   Users,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { CourseNavigator } from "@/components/CourseNavigator"
 
 const messages = [
   {
@@ -31,50 +30,53 @@ const navItems = [
 export function ChatPane() {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
-  const [view, setView] = useState<"chat" | "navigator">("chat")
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <div
       className={cn(
         "flex flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm transition-[width] duration-200 my-2 ml-2",
-        view === "navigator" ? "w-80" : "w-64",
+        collapsed ? "w-12" : "w-64",
       )}
     >
-      <div className="flex items-center gap-1 px-3 pb-2 pt-4">
-        {navItems.map(({ id, label, icon: Icon }) => (
-          <Button
-            key={id}
-            variant="ghost"
-            size="icon-sm"
-            aria-label={label}
-            title={label}
-            aria-pressed={activeNav === id}
-            onClick={() => setActiveNav(id)}
-            className={cn(
-              activeNav === id && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-            )}
-          >
-            <Icon />
-          </Button>
-        ))}
+      <div
+        className={cn(
+          "flex items-center gap-1 pb-2 pt-4",
+          collapsed ? "justify-center px-0" : "px-3",
+        )}
+      >
+        {!collapsed &&
+          navItems.map(({ id, label, icon: Icon }) => (
+            <Button
+              key={id}
+              variant="ghost"
+              size="icon-sm"
+              aria-label={label}
+              title={label}
+              aria-pressed={activeNav === id}
+              onClick={() => setActiveNav(id)}
+              className={cn(
+                activeNav === id &&
+                  "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+              )}
+            >
+              <Icon />
+            </Button>
+          ))}
 
         <Button
           variant="ghost"
           size="icon-sm"
-          aria-label={view === "navigator" ? "Show chat" : "Show course map"}
-          title={view === "navigator" ? "Show chat" : "Show course map"}
-          aria-pressed={view === "navigator"}
-          onClick={() => setView(view === "navigator" ? "chat" : "navigator")}
-          className={cn(
-            "ml-auto",
-            view === "navigator" && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-          )}
+          aria-label={collapsed ? "Expand chat" : "Collapse chat"}
+          title={collapsed ? "Expand chat" : "Collapse chat"}
+          onClick={() => setCollapsed(!collapsed)}
+          className={cn(!collapsed && "ml-auto")}
         >
-          {view === "navigator" ? <MessageSquare /> : <LayoutList />}
+          {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
         </Button>
       </div>
 
-      {view === "chat" ? (
+      {!collapsed && (
         <>
           <ScrollArea className="flex-1 px-4 py-4">
             <div className="space-y-5">
@@ -110,8 +112,6 @@ export function ChatPane() {
             </div>
           </div>
         </>
-      ) : (
-        <CourseNavigator onTopicSelect={() => setView("chat")} />
       )}
     </div>
   )
