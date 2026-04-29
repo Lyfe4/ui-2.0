@@ -130,84 +130,71 @@ export function ContentPane({
       {/* Lesson content */}
       <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
       {/* Breadcrumb bar — hairline bottom border, scrolls with content */}
-      <div className="border-b border-border/40 px-8 pb-3 pt-2.5">
+      <div className="border-b border-border/40 px-8 py-2.5">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {/* Left: two-row column — Rate lesson centres against its full height */}
-          <div className="flex flex-1 flex-col gap-1.5">
-            {/* Row 1: full breadcrumb trail on one line */}
-            <div className="flex items-center gap-2">
-              <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
+          <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
-              <ChevronRight className="size-3 shrink-0" />
+          <ChevronRight className="size-3 shrink-0" />
 
-              <span className="font-medium text-foreground">
-                Lesson {currentLesson}: {lesson.title}
-              </span>
+          <span className="shrink-0 font-medium text-foreground">
+            Lesson {currentLesson}: {lesson.title}
+          </span>
 
-              <ChevronRight className="size-3 shrink-0" />
+          <ChevronRight className="size-3 shrink-0" />
 
-              <div className="group/objective relative flex shrink-0 items-center gap-1">
-                <span className="text-xs text-muted-foreground">LO:</span>
-                <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
-                <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
-                  <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
-                    <p className="text-xs font-medium text-popover-foreground">
-                      Understand budgeting basics
-                    </p>
-                    <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2: dots indented to the lesson label via an invisible spacer that
-                mirrors the topic prefix width — no hardcoded values needed */}
-            <div className="flex items-center gap-2">
-              <span className="invisible shrink-0 font-medium" aria-hidden="true">
-                Topic 1: Tracking Expenses
-              </span>
-              <ChevronRight className="invisible size-3 shrink-0" aria-hidden="true" />
-
-              <div className="flex items-center gap-1.5">
-                {LESSONS.map((l, i) => {
-                  const isCompleted = COMPLETED_LESSONS.has(l.id)
-                  const isCurrent = l.id === currentLesson
-                  const prevCompleted = i > 0 && COMPLETED_LESSONS.has(LESSONS[i - 1].id)
-
-                  return (
-                    <div key={l.id} className="flex items-center">
-                      {i > 0 && (
-                        <div
-                          className={cn(
-                            "h-px w-3 mr-0.5",
-                            prevCompleted ? "bg-primary" : "bg-border",
-                          )}
-                        />
-                      )}
-                      <button
-                        onClick={() => setCurrentLesson(l.id)}
-                        title={`Lesson ${l.id}: ${l.title}`}
-                        className={cn(
-                          "h-2.5 w-2.5 rounded-full border-2 transition-all hover:scale-110 focus-visible:outline-none",
-                          isCompleted
-                            ? "border-primary bg-primary cursor-pointer"
-                            : isCurrent
-                              ? "border-foreground bg-background cursor-default"
-                              : "border-border bg-background cursor-pointer hover:border-muted-foreground",
-                          isCurrent && isCompleted && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
-                        )}
-                        aria-current={isCurrent ? "step" : undefined}
-                      />
-                    </div>
-                  )
-                })}
+          <div className="group/objective relative flex shrink-0 items-center gap-1">
+            <span className="text-xs text-muted-foreground">LO:</span>
+            <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
+            <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
+              <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
+                <p className="text-xs font-medium text-popover-foreground">
+                  Understand budgeting basics
+                </p>
+                <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
               </div>
             </div>
           </div>
 
-          <Button variant="link" size="sm" className="ml-auto h-auto self-center p-0">
-            Rate lesson
-          </Button>
+          {/* Dots + Rate lesson pinned to the right */}
+          <div className="ml-auto flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              {LESSONS.map((l, i) => {
+                const isCompleted = COMPLETED_LESSONS.has(l.id)
+                const isCurrent = l.id === currentLesson
+                const prevCompleted = i > 0 && COMPLETED_LESSONS.has(LESSONS[i - 1].id)
+
+                return (
+                  <div key={l.id} className="flex items-center">
+                    {i > 0 && (
+                      <div
+                        className={cn(
+                          "h-px w-3 mr-0.5",
+                          prevCompleted ? "bg-primary" : "bg-border",
+                        )}
+                      />
+                    )}
+                    <button
+                      onClick={() => setCurrentLesson(l.id)}
+                      title={`Lesson ${l.id}: ${l.title}`}
+                      className={cn(
+                        "h-2.5 w-2.5 rounded-full border-2 transition-all hover:scale-110 focus-visible:outline-none",
+                        isCompleted
+                          ? "border-primary bg-primary cursor-pointer"
+                          : isCurrent
+                            ? "border-foreground bg-background cursor-default"
+                            : "border-border bg-background cursor-pointer hover:border-muted-foreground",
+                        isCurrent && isCompleted && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
+                      )}
+                      aria-current={isCurrent ? "step" : undefined}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+            <Button variant="link" size="sm" className="h-auto p-0">
+              Rate lesson
+            </Button>
+          </div>
         </div>
       </div>
 
