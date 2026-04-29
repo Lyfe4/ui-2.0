@@ -169,8 +169,15 @@ function UnitRow({
   onToggle: () => void
   onTopicSelect: () => void
 }) {
+  const isActive = unit.topics.some((t) => t.isActive)
+
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card">
+    <div
+      className={cn(
+        "overflow-hidden rounded-xl border bg-card",
+        isActive ? "border-primary/50 ring-1 ring-primary/20" : "border-border",
+      )}
+    >
       <Button
         variant="ghost"
         onClick={onToggle}
