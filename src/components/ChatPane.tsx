@@ -27,10 +27,14 @@ const navItems = [
   { id: "support", label: "Support", icon: HelpCircle },
 ]
 
-export function ChatPane() {
+interface ChatPaneProps {
+  collapsed: boolean
+  onCollapsedChange: (collapsed: boolean) => void
+}
+
+export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
-  const [collapsed, setCollapsed] = useState(false)
 
   if (collapsed) {
     return (
@@ -39,7 +43,7 @@ export function ChatPane() {
         size="icon-sm"
         aria-label="Expand chat"
         title="Expand chat"
-        onClick={() => setCollapsed(false)}
+        onClick={() => onCollapsedChange(false)}
         className="fixed left-3 top-4 z-50"
       >
         <PanelLeftOpen />
@@ -73,7 +77,7 @@ export function ChatPane() {
           size="icon-sm"
           aria-label="Collapse chat"
           title="Collapse chat"
-          onClick={() => setCollapsed(true)}
+          onClick={() => onCollapsedChange(true)}
           className="ml-auto"
         >
           <PanelLeftClose />

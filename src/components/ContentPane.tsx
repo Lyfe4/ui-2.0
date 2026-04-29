@@ -10,6 +10,7 @@ interface ContentPaneProps {
   onToggleCanvas: () => void
   mapOpen: boolean
   onToggleMap: () => void
+  chatCollapsed: boolean
 }
 
 export function ContentPane({
@@ -17,11 +18,12 @@ export function ContentPane({
   onToggleCanvas,
   mapOpen,
   onToggleMap,
+  chatCollapsed,
 }: ContentPaneProps) {
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
       {/* Header — always visible */}
-      <div className="flex items-center justify-between px-8 py-4">
+      <div className={cn("flex items-center justify-between px-8 py-4", chatCollapsed && "pl-12")}>
         {mapOpen ? (
           <Button
             variant="ghost"
