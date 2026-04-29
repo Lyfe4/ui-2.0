@@ -75,22 +75,22 @@ const UNITS: Unit[] = [
   },
 ]
 
-const RADIUS = 13
+const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 function ProgressCircle({ percent }: { percent: number }) {
   const offset = CIRCUMFERENCE * (1 - percent / 100)
   return (
     <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
+      width="44"
+      height="44"
+      viewBox="0 0 44 44"
       className="-rotate-90 shrink-0"
       aria-hidden
     >
       <circle
-        cx="16"
-        cy="16"
+        cx="22"
+        cy="22"
         r={RADIUS}
         fill="none"
         strokeWidth="3"
@@ -99,8 +99,8 @@ function ProgressCircle({ percent }: { percent: number }) {
       />
       {percent > 0 && (
         <circle
-          cx="16"
-          cy="16"
+          cx="22"
+          cy="22"
           r={RADIUS}
           fill="none"
           strokeWidth="3"
@@ -117,9 +117,9 @@ function ProgressCircle({ percent }: { percent: number }) {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="flex flex-1 flex-col items-center rounded-lg bg-card px-2 py-2 shadow-xs">
-      <span className="text-sm font-bold text-card-foreground">{value}</span>
-      <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="flex flex-1 flex-col items-center rounded-lg border border-border bg-card px-3 py-3 shadow-xs">
+      <span className="text-base font-bold text-card-foreground">{value}</span>
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </span>
     </div>
@@ -136,22 +136,21 @@ function TopicRow({
   return (
     <Button
       variant="ghost"
-      size="sm"
       onClick={onTopicSelect}
       className={cn(
-        "h-auto w-full justify-start gap-2.5 px-2 py-1.5 font-normal",
+        "h-auto w-full justify-start gap-3 px-4 py-3 font-normal",
         topic.isActive && "bg-primary/10 text-primary hover:bg-primary/15",
       )}
     >
       <div
         className={cn(
-          "h-1.5 w-1.5 shrink-0 rounded-full",
+          "h-2 w-2 shrink-0 rounded-full",
           topic.isActive ? "bg-primary" : "bg-border",
         )}
       />
       <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-xs font-medium">{topic.title}</p>
-        <p className="text-[10px] text-muted-foreground">
+        <p className="truncate text-sm font-medium">{topic.title}</p>
+        <p className="text-xs text-muted-foreground">
           {topic.lessonCount} lessons
         </p>
       </div>
@@ -171,31 +170,31 @@ function UnitRow({
   onTopicSelect: () => void
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div className="overflow-hidden rounded-xl border border-border bg-card">
       <Button
         variant="ghost"
         onClick={onToggle}
-        className="h-auto w-full justify-start gap-2.5 rounded-none px-3 py-2.5 hover:bg-muted/50"
+        className="h-auto w-full justify-start gap-4 rounded-none px-4 py-4 hover:bg-muted/50"
       >
         <ProgressCircle percent={unit.progressPercent} />
         <div className="min-w-0 flex-1 text-left">
-          <p className="truncate text-xs font-semibold text-card-foreground leading-tight">
+          <p className="truncate text-sm font-semibold text-card-foreground leading-snug">
             {unit.title}
           </p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">
+          <p className="text-xs text-muted-foreground mt-1">
             {unit.topics.length}{" "}
             {unit.topics.length === 1 ? "Topic" : "Topics"} · 0/
-            {unit.topics.length}
+            {unit.topics.length} complete
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-2">
           {unit.isInProgress && (
             <Badge variant="accent">In Progress</Badge>
           )}
           {isExpanded ? (
-            <ChevronDown className="size-3.5 text-muted-foreground" />
+            <ChevronDown className="size-4 text-muted-foreground" />
           ) : (
-            <ChevronRight className="size-3.5 text-muted-foreground" />
+            <ChevronRight className="size-4 text-muted-foreground" />
           )}
         </div>
       </Button>
@@ -203,7 +202,7 @@ function UnitRow({
       {isExpanded && (
         <>
           <Separator />
-          <div className="space-y-0.5 px-2 py-1.5">
+          <div className="space-y-0.5 px-2 py-2">
             {unit.topics.map((topic) => (
               <TopicRow
                 key={topic.id}
@@ -235,14 +234,14 @@ export function CourseNavigator({ onTopicSelect }: CourseNavigatorProps) {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex gap-2 px-8 pb-4">
+      <div className="flex gap-3 px-8 pb-5">
         <StatCard label="Units" value={UNITS.length} />
         <StatCard label="Topics" value={totalTopics} />
         <StatCard label="Complete" value="0%" />
       </div>
 
       <ScrollArea className="flex-1 pb-6">
-        <div className="space-y-1.5 px-8">
+        <div className="space-y-2 px-8">
           {UNITS.map((unit) => (
             <UnitRow
               key={unit.id}
