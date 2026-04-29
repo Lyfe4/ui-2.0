@@ -160,19 +160,20 @@ export function ContentPane({
       {/* Breadcrumb bar — hairline bottom border, scrolls with content */}
       <div className="border-b border-border/40 px-8 pb-3 pt-2.5">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {/* Left: two-row breadcrumb column */}
+          <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
+
+          <ChevronRight className="size-3 shrink-0" />
+
+          {/* Two-row column starting at the lesson label — dots align under it */}
           <div className="flex flex-col gap-1.5">
-            {/* Row 1: breadcrumb trail */}
+            {/* Row 1: lesson label onwards */}
             <div className="flex items-center gap-2">
-              <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
-
-              <ChevronRight className="size-3 shrink-0" />
-
               <span className="font-medium text-foreground">
                 Lesson {currentLesson}: {lesson.title}
               </span>
 
               <ChevronRight className="size-3 shrink-0" />
+
 
               <div className="group/objective relative flex shrink-0 items-center gap-1">
                 <span className="text-xs text-muted-foreground">LO:</span>
