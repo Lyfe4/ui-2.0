@@ -166,15 +166,11 @@ export function ContentPane({
       </ScrollArea>
 
       {/* Course navigator — always mounted, hidden when map is closed */}
-      <div className={cn("flex-1 overflow-hidden py-6", !mapOpen && "hidden")}>
-        <div className="mx-auto flex h-full max-w-2xl flex-col">
-          <h2 className="mb-4 px-6 text-lg font-semibold text-foreground">
-            Course Map
-          </h2>
-          <div className="flex-1 overflow-hidden">
-            <CourseNavigator onTopicSelect={onToggleMap} />
-          </div>
-        </div>
+      <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden pt-6", !mapOpen && "hidden")}>
+        <h2 className="mb-4 px-8 text-lg font-semibold text-foreground">
+          Course Map
+        </h2>
+        <CourseNavigator onTopicSelect={onToggleMap} />
       </div>
     </div>
   )
