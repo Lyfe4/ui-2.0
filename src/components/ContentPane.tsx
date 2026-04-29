@@ -195,9 +195,8 @@ export function ContentPane({
                           : isCurrent
                             ? "border-foreground bg-background cursor-default"
                             : "border-border bg-background cursor-pointer hover:border-muted-foreground",
-                        // outer black ring for current lesson — ring-offset creates a
-                        // gap so the dot's own colour (green or white) stays visible
-                        isCurrent && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
+                        // outer ring only for completed+current — offset gap keeps green visible
+                        isCurrent && isCompleted && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
                       )}
                       aria-current={isCurrent ? "step" : undefined}
                     />
