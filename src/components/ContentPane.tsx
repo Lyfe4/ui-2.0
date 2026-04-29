@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ArrowLeft, ChevronRight, LayoutList } from "lucide-react"
+import { ArrowLeft, ChevronRight, LayoutList, PanelRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -86,47 +86,19 @@ export function ContentPane({
 
         <div className="flex items-center gap-4">
           {!mapOpen && (
-            <>
-              <div className="flex items-center gap-2 text-sm">
-                <span
-                  className={cn(
-                    "transition-colors",
-                    !canvasOpen
-                      ? "font-medium text-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  Content
-                </span>
-                <button
-                  onClick={onToggleCanvas}
-                  role="switch"
-                  aria-checked={canvasOpen}
-                  className={cn(
-                    "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    canvasOpen ? "bg-primary" : "bg-border",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform",
-                      canvasOpen ? "translate-x-4" : "translate-x-0",
-                    )}
-                  />
-                </button>
-                <span
-                  className={cn(
-                    "transition-colors",
-                    canvasOpen
-                      ? "font-medium text-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  Canvas
-                </span>
-              </div>
-
-            </>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCanvas}
+              aria-pressed={canvasOpen}
+              className={cn(
+                "gap-1.5",
+                canvasOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+              )}
+            >
+              <PanelRight className="size-4" />
+              {!canvasOpen && "Canvas"}
+            </Button>
           )}
 
           <Button
