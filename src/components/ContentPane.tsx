@@ -80,16 +80,6 @@ export function ContentPane({
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <div className="h-7 w-7 rounded-full bg-muted" />
-                <div className="h-7 w-7 rounded-full bg-muted-foreground" />
-              </div>
-
-              <div className="rounded bg-card-foreground px-2 py-0.5">
-                <span className="text-xs font-bold tracking-tight text-card">
-                  une
-                </span>
-              </div>
             </>
           )}
 
@@ -106,6 +96,14 @@ export function ContentPane({
             <LayoutList className="size-4" />
             {!mapOpen && "Course Map"}
           </Button>
+
+          {!mapOpen && (
+            <div className="rounded bg-card-foreground px-2 py-0.5">
+              <span className="text-xs font-bold tracking-tight text-card">
+                une
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
