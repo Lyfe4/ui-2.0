@@ -112,9 +112,12 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             placeholder="Type a message..."
             className="flex-1 bg-transparent px-1 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
-          <Button variant="ghost" size="icon-xs" aria-label="Send" className="shrink-0 text-muted-foreground hover:text-foreground">
-            <Send />
-          </Button>
+          <button
+            aria-label="Send"
+            className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Send className="size-3.5" />
+          </button>
         </div>
       </div>
     </div>
