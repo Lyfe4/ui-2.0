@@ -163,7 +163,7 @@ export function ContentPane({
           <ChevronRight className="size-3 shrink-0" />
 
           <div className="flex shrink-0 items-center gap-2 rounded-full border border-border px-3 py-1">
-            <span className="font-medium text-foreground">
+            <span className="inline-block min-w-[30ch] font-medium text-foreground">
               Lesson {currentLesson}: {lesson.title}
             </span>
 
