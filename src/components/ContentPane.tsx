@@ -14,6 +14,9 @@ interface ContentPaneProps {
   chatCollapsed: boolean
 }
 
+// Lessons completed in this mock — only the intro lesson is done
+const COMPLETED_LESSONS = new Set([1])
+
 const LESSONS = [
   {
     id: 1,
@@ -165,18 +168,19 @@ export function ContentPane({
             </span>
 
             {/* Lesson dots */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {LESSONS.map((l, i) => {
-                const isCompleted = l.id < currentLesson
+                const isCompleted = COMPLETED_LESSONS.has(l.id)
                 const isCurrent = l.id === currentLesson
+                const prevCompleted = i > 0 && COMPLETED_LESSONS.has(LESSONS[i - 1].id)
 
                 return (
                   <div key={l.id} className="flex items-center">
                     {i > 0 && (
                       <div
                         className={cn(
-                          "h-px w-3 mr-1",
-                          isCompleted ? "bg-primary" : "bg-border",
+                          "h-px w-3 mr-0.5",
+                          prevCompleted ? "bg-primary" : "bg-border",
                         )}
                       />
                     )}
@@ -184,10 +188,16 @@ export function ContentPane({
                       onClick={() => setCurrentLesson(l.id)}
                       title={`Lesson ${l.id}: ${l.title}`}
                       className={cn(
-                        "h-2.5 w-2.5 rounded-full border-2 transition-all hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        isCompleted && "border-primary bg-primary cursor-pointer",
-                        isCurrent && "border-foreground bg-background cursor-default shadow-sm",
-                        !isCompleted && !isCurrent && "border-border bg-background cursor-pointer hover:border-muted-foreground",
+                        "h-2.5 w-2.5 rounded-full border-2 transition-all hover:scale-110 focus-visible:outline-none",
+                        // fill & own border
+                        isCompleted
+                          ? "border-primary bg-primary cursor-pointer"
+                          : isCurrent
+                            ? "border-foreground bg-background cursor-default"
+                            : "border-border bg-background cursor-pointer hover:border-muted-foreground",
+                        // outer black ring for current lesson — ring-offset creates a
+                        // gap so the dot's own colour (green or white) stays visible
+                        isCurrent && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
                       )}
                       aria-current={isCurrent ? "step" : undefined}
                     />
