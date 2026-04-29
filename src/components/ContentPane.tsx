@@ -160,17 +160,35 @@ export function ContentPane({
       {/* Breadcrumb bar — hairline bottom border, scrolls with content */}
       <div className="border-b border-border/40 px-8 pb-3 pt-2.5">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
-
-          <ChevronRight className="size-3 shrink-0" />
-
-          {/* Lesson label + dots — two-row column; siblings centre against its full height */}
+          {/* Left: two-row breadcrumb column */}
           <div className="flex flex-col gap-1.5">
-            <span className="font-medium text-foreground">
-              Lesson {currentLesson}: {lesson.title}
-            </span>
+            {/* Row 1: breadcrumb trail */}
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
-            {/* Dots row — naturally left-aligned with label above */}
+              <ChevronRight className="size-3 shrink-0" />
+
+              <span className="font-medium text-foreground">
+                Lesson {currentLesson}: {lesson.title}
+              </span>
+
+              <ChevronRight className="size-3 shrink-0" />
+
+              <div className="group/objective relative flex shrink-0 items-center gap-1">
+                <span className="text-xs text-muted-foreground">LO:</span>
+                <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
+                <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
+                  <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
+                    <p className="text-xs font-medium text-popover-foreground">
+                      Understand budgeting basics
+                    </p>
+                    <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: lesson dots, left-aligned under the breadcrumb */}
             <div className="flex items-center gap-1.5">
               {LESSONS.map((l, i) => {
                 const isCompleted = COMPLETED_LESSONS.has(l.id)
@@ -207,22 +225,9 @@ export function ContentPane({
             </div>
           </div>
 
-          <ChevronRight className="size-3 shrink-0" />
-
-          <div className="group/objective relative flex shrink-0 items-center gap-1">
-            <span className="text-xs text-muted-foreground">LO:</span>
-            <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
-            <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
-              <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
-                <p className="text-xs font-medium text-popover-foreground">
-                  Understand budgeting basics
-                </p>
-                <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
-              </div>
-            </div>
-          </div>
-
-          <Button variant="link" size="sm" className="ml-auto h-auto p-0">
+          {/* Rate lesson — ml-auto + outer items-center keeps it vertically centred
+              against the full two-row height regardless of left-side content */}
+          <Button variant="link" size="sm" className="ml-auto h-auto self-center p-0">
             Rate lesson
           </Button>
         </div>
