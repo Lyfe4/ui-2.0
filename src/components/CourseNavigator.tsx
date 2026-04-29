@@ -39,7 +39,7 @@ const UNITS: Unit[] = [
     id: "u2",
     title: "Introduction to Programming and the Web",
     progressPercent: 43,
-    isInProgress: true,
+    isInProgress: false,
     topics: [
       { id: "t2", title: "Web Fundamentals", lessonCount: 2, isActive: false },
       { id: "t3", title: "HTML & CSS Basics", lessonCount: 3, isActive: false },
