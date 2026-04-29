@@ -105,14 +105,14 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
       </ScrollArea>
 
       <div className="px-3 pb-3">
-        <div className="flex items-center gap-2 overflow-hidden rounded-xl border border-border bg-background px-3 py-2">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-transparent px-1 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="min-w-0 flex-1 bg-transparent px-1 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
-          <Button variant="ghost" size="icon-xs" aria-label="Send" className="mr-1 shrink-0 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" size="icon-xs" aria-label="Send" className="shrink-0 text-muted-foreground hover:text-foreground">
             <Send />
           </Button>
         </div>
