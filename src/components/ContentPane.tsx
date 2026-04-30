@@ -129,7 +129,7 @@ export function ContentPane({
 
       {/* Breadcrumb bar — sticky, faint muted background, blurs content beneath */}
       <div className={cn("px-8 py-2", mapOpen && "hidden")}>
-        <div className="flex items-center gap-2 rounded-b-lg bg-muted/40 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
+        <div className="flex items-center gap-2 rounded-lg bg-muted/40 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
           <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
           <ChevronRight className="size-3 shrink-0" />
