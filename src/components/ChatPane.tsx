@@ -41,16 +41,51 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
   if (collapsed) {
     return (
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        aria-label="Expand chat"
-        title="Expand chat"
-        onClick={() => onCollapsedChange(false)}
-        className="fixed left-3 top-4 z-50"
-      >
-        <PanelLeftOpen />
-      </Button>
+      <div className="flex w-12 flex-shrink-0 flex-col items-center gap-1 rounded-2xl border border-border bg-muted shadow-sm my-2 ml-2 px-1 pt-4 pb-3">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Expand chat"
+          title="Expand chat"
+          onClick={() => onCollapsedChange(false)}
+        >
+          <PanelLeftOpen />
+        </Button>
+
+        <div className="mt-1 flex flex-col gap-1">
+          {navItems.map(({ id, label, icon: Icon }) => (
+            <Button
+              key={id}
+              variant="ghost"
+              size="icon-sm"
+              aria-label={label}
+              title={label}
+              aria-pressed={activeNav === id}
+              onClick={() => setActiveNav(id)}
+              className={cn(
+                activeNav === id &&
+                  "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+              )}
+            >
+              <Icon />
+            </Button>
+          ))}
+
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Navigate"
+            title="Navigate"
+            aria-pressed={mapOpen}
+            onClick={onToggleMap}
+            className={cn(
+              mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+            )}
+          >
+            <LayoutList />
+          </Button>
+        </div>
+      </div>
     )
   }
 

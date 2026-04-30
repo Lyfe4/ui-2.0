@@ -21,7 +21,6 @@ export default function App() {
         onToggleCanvas={() => setCanvasOpen((o) => !o)}
         mapOpen={mapOpen}
         onToggleMap={() => setMapOpen((o) => !o)}
-        chatCollapsed={chatCollapsed}
       />
       {canvasOpen && (
         <CanvasPane
