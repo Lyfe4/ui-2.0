@@ -52,7 +52,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   }
 
   return (
-    <div className="flex w-64 flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm my-2 ml-2">
+    <div className="flex w-96 flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm my-2 ml-2">
       <div className="flex items-center gap-1 px-3 pb-2 pt-4">
         {navItems.map(({ id, label, icon: Icon }) => (
           <Button
