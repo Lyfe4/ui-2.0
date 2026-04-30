@@ -155,15 +155,21 @@ export function ContentPane({
             </div>
           </div>
 
-          <Button
-            variant="ghost"
-            size="xs"
-            className="ml-auto gap-1 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
-            onClick={onOpenSubmission}
-          >
-            <ClipboardList className="size-3" />
-            Submit Assessment
-          </Button>
+          <div className="relative ml-auto">
+            <span className="absolute -right-0.5 -top-0.5 flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+              <span className="relative inline-flex size-2 rounded-full bg-primary" />
+            </span>
+            <Button
+              variant="ghost"
+              size="xs"
+              className="gap-1 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+              onClick={onOpenSubmission}
+            >
+              <ClipboardList className="size-3" />
+              Submit Assessment
+            </Button>
+          </div>
 
         </div>
       </div>
