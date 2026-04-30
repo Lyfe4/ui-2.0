@@ -18,7 +18,12 @@ export default function App() {
         onToggleMap={() => setMapOpen((o) => !o)}
         chatCollapsed={chatCollapsed}
       />
-      {canvasOpen && <CanvasPane onClose={() => setCanvasOpen(false)} />}
+      {canvasOpen && (
+        <CanvasPane
+          onClose={() => setCanvasOpen(false)}
+          chatCollapsed={chatCollapsed}
+        />
+      )}
     </div>
   )
 }

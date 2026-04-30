@@ -26,9 +26,11 @@ import {
   Video,
   X,
 } from "lucide-react"
- 
+import { cn } from "@/lib/utils"
+
 interface CanvasPaneProps {
   onClose: () => void
+  chatCollapsed?: boolean
 }
  
 function ToolbarBtn({ children }: { children: React.ReactNode }) {
@@ -43,10 +45,10 @@ function Divider() {
   return <div className="mx-1 h-3.5 w-px bg-border" />
 }
  
-export function CanvasPane({ onClose }: CanvasPaneProps) {
+export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="flex w-[420px] flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm my-2 mr-2">
-      <div className="flex items-center justify-between px-5 py-4">
+    <div className="flex w-full sm:w-[420px] flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm my-2 mr-2">
+      <div className={cn("flex items-center justify-between px-5 py-4", chatCollapsed && "pl-16")}>
         <span className="text-sm font-medium text-foreground">Canvas</span>
         <button onClick={onClose} className="text-muted-foreground transition-colors hover:text-foreground">
           <X className="h-4 w-4" />
