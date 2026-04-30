@@ -10,7 +10,12 @@ export default function App() {
 
   return (
     <div className="flex h-screen gap-2 overflow-hidden bg-background">
-      <ChatPane collapsed={chatCollapsed} onCollapsedChange={setChatCollapsed} />
+      <ChatPane
+        collapsed={chatCollapsed}
+        onCollapsedChange={setChatCollapsed}
+        mapOpen={mapOpen}
+        onToggleMap={() => setMapOpen((o) => !o)}
+      />
       <ContentPane
         canvasOpen={canvasOpen}
         onToggleCanvas={() => setCanvasOpen((o) => !o)}

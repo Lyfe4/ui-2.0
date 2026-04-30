@@ -2,6 +2,7 @@ import { useState } from "react"
 import {
   GraduationCap,
   HelpCircle,
+  LayoutList,
   PanelLeftClose,
   PanelLeftOpen,
   Send,
@@ -30,9 +31,11 @@ const navItems = [
 interface ChatPaneProps {
   collapsed: boolean
   onCollapsedChange: (collapsed: boolean) => void
+  mapOpen: boolean
+  onToggleMap: () => void
 }
 
-export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
+export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }: ChatPaneProps) {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
 
@@ -71,6 +74,20 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             <Icon />
           </Button>
         ))}
+
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Navigate"
+          title="Navigate"
+          aria-pressed={mapOpen}
+          onClick={onToggleMap}
+          className={cn(
+            mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+          )}
+        >
+          <LayoutList />
+        </Button>
 
         <Button
           variant="ghost"

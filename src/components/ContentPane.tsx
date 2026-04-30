@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, ClipboardList, LayoutList, PanelRight } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, ClipboardList, PanelRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -102,20 +102,6 @@ export function ContentPane({
               {!canvasOpen && "Canvas"}
             </Button>
           )}
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleMap}
-            aria-pressed={mapOpen}
-            className={cn(
-              "gap-1.5",
-              mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-            )}
-          >
-            <LayoutList className="size-4" />
-            {!mapOpen && "Course Map"}
-          </Button>
 
           {!mapOpen && (
             <div className="rounded bg-card-foreground px-2 py-0.5">
