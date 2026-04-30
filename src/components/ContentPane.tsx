@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, LayoutList, PanelRight } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, ClipboardList, LayoutList, PanelRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -12,6 +12,7 @@ interface ContentPaneProps {
   mapOpen: boolean
   onToggleMap: () => void
   chatCollapsed: boolean
+  onOpenSubmission?: () => void
 }
 
 // Lessons completed in this mock — only the intro lesson is done
@@ -61,6 +62,7 @@ export function ContentPane({
   mapOpen,
   onToggleMap,
   chatCollapsed,
+  onOpenSubmission,
 }: ContentPaneProps) {
   const [currentLesson, setCurrentLesson] = useState(1)
 
@@ -152,6 +154,16 @@ export function ContentPane({
               </div>
             </div>
           </div>
+
+          <Button
+            variant="ghost"
+            size="xs"
+            className="ml-auto gap-1 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+            onClick={onOpenSubmission}
+          >
+            <ClipboardList className="size-3" />
+            Submit Assessment
+          </Button>
 
         </div>
       </div>
