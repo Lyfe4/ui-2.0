@@ -181,7 +181,7 @@ function UnitRow({
       <Button
         variant="ghost"
         onClick={onToggle}
-        className="h-auto w-full justify-start gap-4 rounded-none px-4 py-4 hover:bg-muted/50"
+        className="h-auto w-full justify-start gap-2 sm:gap-4 rounded-none px-4 py-4 hover:bg-muted/50"
       >
         <ProgressCircle percent={unit.progressPercent} />
         <div className="min-w-0 flex-1 text-left">
@@ -247,8 +247,8 @@ export function CourseNavigator({ onTopicSelect }: CourseNavigatorProps) {
         <StatCard label="Complete" value="0%" />
       </div>
 
-      <ScrollArea className="flex-1 pb-6">
-        <div className="space-y-2 px-4 sm:px-8">
+      <ScrollArea className="flex-1">
+        <div className="space-y-2 px-4 sm:px-8 pb-6">
           {UNITS.map((unit) => (
             <UnitRow
               key={unit.id}
