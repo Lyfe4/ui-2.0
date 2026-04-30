@@ -71,7 +71,7 @@ export function ContentPane({
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
       {/* Header — always visible */}
-      <div className={cn("flex items-center justify-between px-8 py-4", chatCollapsed && "pl-12")}>
+      <div className={cn("flex items-center justify-between px-4 py-4 sm:px-8", chatCollapsed && "pl-12")}>
         {mapOpen ? (
           <Button
             variant="ghost"
@@ -130,8 +130,8 @@ export function ContentPane({
       <Separator />
 
       {/* Breadcrumb bar — sticky, faint muted background, blurs content beneath */}
-      <div className={cn("bg-muted/40 backdrop-blur-sm px-8 py-2.5 rounded-b-xl", mapOpen && "hidden")}>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-2.5 rounded-b-xl", mapOpen && "hidden")}>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-muted-foreground">
           <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
 
           <ChevronRight className="size-3 shrink-0" />
@@ -176,7 +176,7 @@ export function ContentPane({
 
       {/* Lesson content */}
       <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
-        <div className="px-8 py-8">
+        <div className="px-4 py-8 sm:px-8">
           <h2 className="mb-3 text-2xl font-semibold text-foreground">
             {lesson.heading}
           </h2>
@@ -189,7 +189,7 @@ export function ContentPane({
 
       {/* Lesson navigation bar */}
       {!mapOpen && (
-        <div className="flex items-center justify-between border-t border-border/60 bg-background px-8 py-3">
+        <div className="flex items-center justify-between border-t border-border/60 bg-background px-4 py-3 sm:px-8">
           <button
             onClick={() => setCurrentLesson((n) => Math.max(1, n - 1))}
             disabled={currentLesson === 1}
@@ -252,7 +252,7 @@ export function ContentPane({
 
       {/* Course navigator */}
       <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden pt-6", !mapOpen && "hidden")}>
-        <h2 className="mb-4 px-8 text-lg font-semibold text-foreground">
+        <h2 className="mb-4 px-4 sm:px-8 text-lg font-semibold text-foreground">
           Course Map
         </h2>
         <CourseNavigator onTopicSelect={onToggleMap} />

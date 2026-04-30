@@ -241,14 +241,14 @@ export function CourseNavigator({ onTopicSelect }: CourseNavigatorProps) {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex gap-3 px-8 pb-5">
+      <div className="flex gap-3 px-4 sm:px-8 pb-5">
         <StatCard label="Units" value={UNITS.length} />
         <StatCard label="Topics" value={totalTopics} />
         <StatCard label="Complete" value="0%" />
       </div>
 
       <ScrollArea className="flex-1 pb-6">
-        <div className="space-y-2 px-8">
+        <div className="space-y-2 px-4 sm:px-8">
           {UNITS.map((unit) => (
             <UnitRow
               key={unit.id}
