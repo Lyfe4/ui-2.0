@@ -71,7 +71,7 @@ export function ContentPane({
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
       {/* Header — always visible */}
-      <div className={cn("flex items-center justify-between px-4 py-4 sm:px-8", chatCollapsed && "pl-12")}>
+      <div className={cn("flex items-center justify-between px-4 py-4 sm:px-8", chatCollapsed && "pl-16")}>
         {mapOpen ? (
           <Button
             variant="ghost"
