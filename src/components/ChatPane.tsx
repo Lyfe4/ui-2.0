@@ -41,7 +41,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
   if (collapsed) {
     return (
-      <div className="flex w-12 flex-shrink-0 flex-col items-center gap-1 rounded-r-2xl bg-background shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 px-1 pt-4 pb-3">
+      <div className="flex w-12 flex-shrink-0 flex-col items-center gap-1 rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 px-1 pt-4 pb-3">
         <Button
           variant="ghost"
           size="icon-sm"
@@ -90,7 +90,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
   }
 
   return (
-    <div className="flex w-72 sm:w-96 flex-shrink-0 flex-col rounded-r-2xl bg-background shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2">
+    <div className="flex w-72 sm:w-96 flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2">
       <div className="flex items-center gap-1 px-3 pb-2 pt-4">
         {navItems.map(({ id, label, icon: Icon }) => (
           <Button
