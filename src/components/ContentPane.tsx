@@ -67,7 +67,7 @@ export function ContentPane({
   const lesson = LESSONS[currentLesson - 1]
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Header — always visible */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-8">
         {mapOpen ? (
