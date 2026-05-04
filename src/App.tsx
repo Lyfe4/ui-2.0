@@ -9,7 +9,7 @@ export default function App() {
   const [chatCollapsed, setChatCollapsed] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-muted/50">
       <ChatPane
         collapsed={chatCollapsed}
         onCollapsedChange={setChatCollapsed}
