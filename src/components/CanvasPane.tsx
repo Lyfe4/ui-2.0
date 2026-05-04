@@ -95,6 +95,9 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
       </div>
 
+      <div className="flex justify-center py-1">
+        <div className="h-px w-1/2 bg-black/[0.07]" />
+      </div>
       <div className="flex-1 overflow-y-auto p-4">
         <textarea
           defaultValue="random user notes"
