@@ -67,7 +67,7 @@ export function ContentPane({
   const lesson = LESSONS[currentLesson - 1]
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Header — always visible */}
       <div className="flex items-center justify-between px-4 py-4 sm:px-8">
         {mapOpen ? (
@@ -171,68 +171,6 @@ export function ContentPane({
         </div>
       </ScrollArea>
 
-      {/* Lesson navigation bar */}
-      {!mapOpen && (
-        <div className="flex items-center justify-between border-t border-border/60 bg-background px-4 py-3 sm:px-8">
-          <button
-            onClick={() => setCurrentLesson((n) => Math.max(1, n - 1))}
-            disabled={currentLesson === 1}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-30 focus-visible:outline-none"
-          >
-            <ChevronLeft className="size-3.5" />
-            Prev
-          </button>
-
-          <div className="flex items-center gap-1.5">
-            {LESSONS.map((l, i) => {
-              const isCompleted = COMPLETED_LESSONS.has(l.id)
-              const isCurrent = l.id === currentLesson
-              const prevCompleted = i > 0 && COMPLETED_LESSONS.has(LESSONS[i - 1].id)
-
-              return (
-                <div key={l.id} className="flex items-center">
-                  {i > 0 && (
-                    <div
-                      className={cn(
-                        "h-px w-4 mr-0.5",
-                        prevCompleted ? "bg-primary" : "bg-border",
-                      )}
-                    />
-                  )}
-                  <button
-                    onClick={() => setCurrentLesson(l.id)}
-                    title={`Lesson ${l.id}: ${l.title}`}
-                    className={cn(
-                      "h-2.5 w-2.5 rounded-full border-2 transition-all hover:scale-110 focus-visible:outline-none",
-                      isCompleted
-                        ? "border-primary bg-primary cursor-pointer"
-                        : isCurrent
-                          ? "border-foreground bg-background cursor-default"
-                          : "border-border bg-background cursor-pointer hover:border-muted-foreground",
-                      isCurrent && isCompleted && "ring-2 ring-foreground ring-offset-1 ring-offset-background",
-                    )}
-                    aria-current={isCurrent ? "step" : undefined}
-                  />
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Button variant="link" size="sm" className="h-auto p-0 text-xs">
-              Rate lesson
-            </Button>
-            <button
-              onClick={() => setCurrentLesson((n) => Math.min(LESSONS.length, n + 1))}
-              disabled={currentLesson === LESSONS.length}
-              className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-30 focus-visible:outline-none"
-            >
-              Next
-              <ChevronRight className="size-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Course navigator */}
       <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden pt-6", !mapOpen && "hidden")}>
