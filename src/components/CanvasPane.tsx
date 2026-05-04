@@ -47,66 +47,64 @@ function Divider() {
  
 export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="flex w-full sm:w-[420px] flex-shrink-0 flex-col rounded-2xl border border-border bg-muted shadow-sm my-2 mr-2">
+    <div className="flex w-full sm:w-[420px] flex-shrink-0 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2">
       <div className={cn("flex items-center justify-between px-5 py-4", chatCollapsed && "pl-16")}>
         <span className="text-sm font-medium text-foreground">Canvas</span>
         <button onClick={onClose} className="text-muted-foreground transition-colors hover:text-foreground">
           <X className="h-4 w-4" />
         </button>
       </div>
- 
-      <div className="mx-3 mb-3 flex flex-1 flex-col overflow-hidden rounded-lg border border-border bg-background">
-        <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-2 py-1.5">
-          <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><Bold className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Italic className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Underline className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Strikethrough className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><Highlighter className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <button className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-            Paragraph <ChevronDown className="h-3 w-3" />
-          </button>
-          <Divider />
-          <ToolbarBtn><List className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><ListOrdered className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><AlignLeft className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><AlignCenter className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><AlignRight className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><AlignJustify className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><Code2 className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Minus className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
-        </div>
- 
-        <div className="flex items-center gap-0.5 border-b border-border px-2 py-1.5">
-          <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><Link className="h-3 w-3" /></ToolbarBtn>
-          <Divider />
-          <ToolbarBtn><Smile className="h-3 w-3" /></ToolbarBtn>
-          <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
-        </div>
- 
-        <div className="flex-1 overflow-y-auto p-4">
-          <textarea
-            defaultValue="random user notes"
-            className="h-full min-h-48 w-full resize-none bg-transparent text-sm leading-relaxed text-foreground outline-none placeholder:text-muted-foreground"
-            placeholder="Start writing your notes..."
-          />
-        </div>
+
+      <div className="flex flex-wrap items-center gap-0.5 border-t border-black/[0.07] px-3 py-1.5">
+        <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><Bold className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Italic className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Underline className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Strikethrough className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><Highlighter className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <button className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          Paragraph <ChevronDown className="h-3 w-3" />
+        </button>
+        <Divider />
+        <ToolbarBtn><List className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><ListOrdered className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><AlignLeft className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><AlignCenter className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><AlignRight className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><AlignJustify className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><Code2 className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Minus className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
       </div>
- 
-      <div className="px-3 pb-3">
-        <button className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted">
+
+      <div className="flex items-center gap-0.5 border-t border-black/[0.07] px-3 py-1.5">
+        <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><Link className="h-3 w-3" /></ToolbarBtn>
+        <Divider />
+        <ToolbarBtn><Smile className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
+      </div>
+
+      <div className="flex-1 overflow-y-auto border-t border-black/[0.07] p-4">
+        <textarea
+          defaultValue="random user notes"
+          className="h-full min-h-48 w-full resize-none bg-transparent text-sm leading-relaxed text-foreground outline-none placeholder:text-muted-foreground"
+          placeholder="Start writing your notes..."
+        />
+      </div>
+
+      <div className="border-t border-black/[0.07] px-4 py-3">
+        <button className="flex items-center gap-2 rounded-lg border border-black/[0.07] px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted">
           <Download className="h-3.5 w-3.5" />
           Export
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
