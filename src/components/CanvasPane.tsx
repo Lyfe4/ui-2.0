@@ -55,7 +55,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-0.5 px-3 pt-1.5">
+      <div className="flex flex-wrap items-center gap-0.5 border-t border-black/[0.07] px-3 pt-1.5">
         <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
         <Divider />
