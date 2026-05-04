@@ -1,11 +1,10 @@
 import { useState } from "react"
 import {
-  GraduationCap,
   HelpCircle,
-  LayoutList,
   PanelLeftClose,
   PanelLeftOpen,
   Send,
+  Sparkles,
   Users,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -23,7 +22,7 @@ const messages = [
 ]
 
 const navItems = [
-  { id: "learn", label: "Learn", icon: GraduationCap },
+  { id: "learn", label: "Learn", icon: Sparkles },
   { id: "social", label: "Social", icon: Users },
   { id: "support", label: "Support", icon: HelpCircle },
 ]
@@ -70,20 +69,6 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
               <Icon />
             </Button>
           ))}
-
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Navigate"
-            title="Navigate"
-            aria-pressed={mapOpen}
-            onClick={onToggleMap}
-            className={cn(
-              mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-            )}
-          >
-            <LayoutList />
-          </Button>
         </div>
       </div>
     )
@@ -91,38 +76,25 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
   return (
     <div className="flex w-72 sm:w-96 flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2">
-      <div className="flex items-center gap-1 px-3 pb-2 pt-4">
-        {navItems.map(({ id, label, icon: Icon }) => (
-          <Button
-            key={id}
-            variant="ghost"
-            size="icon-sm"
-            aria-label={label}
-            title={label}
-            aria-pressed={activeNav === id}
-            onClick={() => setActiveNav(id)}
-            className={cn(
-              activeNav === id &&
-                "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-            )}
-          >
-            <Icon />
-          </Button>
-        ))}
-
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Navigate"
-          title="Navigate"
-          aria-pressed={mapOpen}
-          onClick={onToggleMap}
-          className={cn(
-            mapOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-          )}
-        >
-          <LayoutList />
-        </Button>
+      <div className="flex items-center gap-2 px-3 pb-2 pt-4">
+        <div className="flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
+          {navItems.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              aria-pressed={activeNav === id}
+              onClick={() => setActiveNav(id)}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all",
+                activeNav === id
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Icon className="h-3.5 w-3.5 shrink-0" />
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
 
         <Button
           variant="ghost"
@@ -130,7 +102,6 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
           aria-label="Collapse chat"
           title="Collapse chat"
           onClick={() => onCollapsedChange(true)}
-          className="ml-auto"
         >
           <PanelLeftClose />
         </Button>
