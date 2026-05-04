@@ -138,7 +138,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
               )}
             >
               <Icon className="h-3.5 w-3.5 shrink-0" />
-              <span>{label}</span>
+              {width >= 300 && <span>{label}</span>}
             </button>
           ))}
         </div>
