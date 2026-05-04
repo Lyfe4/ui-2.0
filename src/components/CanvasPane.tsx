@@ -55,7 +55,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-0.5 border-t border-black/[0.07] px-3 py-1.5">
+      <div className="flex flex-wrap items-center gap-0.5 border-t border-black/[0.07] px-3 pt-1.5">
         <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
         <Divider />
@@ -85,7 +85,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
       </div>
 
-      <div className="flex items-center gap-0.5 border-t border-black/[0.07] px-3 py-1.5">
+      <div className="flex items-center gap-0.5 px-3 pb-1.5">
         <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
         <Divider />
@@ -103,7 +103,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         />
       </div>
 
-      <div className="border-t border-black/[0.07] px-4 py-3">
+      <div className="px-4 py-3">
         <button className="flex items-center gap-2 rounded-lg border border-black/[0.07] px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted">
           <Download className="h-3.5 w-3.5" />
           Export
