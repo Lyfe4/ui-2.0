@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   HelpCircle,
   PanelLeftClose,
@@ -27,6 +27,10 @@ const navItems = [
   { id: "support", label: "Support", icon: HelpCircle },
 ]
 
+const MIN_WIDTH = 260
+const MAX_WIDTH = 560
+const DEFAULT_WIDTH = 384
+
 interface ChatPaneProps {
   collapsed: boolean
   onCollapsedChange: (collapsed: boolean) => void
@@ -37,6 +41,46 @@ interface ChatPaneProps {
 export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }: ChatPaneProps) {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
+  const [width, setWidth] = useState(DEFAULT_WIDTH)
+  const [isResizing, setIsResizing] = useState(false)
+  const startX = useRef(0)
+  const startWidth = useRef(0)
+
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    startX.current = e.clientX
+    startWidth.current = width
+    setIsResizing(true)
+  }, [width])
+
+  useEffect(() => {
+    if (!isResizing) return
+
+    const prevCursor = document.body.style.cursor
+    const prevSelect = document.body.style.userSelect
+    document.body.style.cursor = "ew-resize"
+    document.body.style.userSelect = "none"
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const delta = e.clientX - startX.current
+      setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidth.current + delta)))
+    }
+
+    const handleMouseUp = () => {
+      setIsResizing(false)
+      document.body.style.cursor = prevCursor
+      document.body.style.userSelect = prevSelect
+    }
+
+    document.addEventListener("mousemove", handleMouseMove)
+    document.addEventListener("mouseup", handleMouseUp)
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+      document.body.style.cursor = prevCursor
+      document.body.style.userSelect = prevSelect
+    }
+  }, [isResizing])
 
   if (collapsed) {
     return (
@@ -75,7 +119,10 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
   }
 
   return (
-    <div className="flex w-72 sm:w-96 flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2">
+    <div
+      className="relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2"
+      style={{ width }}
+    >
       <div className="flex items-center gap-2 px-3 pb-2 pt-4">
         <div className="flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
           {navItems.map(({ id, label, icon: Icon }) => (
@@ -139,6 +186,25 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
             <Send />
           </Button>
         </div>
+      </div>
+
+      {/* Resize handle */}
+      <div
+        onMouseDown={handleResizeStart}
+        aria-hidden
+        className={cn(
+          "group absolute right-0 top-0 h-full w-3 cursor-ew-resize rounded-r-2xl",
+          "flex items-center justify-end pr-px",
+        )}
+      >
+        <div
+          className={cn(
+            "h-10 w-[3px] rounded-full transition-all duration-150",
+            isResizing
+              ? "bg-primary/50 opacity-100"
+              : "bg-foreground/15 opacity-0 group-hover:opacity-100",
+          )}
+        />
       </div>
     </div>
   )
