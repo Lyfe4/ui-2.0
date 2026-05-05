@@ -62,7 +62,10 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
   const startX = useRef(0)
   const startWidth = useRef(0)
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const navRef = useRef<HTMLDivElement>(null)
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const activeNavRef = useRef(activeNav)
+  activeNavRef.current = activeNav
   // Lags behind `collapsed` on close so expanded content clips during animation;
   // updates immediately on open so content is revealed as width grows.
   const [visuallyCollapsed, setVisuallyCollapsed] = useState(collapsed)
@@ -116,13 +119,26 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
     }
   }, [isResizing])
 
-  useLayoutEffect(() => {
-    const activeIndex = navItems.findIndex(item => item.id === activeNav)
+  const measureIndicator = useCallback(() => {
+    const activeIndex = navItems.findIndex(item => item.id === activeNavRef.current)
     const btn = buttonRefs.current[activeIndex]
     if (btn) {
       setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
     }
-  }, [activeNav, width, visuallyCollapsed])
+  }, [])
+
+  // Immediate remeasure when active tab or view changes
+  useLayoutEffect(() => {
+    measureIndicator()
+  }, [activeNav, visuallyCollapsed, measureIndicator])
+
+  // Continuous remeasure while the container animates (covers expand/collapse + manual resize)
+  useEffect(() => {
+    if (visuallyCollapsed || !navRef.current) return
+    const observer = new ResizeObserver(measureIndicator)
+    observer.observe(navRef.current)
+    return () => observer.disconnect()
+  }, [visuallyCollapsed, measureIndicator])
 
   return (
     <div
@@ -167,7 +183,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
       ) : (
         <>
           <div className="flex h-14 items-center gap-2 px-2.5">
-            <div className="relative flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
+            <div ref={navRef} className="relative flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
               <div
                 className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
                 style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
