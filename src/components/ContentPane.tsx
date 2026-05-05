@@ -258,7 +258,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Unit */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-accent outline-none">
               <Folder className="size-3.5 shrink-0 mr-0.5 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
@@ -283,7 +283,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Topic */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-accent outline-none">
               {topic.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -306,7 +306,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Lesson */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-accent outline-none">
               {lesson.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -329,7 +329,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Learning Objective — hover effect only, no chevron, no dropdown */}
           <div className="group/objective relative flex shrink-0 items-center">
-            <div className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-black/10">
+            <div className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-accent">
               <span className="text-foreground">LO:</span>
               <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
             </div>

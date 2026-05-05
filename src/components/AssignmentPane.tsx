@@ -83,7 +83,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
   }
 
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
+    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
       {/* Header */}
       <div className="flex h-14 flex-shrink-0 items-center gap-2 px-5">
         <span className="flex-1 truncate text-sm font-medium text-foreground">
@@ -95,7 +95,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
             size="icon-sm"
             aria-label="Close assignment"
             onClick={onClose}
-            className="shrink-0 hover:bg-black/10"
+            className="shrink-0 hover:bg-accent"
           >
             <X className="size-3.5" />
           </Button>
@@ -123,7 +123,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
         </div>
       </div>
 
-      <div className="h-px w-full flex-shrink-0 bg-black/[0.07]" />
+      <div className="h-px w-full flex-shrink-0 bg-border" />
 
       {/* Tab content */}
       <ScrollArea className="flex-1 min-h-0">
@@ -214,7 +214,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
                   {files.map(file => (
                     <div
                       key={file.id}
-                      className="flex items-center gap-2.5 rounded-xl border border-black/[0.07] bg-muted/40 px-3 py-2.5"
+                      className="flex items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 py-2.5"
                     >
                       <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                       <div className="flex min-w-0 flex-1 flex-col">
@@ -226,7 +226,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
                         size="icon-xs"
                         onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
                         aria-label={`Remove ${file.name}`}
-                        className="shrink-0 hover:bg-black/10"
+                        className="shrink-0 hover:bg-accent"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -252,7 +252,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
             {mockFeedback.released ? (
               <>
                 {/* Score card */}
-                <div className="flex items-center gap-3 rounded-xl border border-black/[0.07] bg-muted/40 px-4 py-3.5">
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3.5">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
                     <Star className="h-4 w-4 text-primary" />
                   </div>

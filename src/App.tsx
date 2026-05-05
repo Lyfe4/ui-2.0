@@ -135,7 +135,7 @@ export default function App() {
             aria-label="Close canvas"
             title="Close canvas"
             onClick={() => setCanvasOpen(false)}
-            className="hover:bg-black/10"
+            className="hover:bg-accent"
           >
             <X className="size-3.5" />
           </Button>
@@ -147,14 +147,14 @@ export default function App() {
             aria-label="Close assignment"
             title="Close assignment"
             onClick={() => setAssignmentOpen(false)}
-            className="hover:bg-black/10"
+            className="hover:bg-accent"
           >
             <X className="size-3.5" />
           </Button>
         )}
         {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10 outline-none">
+          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-accent outline-none">
             <PanelRight className="size-4" />
             <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
           </DropdownMenuTrigger>
