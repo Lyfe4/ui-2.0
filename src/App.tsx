@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { Check, ChevronDown, ChevronUp, PanelRight, X } from "lucide-react"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
 import { ContentPane } from "@/components/ContentPane"
@@ -7,9 +8,21 @@ export default function App() {
   const [canvasOpen, setCanvasOpen] = useState(false)
   const [mapOpen, setMapOpen] = useState(false)
   const [chatCollapsed, setChatCollapsed] = useState(false)
+  const [panelMenuOpen, setPanelMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setPanelMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-muted/50">
+    <div className="relative flex h-screen overflow-hidden bg-muted/50">
       <ChatPane
         collapsed={chatCollapsed}
         onCollapsedChange={setChatCollapsed}
@@ -17,8 +30,6 @@ export default function App() {
         onToggleMap={() => setMapOpen((o) => !o)}
       />
       <ContentPane
-        canvasOpen={canvasOpen}
-        onToggleCanvas={() => setCanvasOpen((o) => !o)}
         mapOpen={mapOpen}
         onToggleMap={() => setMapOpen((o) => !o)}
       />
@@ -28,6 +39,44 @@ export default function App() {
           chatCollapsed={chatCollapsed}
         />
       )}
+
+      {/* Panel dropdown — always visible, floats over top-right corner */}
+      <div ref={menuRef} className="absolute right-3 top-3 z-50 flex items-center">
+        {canvasOpen && (
+          <>
+            <button
+              onClick={() => setCanvasOpen(false)}
+              className="flex items-center justify-center rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10"
+            >
+              <X className="size-4" />
+            </button>
+            <div className="mx-0.5 h-4 w-px bg-border" />
+          </>
+        )}
+        <button
+          onClick={() => setPanelMenuOpen((o) => !o)}
+          className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10"
+        >
+          <PanelRight className="size-4" />
+          {panelMenuOpen ? <ChevronDown className="size-3" /> : <ChevronUp className="size-3" />}
+        </button>
+
+        {panelMenuOpen && (
+          <div className="absolute right-0 top-full mt-1 min-w-[130px] rounded-md border border-border bg-background py-1 shadow-lg">
+            <button
+              onClick={() => {
+                setCanvasOpen((o) => !o)
+                setPanelMenuOpen(false)
+              }}
+              className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-foreground hover:bg-muted"
+            >
+              <PanelRight className="size-3.5 text-foreground" />
+              Canvas
+              {canvasOpen && <Check className="ml-auto size-3.5 text-foreground" />}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

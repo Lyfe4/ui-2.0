@@ -1,17 +1,13 @@
 import { useState } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, ClipboardList, PanelRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { CourseNavigator } from "@/components/CourseNavigator"
 
 interface ContentPaneProps {
-  canvasOpen: boolean
-  onToggleCanvas: () => void
   mapOpen: boolean
   onToggleMap: () => void
-  onOpenSubmission?: () => void
 }
 
 // Lessons completed in this mock — only the intro lesson is done
@@ -55,65 +51,14 @@ const LESSONS = [
   },
 ]
 
-export function ContentPane({
-  canvasOpen,
-  onToggleCanvas,
-  mapOpen,
-  onToggleMap,
-  onOpenSubmission,
-}: ContentPaneProps) {
+export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
   const [currentLesson, setCurrentLesson] = useState(1)
 
   const lesson = LESSONS[currentLesson - 1]
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
-      {/* Header — always visible */}
-      <div className="flex items-center justify-between px-4 py-4 sm:px-8">
-        {mapOpen ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleMap}
-            className="gap-2 text-muted-foreground"
-          >
-            <ArrowLeft className="size-4" />
-            Back to lesson
-          </Button>
-        ) : (
-          <h1 className="text-xl font-semibold text-primary">Budgeting</h1>
-        )}
-
-        <div className="flex items-center gap-4">
-          {!mapOpen && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onToggleCanvas}
-              aria-pressed={canvasOpen}
-              className={cn(
-                "gap-1.5",
-                canvasOpen && "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-              )}
-            >
-              <PanelRight className="size-4" />
-              {!canvasOpen && "Canvas"}
-            </Button>
-          )}
-
-          {!mapOpen && (
-            <div className="rounded bg-card-foreground px-2 py-0.5">
-              <span className="text-xs font-bold tracking-tight text-card">
-                une
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Breadcrumb bar — sticky, faint muted background, blurs content beneath */}
+      {/* Breadcrumb bar — always visible at top */}
       <div className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-2.5 rounded-b-xl", mapOpen && "hidden")}>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-muted-foreground">
           <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
@@ -139,6 +84,7 @@ export function ContentPane({
             </div>
           </div>
 
+          {/* Submit Assessment — kept for later use
           <div className="relative ml-auto">
             <span className="absolute -right-0.5 -top-0.5 flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -154,6 +100,7 @@ export function ContentPane({
               Submit Assessment
             </Button>
           </div>
+          */}
 
         </div>
       </div>

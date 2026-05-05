@@ -106,6 +106,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
           aria-label="Expand chat"
           title="Expand chat"
           onClick={() => onCollapsedChange(false)}
+          className="hover:bg-black/10"
         >
           <PanelLeftOpen />
         </Button>
@@ -149,7 +150,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
                 "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all",
                 activeNav === id
                   ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+                  : "text-muted-foreground hover:bg-black/10 hover:text-foreground",
               )}
             >
               <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -164,6 +165,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
           aria-label="Collapse chat"
           title="Collapse chat"
           onClick={() => onCollapsedChange(true)}
+          className="hover:bg-black/10"
         >
           <PanelLeftClose />
         </Button>
