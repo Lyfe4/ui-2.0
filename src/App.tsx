@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { ChevronDown, PanelRight } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, PanelRight } from "lucide-react"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
 import { ContentPane } from "@/components/ContentPane"
@@ -47,7 +47,7 @@ export default function App() {
           className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-muted"
         >
           <PanelRight className="size-4" />
-          <ChevronDown className="size-3" />
+          {panelMenuOpen ? <ChevronDown className="size-3" /> : <ChevronUp className="size-3" />}
         </button>
 
         {panelMenuOpen && (
@@ -61,6 +61,7 @@ export default function App() {
             >
               <PanelRight className="size-3.5 text-foreground" />
               Canvas
+              {canvasOpen && <Check className="ml-auto size-3.5 text-foreground" />}
             </button>
           </div>
         )}
