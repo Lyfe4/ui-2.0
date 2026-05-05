@@ -44,7 +44,7 @@ export default function App() {
       <div ref={menuRef} className="absolute right-3 top-3 z-50">
         <button
           onClick={() => setPanelMenuOpen((o) => !o)}
-          className="flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1.5 text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-1 rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <PanelRight className="size-4" />
           <ChevronDown className="size-3" />
@@ -57,13 +57,10 @@ export default function App() {
                 setCanvasOpen((o) => !o)
                 setPanelMenuOpen(false)
               }}
-              className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-foreground hover:bg-muted"
+              className="flex w-full items-center gap-2 px-3 py-1.5 text-sm hover:bg-muted"
             >
-              <PanelRight className="size-3.5 text-muted-foreground" />
-              Canvas
-              {canvasOpen && (
-                <span className="ml-auto text-xs text-primary">✓</span>
-              )}
+              <PanelRight className={canvasOpen ? "size-3.5 text-muted-foreground" : "size-3.5 text-muted-foreground/40"} />
+              <span className={canvasOpen ? "text-muted-foreground" : "text-muted-foreground/40"}>Canvas</span>
             </button>
           </div>
         )}
