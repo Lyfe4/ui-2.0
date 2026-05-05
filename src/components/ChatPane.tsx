@@ -106,6 +106,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
           aria-label="Expand chat"
           title="Expand chat"
           onClick={() => onCollapsedChange(false)}
+          className="hover:bg-black/10"
         >
           <PanelLeftOpen />
         </Button>
@@ -164,6 +165,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
           aria-label="Collapse chat"
           title="Collapse chat"
           onClick={() => onCollapsedChange(true)}
+          className="hover:bg-black/10"
         >
           <PanelLeftClose />
         </Button>
