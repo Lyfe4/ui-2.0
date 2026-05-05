@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { ChevronDown, ClipboardList, PanelRight } from "lucide-react"
+import { ChevronDown, ClipboardList, PanelRight, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { AssignmentPane } from "@/components/AssignmentPane"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
@@ -119,6 +120,31 @@ export default function App() {
 
       {/* Panel dropdown — floats over top-right corner */}
       <div className="absolute right-3 top-2 z-50 flex h-14 items-center">
+        {canvasOpen && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Close canvas"
+            title="Close canvas"
+            onClick={() => setCanvasOpen(false)}
+            className="hover:bg-black/10"
+          >
+            <X className="size-3.5" />
+          </Button>
+        )}
+        {assignmentOpen && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Close assignment"
+            title="Close assignment"
+            onClick={() => setAssignmentOpen(false)}
+            className="hover:bg-black/10"
+          >
+            <X className="size-3.5" />
+          </Button>
+        )}
+        {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
         <DropdownMenu>
           <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10 outline-none">
             <PanelRight className="size-4" />

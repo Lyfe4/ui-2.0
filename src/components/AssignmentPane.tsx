@@ -84,19 +84,10 @@ export function AssignmentPane({ onClose }: AssignmentPaneProps) {
   return (
     <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
       {/* Header */}
-      <div className="flex h-14 flex-shrink-0 items-center gap-2 px-4">
-        <span className="flex-1 truncate text-sm font-medium text-foreground">
+      <div className="flex h-14 flex-shrink-0 items-center px-5">
+        <span className="truncate text-sm font-medium text-foreground">
           {mockAssignment.title}
         </span>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Close assignment"
-          onClick={onClose}
-          className="shrink-0 hover:bg-black/10"
-        >
-          <X className="size-3.5" />
-        </Button>
       </div>
 
       {/* Pill tabs */}
@@ -107,7 +98,7 @@ export function AssignmentPane({ onClose }: AssignmentPaneProps) {
               key={id}
               onClick={() => setActiveTab(id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-all duration-150 active:translate-y-px",
                 activeTab === id
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -218,13 +209,15 @@ export function AssignmentPane({ onClose }: AssignmentPaneProps) {
                         <span className="truncate text-xs font-medium text-foreground">{file.name}</span>
                         <span className="text-[11px] text-muted-foreground">{formatBytes(file.size)}</span>
                       </div>
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
-                        className="shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:bg-black/10 hover:text-foreground"
                         aria-label={`Remove ${file.name}`}
+                        className="shrink-0 hover:bg-black/10"
                       >
                         <X className="h-3 w-3" />
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>

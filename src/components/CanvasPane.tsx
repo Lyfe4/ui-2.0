@@ -24,9 +24,7 @@ import {
   Type,
   Underline,
   Video,
-  X,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -50,17 +48,8 @@ function Divider() {
 export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
     <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
-      <div className={cn("flex h-14 flex-shrink-0 items-center gap-2 px-4", chatCollapsed && "pl-16")}>
-        <span className="flex-1 text-sm font-medium text-foreground">Canvas</span>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Close canvas"
-          onClick={onClose}
-          className="shrink-0 hover:bg-black/10"
-        >
-          <X className="size-3.5" />
-        </Button>
+      <div className={cn("flex h-14 flex-shrink-0 items-center px-5", chatCollapsed && "pl-16")}>
+        <span className="text-sm font-medium text-foreground">Canvas</span>
       </div>
 
       <div className="flex flex-shrink-0 flex-wrap items-center gap-0.5 px-3 pt-1.5">
