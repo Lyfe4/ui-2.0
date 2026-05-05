@@ -36,7 +36,7 @@ interface CanvasPaneProps {
 
 function ToolbarBtn({ children }: { children: React.ReactNode }) {
   return (
-    <Button variant="ghost" size="icon-xs" className="text-muted-foreground hover:text-foreground">
+    <Button variant="ghost" size="icon-xs" className="text-muted-foreground">
       {children}
     </Button>
   )
@@ -66,7 +66,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <Button variant="ghost" size="xs" className="text-muted-foreground hover:text-foreground">
+        <Button variant="ghost" size="xs" className="text-muted-foreground">
           Paragraph <ChevronDown className="h-3 w-3" />
         </Button>
         <Divider />

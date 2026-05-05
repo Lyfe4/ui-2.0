@@ -95,7 +95,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
             size="icon-sm"
             aria-label="Close assignment"
             onClick={onClose}
-            className="shrink-0 hover:bg-accent"
+            className="shrink-0"
           >
             <X className="size-3.5" />
           </Button>
@@ -226,7 +226,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
                         size="icon-xs"
                         onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
                         aria-label={`Remove ${file.name}`}
-                        className="shrink-0 hover:bg-accent"
+                        className="shrink-0"
                       >
                         <X className="h-3 w-3" />
                       </Button>
