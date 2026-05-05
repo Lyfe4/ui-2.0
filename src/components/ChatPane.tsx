@@ -36,6 +36,39 @@ const messagesByNav: Record<string, { id: number; role: "user" | "assistant" | "
       content:
         "Two main failure modes.\n\nAutoimmunity is when the adaptive system targets your own tissue — it mistakes self for non-self. Type 1 diabetes, lupus, and multiple sclerosis all work this way.\n\nAllergies are the innate system overreacting to harmless substances. Pollen, peanuts, dust mites — not threats, but in some people the immune system treats them like pathogens and fires off a disproportionate response.",
     },
+    {
+      id: 5,
+      role: "user",
+      content: "how does vaccination fit into all this?",
+    },
+    {
+      id: 6,
+      role: "assistant",
+      content:
+        "Vaccines exploit the adaptive system's memory.\n\nThey introduce an antigen — or instructions to make one — without a live infection. Your body mounts a response, generates memory B and T cells, and then clears it. If you encounter the real pathogen later, those memory cells let you respond fast enough to stop an illness from taking hold.\n\nDifferent vaccine types get the antigen in differently: live-attenuated vaccines use a weakened pathogen, subunit vaccines use just a protein fragment, and mRNA vaccines (like the COVID-19 ones) give your cells temporary instructions to produce the antigen themselves.",
+    },
+    {
+      id: 7,
+      role: "user",
+      content: "why do some vaccines need boosters but others don't?",
+    },
+    {
+      id: 8,
+      role: "assistant",
+      content:
+        "It comes down to how long the memory response lasts, and how fast the pathogen mutates.\n\nSome vaccines — like the MMR for measles — produce a strong, durable immune memory that lasts decades, often a lifetime. Others, like flu shots, need annual updates because the influenza virus mutates so rapidly that last year's memory cells no longer recognise this year's strains.\n\nBoosters can also be needed when the initial response fades faster than expected — antibody levels drop over time, and a booster restimulates the memory cells to top them back up.",
+    },
+    {
+      id: 9,
+      role: "user",
+      content: "that makes sense. what's herd immunity then?",
+    },
+    {
+      id: 10,
+      role: "assistant",
+      content:
+        "Herd immunity is when enough people in a population are immune that transmission chains break on their own — the pathogen can't find enough susceptible hosts to keep spreading.\n\nThe threshold varies by how contagious the disease is. Measles is extremely transmissible, so you need roughly 95% immunity to stop outbreaks. Polio needs around 80–85%.\n\nIt matters because not everyone can be vaccinated — newborns, people with certain immune conditions, or those undergoing chemotherapy rely on the people around them being immune to stay protected.",
+    },
   ],
   social: [
     {
