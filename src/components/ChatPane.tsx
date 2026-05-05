@@ -142,7 +142,10 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
   return (
     <div
-      className="relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden transition-[width] duration-300 ease-in-out"
+      className={cn(
+        "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden",
+        !isResizing && "transition-[width] duration-300 ease-in-out",
+      )}
       style={{ width: collapsed ? 48 : width }}
     >
       {visuallyCollapsed ? (

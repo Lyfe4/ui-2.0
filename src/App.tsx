@@ -3,6 +3,7 @@ import { ChevronDown, PanelRight, X } from "lucide-react"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
 import { ContentPane } from "@/components/ContentPane"
+import { cn } from "@/lib/utils"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -12,6 +13,8 @@ import {
 
 export default function App() {
   const [canvasOpen, setCanvasOpen] = useState(false)
+  const [canvasWidth, setCanvasWidth] = useState(420)
+  const [isCanvasResizing, setIsCanvasResizing] = useState(false)
   const [mapOpen, setMapOpen] = useState(false)
   const [chatCollapsed, setChatCollapsed] = useState(false)
 
@@ -28,12 +31,18 @@ export default function App() {
         onToggleMap={() => setMapOpen((o) => !o)}
       />
       <div
-        className="flex flex-shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"
-        style={{ width: canvasOpen ? 420 : 0 }}
+        className={cn(
+          "flex flex-shrink-0 overflow-hidden",
+          !isCanvasResizing && "transition-[width] duration-300 ease-in-out",
+        )}
+        style={{ width: canvasOpen ? canvasWidth : 0 }}
       >
         <CanvasPane
           onClose={() => setCanvasOpen(false)}
           chatCollapsed={chatCollapsed}
+          width={canvasWidth}
+          onWidthChange={setCanvasWidth}
+          onResizingChange={setIsCanvasResizing}
         />
       </div>
 
