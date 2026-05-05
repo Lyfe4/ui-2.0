@@ -82,7 +82,7 @@ export default function App() {
       {/* Right panel column — shared resize */}
       <div
         className={cn(
-          "relative flex flex-shrink-0 overflow-hidden",
+          "relative flex flex-shrink-0",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
         style={{ width: anyPanelOpen ? rightColumnWidth : 0 }}
