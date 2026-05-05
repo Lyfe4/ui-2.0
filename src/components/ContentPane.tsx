@@ -258,7 +258,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Unit */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               <Folder className="size-3.5 shrink-0 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
@@ -283,7 +283,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Topic */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {topic.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -306,7 +306,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Lesson */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {lesson.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
