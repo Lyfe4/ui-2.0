@@ -170,12 +170,10 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
                 size="icon-sm"
                 aria-label={label}
                 title={label}
-                aria-pressed={activeNav === id}
-                onClick={() => setActiveNav(id)}
-                className={cn(
-                  activeNav === id &&
-                    "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
-                )}
+                onClick={() => {
+                  setActiveNav(id)
+                  onCollapsedChange(false)
+                }}
               >
                 <Icon />
               </Button>
