@@ -203,9 +203,17 @@ function unitStatus(unit: (typeof CURRICULUM)[number]): Status {
 
 function StatusIcon({ status }: { status: Status }) {
   if (status === "complete")
-    return <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
+    return (
+      <span title="Complete" className="flex shrink-0">
+        <CheckCircle2 className="size-3.5 text-primary" />
+      </span>
+    )
   if (status === "in-progress")
-    return <CircleDot className="size-3.5 shrink-0 text-warning" />
+    return (
+      <span title="In Progress" className="flex shrink-0">
+        <CircleDot className="size-3.5 text-warning" />
+      </span>
+    )
   return <span className="size-3.5 shrink-0" />
 }
 
