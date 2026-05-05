@@ -12,30 +12,87 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const messages = [
-  {
-    id: 1,
-    role: "user" as const,
-    content: "can you explain how the immune system recognises pathogens?",
-  },
-  {
-    id: 2,
-    role: "assistant" as const,
-    content:
-      "Your immune system uses two main strategies.\n\nThe innate system is fast and non-specific — it spots molecular patterns shared across many pathogens, like bacterial cell-wall components, and mounts an immediate response.\n\nThe adaptive system is slower but precise. B and T cells carry receptors that match specific antigens. When a match is found those cells multiply and attack — and a small pool persists as memory cells, which is why you respond faster to something you've encountered before.",
-  },
-  {
-    id: 3,
-    role: "user" as const,
-    content: "what happens when it makes a mistake?",
-  },
-  {
-    id: 4,
-    role: "assistant" as const,
-    content:
-      "Two main failure modes.\n\nAutoimmunity is when the adaptive system targets your own tissue — it mistakes self for non-self. Type 1 diabetes, lupus, and multiple sclerosis all work this way.\n\nAllergies are the innate system overreacting to harmless substances. Pollen, peanuts, dust mites — not threats, but in some people the immune system treats them like pathogens and fires off a disproportionate response.",
-  },
-]
+const messagesByNav: Record<string, { id: number; role: "user" | "assistant" | "peer"; name?: string; content: string }[]> = {
+  learn: [
+    {
+      id: 1,
+      role: "user",
+      content: "can you explain how the immune system recognises pathogens?",
+    },
+    {
+      id: 2,
+      role: "assistant",
+      content:
+        "Your immune system uses two main strategies.\n\nThe innate system is fast and non-specific — it spots molecular patterns shared across many pathogens, like bacterial cell-wall components, and mounts an immediate response.\n\nThe adaptive system is slower but precise. B and T cells carry receptors that match specific antigens. When a match is found those cells multiply and attack — and a small pool persists as memory cells, which is why you respond faster to something you've encountered before.",
+    },
+    {
+      id: 3,
+      role: "user",
+      content: "what happens when it makes a mistake?",
+    },
+    {
+      id: 4,
+      role: "assistant",
+      content:
+        "Two main failure modes.\n\nAutoimmunity is when the adaptive system targets your own tissue — it mistakes self for non-self. Type 1 diabetes, lupus, and multiple sclerosis all work this way.\n\nAllergies are the innate system overreacting to harmless substances. Pollen, peanuts, dust mites — not threats, but in some people the immune system treats them like pathogens and fires off a disproportionate response.",
+    },
+  ],
+  social: [
+    {
+      id: 1,
+      role: "peer",
+      name: "Maya",
+      content: "has anyone started on the cell signalling unit yet? i'm completely lost on receptor kinases",
+    },
+    {
+      id: 2,
+      role: "peer",
+      name: "Jordan",
+      content: "yeah i did it last week — the Khan Academy video on RTKs is actually really good, way clearer than the textbook",
+    },
+    {
+      id: 3,
+      role: "user",
+      content: "thanks, i'll check it out. are we doing a study group before the midterm?",
+    },
+    {
+      id: 4,
+      role: "peer",
+      name: "Maya",
+      content: "yes! thursday 6pm in the library. i'll send the invite — we're planning to go through the practice exam together",
+    },
+    {
+      id: 5,
+      role: "peer",
+      name: "Jordan",
+      content: "i'll bring the flashcard deck i made, it covers everything from week 1–5",
+    },
+  ],
+  support: [
+    {
+      id: 1,
+      role: "user",
+      content: "hi, i submitted my assignment two days ago but it still shows as 'pending review' — is that normal?",
+    },
+    {
+      id: 2,
+      role: "assistant",
+      content:
+        "Hi! Yes, that's completely normal — our tutors typically review submissions within 3–5 business days. You'll get an email notification as soon as feedback is posted.",
+    },
+    {
+      id: 3,
+      role: "user",
+      content: "ok thanks. also i can't access the week 4 videos, it just says 'content unavailable'",
+    },
+    {
+      id: 4,
+      role: "assistant",
+      content:
+        "Sorry about that — we had a brief issue with the video CDN earlier today that's now resolved. Try doing a hard refresh (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac) and the videos should load. If they're still not showing, let me know and I'll escalate it for you.",
+    },
+  ],
+}
 
 const navItems = [
   { id: "learn", label: "Learn", icon: Sparkles },
@@ -220,10 +277,17 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
           <ScrollArea className="flex-1">
             <div className="flex flex-col gap-6 px-4 py-5">
-              {messages.map((msg) =>
+              {(messagesByNav[activeNav] ?? []).map((msg) =>
                 msg.role === "user" ? (
                   <div key={msg.id} className="flex justify-end">
                     <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                      {msg.content}
+                    </div>
+                  </div>
+                ) : msg.role === "peer" ? (
+                  <div key={msg.id} className="flex flex-col gap-1">
+                    <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
+                    <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
                       {msg.content}
                     </div>
                   </div>
