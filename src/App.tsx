@@ -105,19 +105,24 @@ export default function App() {
           </div>
         )}
 
-        <div className="flex flex-1 flex-col">
-          {canvasOpen && (
+        <div
+          className="grid flex-1 h-full transition-[grid-template-rows] duration-300 ease-in-out"
+          style={{
+            gridTemplateRows: `${canvasOpen ? "1fr" : "0fr"} ${assignmentOpen ? "1fr" : "0fr"}`,
+          }}
+        >
+          <div className="flex flex-col min-h-0 overflow-hidden">
             <CanvasPane
               onClose={() => setCanvasOpen(false)}
               chatCollapsed={chatCollapsed}
             />
-          )}
-          {assignmentOpen && (
+          </div>
+          <div className="flex flex-col min-h-0 overflow-hidden">
             <AssignmentPane
               onClose={() => setAssignmentOpen(false)}
               showCloseButton={canvasOpen}
             />
-          )}
+          </div>
         </div>
       </div>
 
