@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronRight } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -59,17 +59,21 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Breadcrumb bar — always visible at top */}
-      <div className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-2.5 rounded-b-xl", mapOpen && "hidden")}>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-muted-foreground">
-          <span className="shrink-0 font-medium text-foreground">Topic 1: Tracking Expenses</span>
+      <div className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-3 rounded-b-xl", mapOpen && "hidden")}>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-muted-foreground">
+          <span className="shrink-0 font-semibold text-foreground">Unit 1: Personal Finance</span>
 
-          <ChevronRight className="size-3 shrink-0" />
+          <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
-          <span className="shrink-0 font-medium text-foreground">
+          <span className="shrink-0 font-semibold text-foreground">Topic 1: Tracking Expenses</span>
+
+          <span className="shrink-0 select-none text-muted-foreground/60">/</span>
+
+          <span className="shrink-0 font-semibold text-foreground">
             Lesson {currentLesson}: {lesson.title}
           </span>
 
-          <ChevronRight className="size-3 shrink-0" />
+          <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
           <div className="group/objective relative flex shrink-0 items-center gap-1">
             <span className="text-xs text-muted-foreground">LO:</span>
