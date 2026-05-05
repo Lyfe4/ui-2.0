@@ -17,8 +17,6 @@ export default function App() {
         onToggleMap={() => setMapOpen((o) => !o)}
       />
       <ContentPane
-        canvasOpen={canvasOpen}
-        onToggleCanvas={() => setCanvasOpen((o) => !o)}
         mapOpen={mapOpen}
         onToggleMap={() => setMapOpen((o) => !o)}
       />
