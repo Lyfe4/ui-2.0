@@ -113,7 +113,10 @@ export default function App() {
             />
           )}
           {assignmentOpen && (
-            <AssignmentPane onClose={() => setAssignmentOpen(false)} />
+            <AssignmentPane
+              onClose={() => setAssignmentOpen(false)}
+              showCloseButton={canvasOpen}
+            />
           )}
         </div>
       </div>
@@ -132,7 +135,7 @@ export default function App() {
             <X className="size-3.5" />
           </Button>
         )}
-        {assignmentOpen && (
+        {assignmentOpen && !canvasOpen && (
           <Button
             variant="ghost"
             size="icon-sm"

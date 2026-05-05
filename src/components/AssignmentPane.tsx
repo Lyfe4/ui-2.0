@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface AssignmentPaneProps {
   onClose: () => void
+  showCloseButton?: boolean
 }
 
 type Tab = "assignment" | "submit" | "feedback"
@@ -56,7 +57,7 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-export function AssignmentPane({ onClose }: AssignmentPaneProps) {
+export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps) {
   const [activeTab, setActiveTab] = useState<Tab>("assignment")
   const [dragging, setDragging] = useState(false)
   const [files, setFiles] = useState<UploadedFile[]>([])
@@ -84,10 +85,21 @@ export function AssignmentPane({ onClose }: AssignmentPaneProps) {
   return (
     <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
       {/* Header */}
-      <div className="flex h-14 flex-shrink-0 items-center px-5">
-        <span className="truncate text-sm font-medium text-foreground">
+      <div className="flex h-14 flex-shrink-0 items-center gap-2 px-5">
+        <span className="flex-1 truncate text-sm font-medium text-foreground">
           {mockAssignment.title}
         </span>
+        {showCloseButton && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Close assignment"
+            onClick={onClose}
+            className="shrink-0 hover:bg-black/10"
+          >
+            <X className="size-3.5" />
+          </Button>
+        )}
       </div>
 
       {/* Pill tabs */}
