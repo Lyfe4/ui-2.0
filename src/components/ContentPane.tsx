@@ -1,5 +1,5 @@
 import { useState } from "react"
-
+import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -60,24 +60,34 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Breadcrumb bar — always visible at top */}
       <div className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-3 rounded-b-xl", mapOpen && "hidden")}>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-muted-foreground">
-          <span className="shrink-0 font-semibold text-foreground">Unit 1: Personal Finance</span>
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5 text-sm text-muted-foreground">
+          <button className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10">
+            Unit 1: Personal Finance
+            <ChevronDown className="size-3 opacity-0 transition-opacity group-hover/crumb:opacity-100" />
+          </button>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
-          <span className="shrink-0 font-semibold text-foreground">Topic 1: Tracking Expenses</span>
+          <button className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10">
+            Topic 1: Tracking Expenses
+            <ChevronDown className="size-3 opacity-0 transition-opacity group-hover/crumb:opacity-100" />
+          </button>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
-          <span className="shrink-0 font-semibold text-foreground">
+          <button className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10">
             Lesson {currentLesson}: {lesson.title}
-          </span>
+            <ChevronDown className="size-3 opacity-0 transition-opacity group-hover/crumb:opacity-100" />
+          </button>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
           <div className="group/objective relative flex shrink-0 items-center gap-1">
-            <span className="text-xs text-muted-foreground">LO:</span>
-            <div className="h-2.5 w-2.5 cursor-default rounded-full border-2 border-border bg-background" />
+            <button className="group/crumb flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-black/10">
+              <span className="text-xs text-muted-foreground">LO:</span>
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
+              <ChevronDown className="size-3 opacity-0 transition-opacity group-hover/crumb:opacity-100" />
+            </button>
             <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
               <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
                 <p className="text-xs font-medium text-popover-foreground">
