@@ -27,12 +27,15 @@ export default function App() {
         mapOpen={mapOpen}
         onToggleMap={() => setMapOpen((o) => !o)}
       />
-      {canvasOpen && (
+      <div
+        className="flex flex-shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"
+        style={{ width: canvasOpen ? 420 : 0 }}
+      >
         <CanvasPane
           onClose={() => setCanvasOpen(false)}
           chatCollapsed={chatCollapsed}
         />
-      )}
+      </div>
 
       {/* Panel dropdown — always visible, floats over top-right corner */}
       <div className="absolute right-3 top-2 z-50 flex h-14 items-center">
