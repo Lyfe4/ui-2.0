@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -9,6 +9,8 @@ interface ContentPaneProps {
   mapOpen: boolean
   onToggleMap: () => void
 }
+
+type Status = "complete" | "in-progress" | "not-started"
 
 const CURRICULUM = [
   {
@@ -24,6 +26,7 @@ const CURRICULUM = [
             id: 1,
             title: "Introduction",
             heading: "Welcome",
+            status: "complete" as Status,
             content:
               "Welcome to the first lesson on tracking expenses. Here we introduce the fundamental concepts of budgeting and why monitoring your spending is crucial for financial health. By the end of this lesson you'll understand why even small daily purchases matter in the bigger picture of your financial wellbeing.",
           },
@@ -31,6 +34,7 @@ const CURRICULUM = [
             id: 2,
             title: "Income & Fixed Costs",
             heading: "Understanding Your Income",
+            status: "complete" as Status,
             content:
               "In this lesson we explore how to categorise your income sources and identify fixed costs — the recurring expenses that stay the same each month. Fixed costs such as rent, loan repayments, and subscriptions form the foundation of any solid budget because they are predictable and non-negotiable.",
           },
@@ -38,6 +42,7 @@ const CURRICULUM = [
             id: 3,
             title: "Variable Expenses",
             heading: "Managing Variable Spending",
+            status: "complete" as Status,
             content:
               "Variable expenses fluctuate month to month. This lesson covers strategies to track and manage spending on groceries, entertainment, dining out, and other discretionary categories. You'll learn how to spot patterns in your variable spending and where small adjustments can make a big difference.",
           },
@@ -45,6 +50,7 @@ const CURRICULUM = [
             id: 4,
             title: "Building a Budget",
             heading: "Creating Your First Budget",
+            status: "complete" as Status,
             content:
               "Put your knowledge into practice. We walk through building a simple monthly budget template, setting realistic spending targets for each category, and balancing your income against your outgoings. A well-constructed budget is a living document — we'll show you how to keep it up to date.",
           },
@@ -58,6 +64,7 @@ const CURRICULUM = [
             id: 1,
             title: "Why Save?",
             heading: "The Case for Saving",
+            status: "complete" as Status,
             content:
               "Saving is the foundation of financial resilience. In this lesson we explore the psychological and practical reasons for building a savings habit, from handling unexpected expenses to working towards long-term goals. Understanding your 'why' is the first step to making saving stick.",
           },
@@ -65,6 +72,7 @@ const CURRICULUM = [
             id: 2,
             title: "Emergency Funds",
             heading: "Your Financial Safety Net",
+            status: "complete" as Status,
             content:
               "An emergency fund is a dedicated pool of money set aside for unexpected events — job loss, medical bills, urgent repairs. We cover how much to save, where to keep it, and the step-by-step process of building one even on a tight budget.",
           },
@@ -72,6 +80,7 @@ const CURRICULUM = [
             id: 3,
             title: "Savings Accounts",
             heading: "Making Your Money Work",
+            status: "complete" as Status,
             content:
               "Not all savings accounts are equal. This lesson compares account types — instant-access, notice accounts, and cash ISAs — and explains how interest rates, tax wrappers, and access restrictions affect your returns. We'll help you choose the right account for each savings goal.",
           },
@@ -92,6 +101,7 @@ const CURRICULUM = [
             id: 1,
             title: "What is Investing?",
             heading: "Investing Basics",
+            status: "complete" as Status,
             content:
               "Investing means putting your money to work with the expectation of a future return. This lesson introduces the core idea of growing wealth over time, contrasting investing with saving, and explaining why starting early — even with small amounts — can have an outsized impact thanks to compounding.",
           },
@@ -99,6 +109,7 @@ const CURRICULUM = [
             id: 2,
             title: "Risk & Return",
             heading: "Understanding Risk",
+            status: "in-progress" as Status,
             content:
               "Every investment carries some level of risk. Here we unpack the relationship between risk and potential return, introduce common risk categories (market risk, liquidity risk, inflation risk), and discuss how your personal risk tolerance should shape your investment choices.",
           },
@@ -112,6 +123,7 @@ const CURRICULUM = [
             id: 1,
             title: "Understanding Stocks",
             heading: "What Are Stocks?",
+            status: "not-started" as Status,
             content:
               "A stock represents a small ownership stake in a company. This lesson explains how stocks are issued, how stock markets work, and what it means to be a shareholder — including rights to dividends and voting. We cover the difference between common and preferred shares.",
           },
@@ -119,6 +131,7 @@ const CURRICULUM = [
             id: 2,
             title: "Buying & Selling",
             heading: "How to Trade",
+            status: "not-started" as Status,
             content:
               "From choosing a broker to placing your first order, this lesson walks through the mechanics of buying and selling shares. We explain market orders versus limit orders, bid-ask spreads, and the costs involved — so you can trade confidently and avoid common beginner mistakes.",
           },
@@ -126,6 +139,7 @@ const CURRICULUM = [
             id: 3,
             title: "Dividends",
             heading: "Earning from Stocks",
+            status: "not-started" as Status,
             content:
               "Dividends are a share of a company's profits paid out to shareholders. This lesson covers how dividend income works, the difference between income and growth stocks, dividend reinvestment strategies, and how to evaluate a company's dividend history when making investment decisions.",
           },
@@ -139,6 +153,7 @@ const CURRICULUM = [
             id: 1,
             title: "Diversification",
             heading: "Don't Put All Your Eggs in One Basket",
+            status: "not-started" as Status,
             content:
               "Diversification spreads your investments across different assets, sectors, and geographies to reduce the impact of any single loss. This lesson explains why diversification works, how to assess your current concentration risk, and practical ways to diversify without over-complicating your portfolio.",
           },
@@ -146,6 +161,7 @@ const CURRICULUM = [
             id: 2,
             title: "Asset Allocation",
             heading: "Balancing Your Investments",
+            status: "not-started" as Status,
             content:
               "Asset allocation is the process of deciding how to split your portfolio between asset classes — stocks, bonds, property, and cash. We explore how your time horizon, income needs, and risk appetite should drive your allocation, and introduce classic frameworks like the age-based rule of thumb.",
           },
@@ -153,6 +169,7 @@ const CURRICULUM = [
             id: 3,
             title: "Long-term Planning",
             heading: "Investing for the Future",
+            status: "not-started" as Status,
             content:
               "Long-term investing requires patience, discipline, and a plan. This lesson covers how to set investment goals, the importance of staying invested through market downturns, dollar-cost averaging, and how to review your portfolio periodically without reacting to short-term noise.",
           },
@@ -160,6 +177,7 @@ const CURRICULUM = [
             id: 4,
             title: "Portfolio Review",
             heading: "Staying on Track",
+            status: "not-started" as Status,
             content:
               "Regular portfolio reviews keep your investments aligned with your goals. We cover how often to review, what to look for (drift from target allocation, underperforming holdings, changing life circumstances), and when it makes sense to rebalance versus hold steady.",
           },
@@ -168,6 +186,28 @@ const CURRICULUM = [
     ],
   },
 ]
+
+function topicStatus(topic: (typeof CURRICULUM)[number]["topics"][number]): Status {
+  const statuses = topic.lessons.map((l) => l.status)
+  if (statuses.every((s) => s === "complete")) return "complete"
+  if (statuses.some((s) => s === "complete" || s === "in-progress")) return "in-progress"
+  return "not-started"
+}
+
+function unitStatus(unit: (typeof CURRICULUM)[number]): Status {
+  const statuses = unit.topics.map(topicStatus)
+  if (statuses.every((s) => s === "complete")) return "complete"
+  if (statuses.some((s) => s === "complete" || s === "in-progress")) return "in-progress"
+  return "not-started"
+}
+
+function StatusIcon({ status }: { status: Status }) {
+  if (status === "complete")
+    return <CheckCircle2 className="size-3.5 shrink-0 text-green-500" />
+  if (status === "in-progress")
+    return <CircleDot className="size-3.5 shrink-0 text-amber-400" />
+  return <span className="size-3.5 shrink-0" />
+}
 
 type DropdownId = "unit" | "topic" | "lesson"
 
@@ -243,16 +283,17 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               />
             </button>
             {openDropdown === "unit" && (
-              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[200px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
+              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
                 {CURRICULUM.map((u) => (
                   <button
                     key={u.id}
                     onClick={() => selectUnit(u.id)}
                     className={cn(
-                      "flex w-full items-baseline gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
+                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
                       u.id === unitId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
+                    <StatusIcon status={unitStatus(u)} />
                     <span className="shrink-0 text-xs text-muted-foreground">{u.code}</span>
                     <span className="shrink-0 text-xs text-muted-foreground/50">—</span>
                     {u.title}
@@ -287,10 +328,11 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                     key={t.id}
                     onClick={() => selectTopic(t.id)}
                     className={cn(
-                      "flex w-full items-baseline gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
+                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
                       t.id === topicId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
+                    <StatusIcon status={topicStatus(t)} />
                     <span className="shrink-0 text-xs text-muted-foreground">Topic {t.id}:</span>
                     {t.title}
                   </button>
@@ -324,10 +366,11 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                     key={l.id}
                     onClick={() => selectLesson(l.id)}
                     className={cn(
-                      "flex w-full items-baseline gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
+                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
                       l.id === lessonId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
+                    <StatusIcon status={l.status} />
                     <span className="shrink-0 text-xs text-muted-foreground">Lesson {l.id}:</span>
                     {l.title}
                   </button>
