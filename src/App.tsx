@@ -28,7 +28,7 @@ export default function App() {
         onToggleMap={() => setMapOpen((o) => !o)}
       />
       <div
-        className="flex-shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"
+        className="flex flex-shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"
         style={{ width: canvasOpen ? 420 : 0 }}
       >
         <CanvasPane
