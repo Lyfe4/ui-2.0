@@ -26,6 +26,7 @@ import {
   Video,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Textarea } from "@/components/ui/textarea"
 
 interface CanvasPaneProps {
   onClose: () => void
@@ -93,9 +94,9 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
 
       <div className="h-px w-full bg-black/[0.07]" />
       <div className="flex-1 overflow-y-auto p-4">
-        <textarea
+        <Textarea
           defaultValue="random user notes"
-          className="h-full min-h-48 w-full resize-none bg-transparent text-sm leading-relaxed text-foreground outline-none placeholder:text-muted-foreground"
+          className="h-full min-h-48 resize-none border-0 bg-transparent p-0 text-sm leading-relaxed shadow-none focus-visible:ring-0"
           placeholder="Start writing your notes..."
         />
       </div>

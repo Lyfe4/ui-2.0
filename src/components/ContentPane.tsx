@@ -1,8 +1,14 @@
-import { useState, useRef, useEffect } from "react"
-import { ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
+import { useState } from "react"
+import { Folder, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { CourseNavigator } from "@/components/CourseNavigator"
 
 interface ContentPaneProps {
@@ -217,181 +223,114 @@ function StatusIcon({ status }: { status: Status }) {
   return <span className="size-3.5 shrink-0" />
 }
 
-type DropdownId = "unit" | "topic" | "lesson"
-
 export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
   const [unitId, setUnitId] = useState(1)
   const [topicId, setTopicId] = useState(1)
   const [lessonId, setLessonId] = useState(1)
-  const [openDropdown, setOpenDropdown] = useState<DropdownId | null>(null)
-  const breadcrumbRef = useRef<HTMLDivElement>(null)
 
   const unit = CURRICULUM.find((u) => u.id === unitId)!
   const topic = unit.topics.find((t) => t.id === topicId)!
   const lesson = topic.lessons.find((l) => l.id === lessonId)!
-
-  useEffect(() => {
-    if (!openDropdown) return
-    function handleClickOutside(e: MouseEvent) {
-      if (breadcrumbRef.current && !breadcrumbRef.current.contains(e.target as Node)) {
-        setOpenDropdown(null)
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [openDropdown])
 
   function selectUnit(id: number) {
     const newUnit = CURRICULUM.find((u) => u.id === id)!
     setUnitId(id)
     setTopicId(newUnit.topics[0].id)
     setLessonId(newUnit.topics[0].lessons[0].id)
-    setOpenDropdown(null)
   }
 
   function selectTopic(id: number) {
     const newTopic = unit.topics.find((t) => t.id === id)!
     setTopicId(id)
     setLessonId(newTopic.lessons[0].id)
-    setOpenDropdown(null)
   }
 
   function selectLesson(id: number) {
     setLessonId(id)
-    setOpenDropdown(null)
-  }
-
-  function toggleDropdown(id: DropdownId) {
-    setOpenDropdown((prev) => (prev === id ? null : id))
   }
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Breadcrumb bar — always visible at top */}
       <div
-        ref={breadcrumbRef}
-        className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-1 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
+        className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-0.5 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
       >
 
           {/* Unit */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown("unit")}
-              className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
-            >
+          <DropdownMenu>
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+              <Folder className="size-3.5 shrink-0 mr-0.5 text-muted-foreground" />
               {unit.title}
-              <ChevronDown
-                className={cn(
-                  "size-3 transition-all",
-                  openDropdown === "unit"
-                    ? "opacity-100 rotate-180"
-                    : "opacity-0 group-hover/crumb:opacity-100",
-                )}
-              />
-            </button>
-            {openDropdown === "unit" && (
-              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
-                {CURRICULUM.map((u) => (
-                  <button
-                    key={u.id}
-                    onClick={() => selectUnit(u.id)}
-                    className={cn(
-                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
-                      u.id === unitId ? "font-semibold text-foreground" : "text-muted-foreground",
-                    )}
-                  >
-                    <StatusIcon status={unitStatus(u)} />
-                    <span className="shrink-0 text-xs text-muted-foreground">{u.code}</span>
-                    <span className="shrink-0 text-xs text-muted-foreground/50">—</span>
-                    {u.title}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+              <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[220px]">
+              {CURRICULUM.map((u) => (
+                <DropdownMenuItem
+                  key={u.id}
+                  onClick={() => selectUnit(u.id)}
+                  className={cn(u.id === unitId ? "font-semibold text-foreground" : "text-muted-foreground")}
+                >
+                  <StatusIcon status={unitStatus(u)} />
+                  <span className="shrink-0 text-xs text-muted-foreground">{u.code}</span>
+                  <span className="shrink-0 text-xs text-muted-foreground/50">—</span>
+                  {u.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
           {/* Topic */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown("topic")}
-              className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
-            >
+          <DropdownMenu>
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {topic.title}
-              <ChevronDown
-                className={cn(
-                  "size-3 transition-all",
-                  openDropdown === "topic"
-                    ? "opacity-100 rotate-180"
-                    : "opacity-0 group-hover/crumb:opacity-100",
-                )}
-              />
-            </button>
-            {openDropdown === "topic" && (
-              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
-                {unit.topics.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => selectTopic(t.id)}
-                    className={cn(
-                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
-                      t.id === topicId ? "font-semibold text-foreground" : "text-muted-foreground",
-                    )}
-                  >
-                    <StatusIcon status={topicStatus(t)} />
-                    <span className="shrink-0 text-xs text-muted-foreground">Topic {t.id}:</span>
-                    {t.title}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+              <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[220px]">
+              {unit.topics.map((t) => (
+                <DropdownMenuItem
+                  key={t.id}
+                  onClick={() => selectTopic(t.id)}
+                  className={cn(t.id === topicId ? "font-semibold text-foreground" : "text-muted-foreground")}
+                >
+                  <StatusIcon status={topicStatus(t)} />
+                  <span className="shrink-0 text-xs text-muted-foreground">Topic {t.id}:</span>
+                  {t.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
           {/* Lesson */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown("lesson")}
-              className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
-            >
+          <DropdownMenu>
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {lesson.title}
-              <ChevronDown
-                className={cn(
-                  "size-3 transition-all",
-                  openDropdown === "lesson"
-                    ? "opacity-100 rotate-180"
-                    : "opacity-0 group-hover/crumb:opacity-100",
-                )}
-              />
-            </button>
-            {openDropdown === "lesson" && (
-              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
-                {topic.lessons.map((l) => (
-                  <button
-                    key={l.id}
-                    onClick={() => selectLesson(l.id)}
-                    className={cn(
-                      "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors hover:bg-black/10",
-                      l.id === lessonId ? "font-semibold text-foreground" : "text-muted-foreground",
-                    )}
-                  >
-                    <StatusIcon status={l.status} />
-                    <span className="shrink-0 text-xs text-muted-foreground">Lesson {l.id}:</span>
-                    {l.title}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+              <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-[220px]">
+              {topic.lessons.map((l) => (
+                <DropdownMenuItem
+                  key={l.id}
+                  onClick={() => selectLesson(l.id)}
+                  className={cn(l.id === lessonId ? "font-semibold text-foreground" : "text-muted-foreground")}
+                >
+                  <StatusIcon status={l.status} />
+                  <span className="shrink-0 text-xs text-muted-foreground">Lesson {l.id}:</span>
+                  {l.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
           {/* Learning Objective — hover effect only, no chevron, no dropdown */}
           <div className="group/objective relative flex shrink-0 items-center">
-            <div className="flex cursor-default items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-black/10">
-              <span className="text-xs text-muted-foreground">LO:</span>
+            <div className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-black/10">
+              <span className="text-foreground">LO:</span>
               <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
             </div>
             <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
