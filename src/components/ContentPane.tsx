@@ -220,7 +220,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
       {/* Breadcrumb bar — always visible at top */}
       <div
         ref={breadcrumbRef}
-        className={cn("bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-3 rounded-b-xl", mapOpen && "hidden")}
+        className={cn("relative z-10 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-3 rounded-b-xl", mapOpen && "hidden")}
       >
         <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5 text-sm text-muted-foreground">
 
