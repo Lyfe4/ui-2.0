@@ -82,7 +82,7 @@ export default function App() {
       {/* Right panel column — shared resize */}
       <div
         className={cn(
-          "relative flex flex-shrink-0 overflow-hidden",
+          "relative flex flex-shrink-0",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
         style={{ width: anyPanelOpen ? rightColumnWidth : 0 }}
@@ -105,7 +105,7 @@ export default function App() {
           </div>
         )}
 
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex flex-1 flex-col">
           {canvasOpen && (
             <CanvasPane
               onClose={() => setCanvasOpen(false)}
