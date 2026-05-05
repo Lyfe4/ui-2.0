@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
+import { BookMarked, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -253,12 +253,13 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Breadcrumb bar — always visible at top */}
       <div
-        className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-1 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
+        className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-0.5 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
       >
 
           {/* Unit */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
+              <BookMarked className="size-3.5 shrink-0 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -282,7 +283,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Topic */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {topic.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -305,7 +306,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Lesson */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10 outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
               {lesson.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
