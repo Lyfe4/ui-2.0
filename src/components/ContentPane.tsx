@@ -13,6 +13,7 @@ interface ContentPaneProps {
 const CURRICULUM = [
   {
     id: 1,
+    code: "PF1",
     title: "Personal Finance",
     topics: [
       {
@@ -80,6 +81,7 @@ const CURRICULUM = [
   },
   {
     id: 2,
+    code: "IF2",
     title: "Investing Fundamentals",
     topics: [
       {
@@ -230,7 +232,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               onClick={() => toggleDropdown("unit")}
               className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
             >
-              Unit {unitId}: {unit.title}
+              {unit.title}
               <ChevronDown
                 className={cn(
                   "size-3 transition-all",
@@ -251,7 +253,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                       u.id === unitId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
-                    <span className="shrink-0 text-xs text-muted-foreground">Unit {u.id}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{u.code}</span>
                     {u.title}
                   </button>
                 ))}
@@ -267,7 +269,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               onClick={() => toggleDropdown("topic")}
               className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
             >
-              Topic {topicId}: {topic.title}
+              {topic.title}
               <ChevronDown
                 className={cn(
                   "size-3 transition-all",
@@ -288,7 +290,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                       t.id === topicId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
-                    <span className="shrink-0 text-xs text-muted-foreground">Topic {t.id}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">Topic {t.id}:</span>
                     {t.title}
                   </button>
                 ))}
@@ -304,7 +306,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               onClick={() => toggleDropdown("lesson")}
               className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-semibold text-foreground transition-colors hover:bg-black/10"
             >
-              Lesson {lessonId}: {lesson.title}
+              {lesson.title}
               <ChevronDown
                 className={cn(
                   "size-3 transition-all",
@@ -325,7 +327,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                       l.id === lessonId ? "font-semibold text-foreground" : "text-muted-foreground",
                     )}
                   >
-                    <span className="shrink-0 text-xs text-muted-foreground">Lesson {l.id}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">Lesson {l.id}:</span>
                     {l.title}
                   </button>
                 ))}
