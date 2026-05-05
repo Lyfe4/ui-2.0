@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BookMarked, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
+import { FolderBookmark, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -259,7 +259,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
           {/* Unit */}
           <DropdownMenu>
             <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
-              <BookMarked className="size-3.5 shrink-0 text-muted-foreground" />
+              <FolderBookmark className="size-3.5 shrink-0 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
