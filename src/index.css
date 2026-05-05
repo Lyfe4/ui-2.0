@@ -21,6 +21,9 @@
     --color-chart-3: var(--chart-3);
     --color-chart-2: var(--chart-2);
     --color-chart-1: var(--chart-1);
+    --color-surface-hover: var(--surface-hover);
+    --shadow-panel-inset: var(--panel-shadow-inset);
+    --shadow-panel-outset: var(--panel-shadow-outset);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -82,6 +85,9 @@
     --border: oklch(0.923 0.003 48.7);                 /* stone-200              */
     --input:  oklch(0.923 0.003 48.7);                 /* stone-200              */
     --ring:   oklch(0.869 0.005 56.4);                 /* stone-300              */
+    --surface-hover: oklch(0 0 0 / 10%);               /* black/10 – interactive hover overlay */
+    --panel-shadow-inset: -2px 0 12px -2px oklch(0 0 0 / 8%); /* right panels – shadow toward content */
+    --panel-shadow-outset:  2px 0 12px -2px oklch(0 0 0 / 8%); /* chat panel   – shadow toward content */
 
     --radius: 0.625rem;
 
@@ -131,6 +137,9 @@
     --border: oklch(1 0 0 / 10%);
     --input:  oklch(1 0 0 / 15%);
     --ring:   oklch(0.553 0.013 56.0);                 /* stone-500              */
+    --surface-hover: oklch(1 0 0 / 10%);               /* white/10 – interactive hover overlay */
+    --panel-shadow-inset: -2px 0 12px -2px oklch(0 0 0 / 20%);
+    --panel-shadow-outset:  2px 0 12px -2px oklch(0 0 0 / 20%);
 
     --chart-1: oklch(0.845 0.143 164.978);
     --chart-2: oklch(0.696 0.170 162.480);

@@ -26,6 +26,7 @@ import {
   Video,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 interface CanvasPaneProps {
@@ -35,9 +36,9 @@ interface CanvasPaneProps {
 
 function ToolbarBtn({ children }: { children: React.ReactNode }) {
   return (
-    <button className="flex h-6 w-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+    <Button variant="ghost" size="icon-xs" className="text-muted-foreground">
       {children}
-    </button>
+    </Button>
   )
 }
 
@@ -47,7 +48,7 @@ function Divider() {
 
 export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
+    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-panel-inset my-2 overflow-hidden min-h-0">
       <div className={cn("flex h-14 flex-shrink-0 items-center px-5", chatCollapsed && "pl-16")}>
         <span className="text-sm font-medium text-foreground">Canvas</span>
       </div>
@@ -65,9 +66,9 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <button className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+        <Button variant="ghost" size="xs" className="text-muted-foreground">
           Paragraph <ChevronDown className="h-3 w-3" />
-        </button>
+        </Button>
         <Divider />
         <ToolbarBtn><List className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><ListOrdered className="h-3 w-3" /></ToolbarBtn>
@@ -92,7 +93,7 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
       </div>
 
-      <div className="h-px w-full flex-shrink-0 bg-black/[0.07]" />
+      <div className="h-px w-full flex-shrink-0 bg-border" />
       <div className="flex-1 overflow-y-auto p-4 min-h-0">
         <Textarea
           defaultValue="random user notes"
@@ -102,11 +103,11 @@ export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
       </div>
 
       <div className="flex-shrink-0 px-4 py-3">
-        <button className="flex items-center gap-2 rounded-lg border border-black/[0.07] px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted">
+        <Button variant="outline" size="sm">
           <Download className="h-3.5 w-3.5" />
           Export
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
-        </button>
+        </Button>
       </div>
     </div>
   )

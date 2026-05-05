@@ -82,7 +82,7 @@ export default function App() {
       {/* Right panel column — shared resize */}
       <div
         className={cn(
-          "relative flex flex-shrink-0 overflow-hidden",
+          "relative flex flex-shrink-0",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
         style={{ width: anyPanelOpen ? rightColumnWidth : 0 }}
@@ -105,19 +105,24 @@ export default function App() {
           </div>
         )}
 
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {canvasOpen && (
+        <div
+          className="grid flex-1 h-full transition-[grid-template-rows] duration-300 ease-in-out"
+          style={{
+            gridTemplateRows: `${canvasOpen ? "1fr" : "0fr"} ${assignmentOpen ? "1fr" : "0fr"}`,
+          }}
+        >
+          <div className="flex flex-col min-h-0 overflow-hidden">
             <CanvasPane
               onClose={() => setCanvasOpen(false)}
               chatCollapsed={chatCollapsed}
             />
-          )}
-          {assignmentOpen && (
+          </div>
+          <div className="flex flex-col min-h-0 overflow-hidden">
             <AssignmentPane
               onClose={() => setAssignmentOpen(false)}
               showCloseButton={canvasOpen}
             />
-          )}
+          </div>
         </div>
       </div>
 
@@ -130,7 +135,6 @@ export default function App() {
             aria-label="Close canvas"
             title="Close canvas"
             onClick={() => setCanvasOpen(false)}
-            className="hover:bg-black/10"
           >
             <X className="size-3.5" />
           </Button>
@@ -142,14 +146,13 @@ export default function App() {
             aria-label="Close assignment"
             title="Close assignment"
             onClick={() => setAssignmentOpen(false)}
-            className="hover:bg-black/10"
           >
             <X className="size-3.5" />
           </Button>
         )}
         {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10 outline-none">
+          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none">
             <PanelRight className="size-4" />
             <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
           </DropdownMenuTrigger>
