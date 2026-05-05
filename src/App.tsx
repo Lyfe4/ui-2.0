@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Check, ChevronDown, ChevronUp, PanelRight } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, PanelRight, X } from "lucide-react"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
 import { ContentPane } from "@/components/ContentPane"
@@ -41,7 +41,18 @@ export default function App() {
       )}
 
       {/* Panel dropdown — always visible, floats over top-right corner */}
-      <div ref={menuRef} className="absolute right-3 top-3 z-50">
+      <div ref={menuRef} className="absolute right-3 top-3 z-50 flex items-center">
+        {canvasOpen && (
+          <>
+            <button
+              onClick={() => setCanvasOpen(false)}
+              className="flex items-center justify-center rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10"
+            >
+              <X className="size-4" />
+            </button>
+            <div className="mx-0.5 h-4 w-px bg-border" />
+          </>
+        )}
         <button
           onClick={() => setPanelMenuOpen((o) => !o)}
           className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10"
