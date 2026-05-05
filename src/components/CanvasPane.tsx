@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from "react"
 import {
   AlignCenter,
   AlignJustify,
@@ -25,19 +24,15 @@ import {
   Type,
   Underline,
   Video,
+  X,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
-
-const MIN_WIDTH = 280
-const MAX_WIDTH = 700
 
 interface CanvasPaneProps {
   onClose: () => void
   chatCollapsed?: boolean
-  width: number
-  onWidthChange: (w: number) => void
-  onResizingChange: (resizing: boolean) => void
 }
 
 function ToolbarBtn({ children }: { children: React.ReactNode }) {
@@ -52,75 +47,23 @@ function Divider() {
   return <div className="mx-1 h-3.5 w-px bg-border" />
 }
 
-export function CanvasPane({ onClose, chatCollapsed, width, onWidthChange, onResizingChange }: CanvasPaneProps) {
-  const [isResizing, setIsResizing] = useState(false)
-  const startX = useRef(0)
-  const startWidth = useRef(0)
-
-  const handleResizeStart = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    startX.current = e.clientX
-    startWidth.current = width
-    setIsResizing(true)
-    onResizingChange(true)
-  }, [width, onResizingChange])
-
-  useEffect(() => {
-    if (!isResizing) return
-
-    const prevCursor = document.body.style.cursor
-    const prevSelect = document.body.style.userSelect
-    document.body.style.cursor = "ew-resize"
-    document.body.style.userSelect = "none"
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientX - startX.current
-      onWidthChange(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidth.current - delta)))
-    }
-
-    const handleMouseUp = () => {
-      setIsResizing(false)
-      onResizingChange(false)
-      document.body.style.cursor = prevCursor
-      document.body.style.userSelect = prevSelect
-    }
-
-    document.addEventListener("mousemove", handleMouseMove)
-    document.addEventListener("mouseup", handleMouseUp)
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove)
-      document.removeEventListener("mouseup", handleMouseUp)
-      document.body.style.cursor = prevCursor
-      document.body.style.userSelect = prevSelect
-    }
-  }, [isResizing, onWidthChange, onResizingChange])
-
+export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="relative flex w-full flex-shrink-0 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden">
-      {/* Resize handle on left edge */}
-      <div
-        onMouseDown={handleResizeStart}
-        aria-hidden
-        className={cn(
-          "group absolute left-0 top-0 h-full w-3 cursor-ew-resize rounded-l-2xl",
-          "flex items-center justify-start pl-px",
-        )}
-      >
-        <div
-          className={cn(
-            "h-10 w-[3px] rounded-full transition-all duration-150",
-            isResizing
-              ? "bg-primary/50 opacity-100"
-              : "bg-foreground/15 opacity-0 group-hover:opacity-100",
-          )}
-        />
+    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-black/[0.07] shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
+      <div className={cn("flex h-14 flex-shrink-0 items-center gap-2 px-4", chatCollapsed && "pl-16")}>
+        <span className="flex-1 text-sm font-medium text-foreground">Canvas</span>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Close canvas"
+          onClick={onClose}
+          className="shrink-0 hover:bg-black/10"
+        >
+          <X className="size-3.5" />
+        </Button>
       </div>
 
-      <div className={cn("flex h-14 items-center px-5", chatCollapsed && "pl-16")}>
-        <span className="text-sm font-medium text-foreground">Canvas</span>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-0.5 px-3 pt-1.5">
+      <div className="flex flex-shrink-0 flex-wrap items-center gap-0.5 px-3 pt-1.5">
         <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
         <Divider />
@@ -150,7 +93,7 @@ export function CanvasPane({ onClose, chatCollapsed, width, onWidthChange, onRes
         <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
       </div>
 
-      <div className="flex items-center gap-0.5 px-3 pb-1.5">
+      <div className="flex flex-shrink-0 items-center gap-0.5 px-3 pb-1.5">
         <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
         <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
         <Divider />
@@ -160,8 +103,8 @@ export function CanvasPane({ onClose, chatCollapsed, width, onWidthChange, onRes
         <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
       </div>
 
-      <div className="h-px w-full bg-black/[0.07]" />
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="h-px w-full flex-shrink-0 bg-black/[0.07]" />
+      <div className="flex-1 overflow-y-auto p-4 min-h-0">
         <Textarea
           defaultValue="random user notes"
           className="h-full min-h-48 resize-none border-0 bg-transparent p-0 text-sm leading-relaxed shadow-none focus-visible:ring-0"
@@ -169,7 +112,7 @@ export function CanvasPane({ onClose, chatCollapsed, width, onWidthChange, onRes
         />
       </div>
 
-      <div className="px-4 py-3">
+      <div className="flex-shrink-0 px-4 py-3">
         <button className="flex items-center gap-2 rounded-lg border border-black/[0.07] px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-muted">
           <Download className="h-3.5 w-3.5" />
           Export
