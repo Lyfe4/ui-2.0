@@ -14,10 +14,25 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 const messages = [
   {
     id: 1,
+    role: "user" as const,
+    content: "can you explain how the immune system recognises pathogens?",
+  },
+  {
+    id: 2,
     role: "assistant" as const,
-    name: "Madgwick",
     content:
-      "Welcome to Introduction for B123. When you're ready, start a new conversation by asking a question or describing what you'd like to work on.",
+      "Your immune system uses two main strategies.\n\nThe innate system is fast and non-specific — it spots molecular patterns shared across many pathogens, like bacterial cell-wall components, and mounts an immediate response.\n\nThe adaptive system is slower but precise. B and T cells carry receptors that match specific antigens. When a match is found those cells multiply and attack — and a small pool persists as memory cells, which is why you respond faster to something you've encountered before.",
+  },
+  {
+    id: 3,
+    role: "user" as const,
+    content: "what happens when it makes a mistake?",
+  },
+  {
+    id: 4,
+    role: "assistant" as const,
+    content:
+      "Two main failure modes.\n\nAutoimmunity is when the adaptive system targets your own tissue — it mistakes self for non-self. Type 1 diabetes, lupus, and multiple sclerosis all work this way.\n\nAllergies are the innate system overreacting to harmless substances. Pollen, peanuts, dust mites — not threats, but in some people the immune system treats them like pathogens and fires off a disproportionate response.",
   },
 ]
 
@@ -154,23 +169,23 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
         </Button>
       </div>
 
-      <ScrollArea className="flex-1 px-4 py-4">
-        <div className="space-y-5">
-          {messages.map((msg) => (
-            <div key={msg.id} className="flex gap-3">
-              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-border text-xs font-semibold text-foreground">
-                {msg.name[0]}
-              </div>
-              <div className="min-w-0">
-                <p className="mb-1 text-xs font-semibold text-foreground">
-                  {msg.name}
-                </p>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+      <ScrollArea className="flex-1">
+        <div className="flex flex-col gap-6 px-4 py-5">
+          {messages.map((msg) =>
+            msg.role === "user" ? (
+              <div key={msg.id} className="flex justify-end">
+                <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
                   {msg.content}
-                </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ) : (
+              <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
+                {msg.content.split("\n\n").map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            )
+          )}
         </div>
       </ScrollArea>
 
