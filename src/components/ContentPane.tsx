@@ -254,6 +254,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
                     )}
                   >
                     <span className="shrink-0 text-xs text-muted-foreground">{u.code}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground/50">—</span>
                     {u.title}
                   </button>
                 ))}
