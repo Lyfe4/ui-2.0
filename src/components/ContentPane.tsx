@@ -270,9 +270,8 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
       {/* Breadcrumb bar — always visible at top */}
       <div
         ref={breadcrumbRef}
-        className={cn("relative z-10 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 py-3 rounded-b-xl", mapOpen && "hidden")}
+        className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-1 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
       >
-        <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5 text-sm text-muted-foreground">
 
           {/* Unit */}
           <div className="relative">
@@ -405,7 +404,6 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
             </div>
           </div>
 
-        </div>
       </div>
 
       {/* Lesson content */}

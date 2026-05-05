@@ -41,7 +41,7 @@ export default function App() {
       )}
 
       {/* Panel dropdown — always visible, floats over top-right corner */}
-      <div ref={menuRef} className="absolute right-3 top-3 z-50 flex items-center">
+      <div ref={menuRef} className="absolute right-3 top-2 z-50 flex h-14 items-center">
         {canvasOpen && (
           <>
             <button

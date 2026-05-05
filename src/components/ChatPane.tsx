@@ -139,7 +139,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
       className="relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2"
       style={{ width }}
     >
-      <div className="flex items-center gap-2 px-3 pb-2 pt-4">
+      <div className="flex h-14 items-center gap-2 px-3">
         <div className="flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
           {navItems.map(({ id, label, icon: Icon }) => (
             <button
