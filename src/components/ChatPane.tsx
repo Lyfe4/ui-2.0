@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
   HelpCircle,
   PanelLeftClose,
@@ -61,6 +61,8 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
   const [isResizing, setIsResizing] = useState(false)
   const startX = useRef(0)
   const startWidth = useRef(0)
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
 
   const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -98,10 +100,18 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
     }
   }, [isResizing])
 
+  useLayoutEffect(() => {
+    const activeIndex = navItems.findIndex(item => item.id === activeNav)
+    const btn = buttonRefs.current[activeIndex]
+    if (btn) {
+      setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
+    }
+  }, [activeNav, width])
+
   if (collapsed) {
     return (
       <div className="flex w-12 flex-shrink-0 flex-col items-center rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 px-1 pb-3">
-        <div className="flex h-14 items-center justify-center">
+        <div className="flex h-10 items-center justify-center">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -142,21 +152,26 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
       className="relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2"
       style={{ width }}
     >
-      <div className="flex h-14 items-center gap-2 px-3">
-        <div className="flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
-          {navItems.map(({ id, label, icon: Icon }) => (
+      <div className="flex h-10 items-center gap-2 px-2.5">
+        <div className="relative flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
+          <div
+            className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
+            style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
+          />
+          {navItems.map(({ id, label, icon: Icon }, index) => (
             <button
               key={id}
+              ref={el => { buttonRefs.current[index] = el }}
               aria-pressed={activeNav === id}
               onClick={() => setActiveNav(id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-all",
+                "relative flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
                 activeNav === id
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-black/10 hover:text-foreground",
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
-              <Icon className="h-3.5 w-3.5 shrink-0" />
+              <Icon className="h-3 w-3 shrink-0" />
               {width >= 300 && <span>{label}</span>}
             </button>
           ))}
