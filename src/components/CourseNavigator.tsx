@@ -181,7 +181,7 @@ function UnitRow({
       <Button
         variant="ghost"
         onClick={onToggle}
-        className="h-auto w-full justify-start gap-2 sm:gap-4 rounded-none px-4 py-4 hover:bg-muted/50"
+        className="h-auto w-full justify-start gap-2 sm:gap-4 rounded-none px-4 py-4 hover:bg-surface-hover"
       >
         <ProgressCircle percent={unit.progressPercent} />
         <div className="min-w-0 flex-1 text-left">

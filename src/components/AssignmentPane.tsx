@@ -104,7 +104,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
   }
 
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-[-2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 overflow-hidden min-h-0">
+    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-panel-inset my-2 overflow-hidden min-h-0">
       {/* Header */}
       <div className="flex h-14 flex-shrink-0 items-center gap-2 px-5">
         <span className="flex-1 truncate text-sm font-medium text-foreground">
