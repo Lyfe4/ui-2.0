@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const messages = [
@@ -195,11 +196,11 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
       <div className="px-3 pb-3">
         <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2">
-          <input
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="min-w-0 flex-1 bg-transparent px-1 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="min-w-0 flex-1 border-0 bg-transparent px-1 py-0 h-auto shadow-none focus-visible:ring-0"
           />
           <Button variant="ghost" size="icon-xs" aria-label="Send" className="shrink-0 text-muted-foreground hover:text-foreground">
             <Send />
