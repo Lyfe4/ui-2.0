@@ -111,7 +111,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
   if (collapsed) {
     return (
       <div className="flex w-12 flex-shrink-0 flex-col items-center rounded-r-2xl bg-background border border-black/[0.07] shadow-[2px_0_12px_-2px_rgba(0,0,0,0.08)] my-2 px-1 pb-3">
-        <div className="flex h-10 items-center justify-center">
+        <div className="flex h-14 items-center justify-center">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -120,7 +120,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
             onClick={() => onCollapsedChange(false)}
             className="hover:bg-black/10"
           >
-            <PanelLeftOpen />
+            <PanelLeftOpen className="size-3.5" />
           </Button>
         </div>
 
@@ -179,13 +179,13 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
 
         <Button
           variant="ghost"
-          size="icon-xs"
+          size="icon-sm"
           aria-label="Collapse chat"
           title="Collapse chat"
           onClick={() => onCollapsedChange(true)}
           className="hover:bg-black/10"
         >
-          <PanelLeftClose />
+          <PanelLeftClose className="size-3.5" />
         </Button>
       </div>
 
