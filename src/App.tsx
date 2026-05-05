@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { PanelRight, X } from "lucide-react"
+import { ChevronDown, PanelRight, X } from "lucide-react"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
 import { ContentPane } from "@/components/ContentPane"
@@ -48,10 +48,11 @@ export default function App() {
           </>
         )}
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10 outline-none">
+          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10 outline-none">
             <PanelRight className="size-4" />
+            <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[130px]">
+          <DropdownMenuContent align="end" sideOffset={2} className="min-w-[130px]">
             <DropdownMenuCheckboxItem
               checked={canvasOpen}
               onCheckedChange={setCanvasOpen}
