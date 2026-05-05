@@ -241,7 +241,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               />
             </button>
             {openDropdown === "unit" && (
-              <div className="absolute left-0 top-full z-50 mt-1 min-w-[200px] overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md">
+              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[200px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
                 {CURRICULUM.map((u) => (
                   <button
                     key={u.id}
@@ -278,7 +278,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               />
             </button>
             {openDropdown === "topic" && (
-              <div className="absolute left-0 top-full z-50 mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md">
+              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
                 {unit.topics.map((t) => (
                   <button
                     key={t.id}
@@ -315,7 +315,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
               />
             </button>
             {openDropdown === "lesson" && (
-              <div className="absolute left-0 top-full z-50 mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-popover py-1 shadow-md">
+              <div className="absolute left-0 top-full z-[9999] mt-1 min-w-[220px] overflow-hidden rounded-md border border-border bg-white py-1 shadow-md">
                 {topic.lessons.map((l) => (
                   <button
                     key={l.id}
