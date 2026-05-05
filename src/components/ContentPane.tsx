@@ -1,17 +1,13 @@
 import { useState } from "react"
-import { ChevronRight, ClipboardList } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { CourseNavigator } from "@/components/CourseNavigator"
 
 interface ContentPaneProps {
-  canvasOpen?: boolean
-  onToggleCanvas?: () => void
   mapOpen: boolean
   onToggleMap: () => void
-  onOpenSubmission?: () => void
 }
 
 // Lessons completed in this mock — only the intro lesson is done
@@ -55,11 +51,7 @@ const LESSONS = [
   },
 ]
 
-export function ContentPane({
-  mapOpen,
-  onToggleMap,
-  onOpenSubmission,
-}: ContentPaneProps) {
+export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
   const [currentLesson, setCurrentLesson] = useState(1)
 
   const lesson = LESSONS[currentLesson - 1]
@@ -92,6 +84,7 @@ export function ContentPane({
             </div>
           </div>
 
+          {/* Submit Assessment — kept for later use
           <div className="relative ml-auto">
             <span className="absolute -right-0.5 -top-0.5 flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -107,6 +100,7 @@ export function ContentPane({
               Submit Assessment
             </Button>
           </div>
+          */}
 
         </div>
       </div>
