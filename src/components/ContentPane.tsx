@@ -1,5 +1,14 @@
 import { useState } from "react"
-import { Bookmark, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
+import { ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
+
+function FolderBookmark({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 6v8l3-3 3 3V6" />
+      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z" />
+    </svg>
+  )
+}
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -259,7 +268,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
           {/* Unit */}
           <DropdownMenu>
             <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-foreground transition-colors hover:bg-black/10 outline-none">
-              <Bookmark className="size-3.5 shrink-0 text-muted-foreground" />
+              <FolderBookmark className="size-3.5 shrink-0 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
