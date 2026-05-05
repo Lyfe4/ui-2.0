@@ -44,7 +44,7 @@ export default function App() {
       <div ref={menuRef} className="absolute right-3 top-3 z-50">
         <button
           onClick={() => setPanelMenuOpen((o) => !o)}
-          className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-muted"
+          className="flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-black/10"
         >
           <PanelRight className="size-4" />
           {panelMenuOpen ? <ChevronDown className="size-3" /> : <ChevronUp className="size-3" />}
