@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
   Award,
   Calendar,
@@ -63,6 +63,27 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
   const [files, setFiles] = useState<UploadedFile[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const tabButtonRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const tabContainerRef = useRef<HTMLDivElement>(null)
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  const activeTabRef = useRef(activeTab)
+  activeTabRef.current = activeTab
+
+  const measureIndicator = useCallback(() => {
+    const idx = tabs.findIndex(t => t.id === activeTabRef.current)
+    const btn = tabButtonRefs.current[idx]
+    if (btn) setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
+  }, [])
+
+  useLayoutEffect(() => { measureIndicator() }, [activeTab, measureIndicator])
+
+  useEffect(() => {
+    if (!tabContainerRef.current) return
+    const observer = new ResizeObserver(measureIndicator)
+    observer.observe(tabContainerRef.current)
+    return () => observer.disconnect()
+  }, [measureIndicator])
+
   const addFiles = (incoming: FileList | null) => {
     if (!incoming) return
     setFiles(prev => [
@@ -104,16 +125,21 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
 
       {/* Pill tabs */}
       <div className="flex-shrink-0 px-4 pb-3">
-        <div className="flex rounded-xl bg-muted p-1 gap-1">
-          {tabs.map(({ id, label, icon: Icon }) => (
+        <div ref={tabContainerRef} className="relative flex rounded-xl bg-muted p-1 gap-1">
+          <div
+            className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
+            style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
+          />
+          {tabs.map(({ id, label, icon: Icon }, index) => (
             <button
               key={id}
+              ref={el => { tabButtonRefs.current[index] = el }}
               onClick={() => setActiveTab(id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-all duration-150 active:translate-y-px",
+                "relative flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150 active:translate-y-px",
                 activeTab === id
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
               )}
             >
               <Icon className="h-3 w-3 shrink-0" />

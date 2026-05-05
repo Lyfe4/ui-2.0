@@ -200,7 +200,7 @@ export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }:
                     "relative flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
                     activeNav === id
                       ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
+                      : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
                   )}
                 >
                   <Icon className="h-3 w-3 shrink-0" />
