@@ -140,11 +140,9 @@ const DEFAULT_WIDTH = 384
 interface ChatPaneProps {
   collapsed: boolean
   onCollapsedChange: (collapsed: boolean) => void
-  mapOpen: boolean
-  onToggleMap: () => void
 }
 
-export function ChatPane({ collapsed, onCollapsedChange, mapOpen, onToggleMap }: ChatPaneProps) {
+export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
   const [width, setWidth] = useState(DEFAULT_WIDTH)

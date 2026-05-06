@@ -71,8 +71,6 @@ export default function App() {
       <ChatPane
         collapsed={chatCollapsed}
         onCollapsedChange={setChatCollapsed}
-        mapOpen={mapOpen}
-        onToggleMap={() => setMapOpen((o) => !o)}
       />
       <ContentPane
         mapOpen={mapOpen}
@@ -113,7 +111,6 @@ export default function App() {
         >
           <div className="flex flex-col min-h-0 overflow-hidden">
             <CanvasPane
-              onClose={() => setCanvasOpen(false)}
               chatCollapsed={chatCollapsed}
             />
           </div>

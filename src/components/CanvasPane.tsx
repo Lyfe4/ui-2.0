@@ -30,7 +30,6 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 interface CanvasPaneProps {
-  onClose: () => void
   chatCollapsed?: boolean
 }
 
@@ -46,7 +45,7 @@ function Divider() {
   return <div className="mx-1 h-3.5 w-px bg-border" />
 }
 
-export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
+export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
   return (
     <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-panel-inset my-2 overflow-hidden min-h-0">
       <div className={cn("flex h-14 flex-shrink-0 items-center px-5", chatCollapsed && "pl-16")}>
