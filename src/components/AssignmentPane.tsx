@@ -149,8 +149,6 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
         </div>
       </div>
 
-      <div className="h-px w-full flex-shrink-0 bg-border" />
-
       {/* Tab content */}
       <ScrollArea className="flex-1 min-h-0">
         {activeTab === "assignment" && (

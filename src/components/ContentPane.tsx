@@ -330,7 +330,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
           {/* Learning Objective — hover effect only, no chevron, no dropdown */}
           <div className="group/objective relative flex shrink-0 items-center">
             <div className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-surface-hover">
-              <span className="text-foreground">LO:</span>
+              <span className="text-foreground">Objective:</span>
               <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
             </div>
             <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
