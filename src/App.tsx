@@ -80,7 +80,7 @@ export default function App() {
       {/* Right panel column — shared resize */}
       <div
         className={cn(
-          "relative flex flex-shrink-0",
+          "relative flex flex-shrink-0 bg-muted/50",
           anyPanelOpen && "shadow-panel-inset",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
