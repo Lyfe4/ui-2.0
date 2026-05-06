@@ -352,7 +352,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
             {lesson.heading}
           </h2>
           <Separator className="mb-5" />
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="text-sm leading-relaxed text-foreground">
             {lesson.content}
           </p>
         </div>
