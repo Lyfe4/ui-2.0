@@ -81,6 +81,7 @@ export default function App() {
       <div
         className={cn(
           "relative flex flex-shrink-0",
+          anyPanelOpen && "shadow-panel-inset",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
         style={{ width: anyPanelOpen ? rightColumnWidth : 0 }}
