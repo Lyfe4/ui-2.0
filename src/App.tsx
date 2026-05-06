@@ -111,13 +111,13 @@ export default function App() {
             gridTemplateRows: `${canvasOpen ? "1fr" : "0fr"} ${assignmentOpen ? "1fr" : "0fr"}`,
           }}
         >
-          <div className="flex flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0 overflow-hidden shadow-panel-inset">
             <CanvasPane
               onClose={() => setCanvasOpen(false)}
               chatCollapsed={chatCollapsed}
             />
           </div>
-          <div className="flex flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0 overflow-hidden shadow-panel-inset">
             <AssignmentPane
               onClose={() => setAssignmentOpen(false)}
               showCloseButton={canvasOpen}

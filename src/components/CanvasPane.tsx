@@ -48,7 +48,7 @@ function Divider() {
 
 export function CanvasPane({ onClose, chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border shadow-panel-inset my-2 overflow-hidden min-h-0">
+    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
       <div className={cn("flex h-14 flex-shrink-0 items-center px-5", chatCollapsed && "pl-16")}>
         <span className="text-sm font-medium text-foreground">Canvas</span>
       </div>
