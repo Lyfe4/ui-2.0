@@ -22,8 +22,6 @@
     --color-chart-2: var(--chart-2);
     --color-chart-1: var(--chart-1);
     --color-surface-hover: var(--surface-hover);
-    --shadow-panel-inset: var(--panel-shadow-inset);
-    --shadow-panel-outset: var(--panel-shadow-outset);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -155,6 +153,11 @@
     --sidebar-accent-foreground: oklch(0.869 0.005 56.4);
     --sidebar-border:           oklch(1 0 0 / 10%);
     --sidebar-ring:             oklch(0.553 0.013 56.0);
+}
+
+@layer utilities {
+  .shadow-panel-inset  { box-shadow: var(--panel-shadow-inset); }
+  .shadow-panel-outset { box-shadow: var(--panel-shadow-outset); }
 }
 
 @layer base {
