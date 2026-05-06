@@ -81,7 +81,6 @@ export default function App() {
       <div
         className={cn(
           "relative flex flex-shrink-0 bg-muted/50",
-          anyPanelOpen && "shadow-panel-inset",
           !isColumnResizing && "transition-[width] duration-300 ease-in-out",
         )}
         style={{ width: anyPanelOpen ? rightColumnWidth : 0 }}
@@ -110,12 +109,12 @@ export default function App() {
             gridTemplateRows: `${canvasOpen ? "1fr" : "0fr"} ${assignmentOpen ? "1fr" : "0fr"}`,
           }}
         >
-          <div className="flex flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset">
             <CanvasPane
               chatCollapsed={chatCollapsed}
             />
           </div>
-          <div className="flex flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset">
             <AssignmentPane
               onClose={() => setAssignmentOpen(false)}
               showCloseButton={canvasOpen}

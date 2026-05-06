@@ -88,6 +88,7 @@
     --surface-hover: oklch(0 0 0 / 10%);               /* black/10 – interactive hover overlay */
     --panel-shadow-inset: -2px 0 12px -2px oklch(0 0 0 / 8%); /* right panels – shadow toward content */
     --panel-shadow-outset:  2px 0 12px -2px oklch(0 0 0 / 8%); /* chat panel   – shadow toward content */
+    --panel-drop-shadow-inset: drop-shadow(-2px 0 12px oklch(0 0 0 / 8%));
 
     --radius: 0.625rem;
 
@@ -140,6 +141,7 @@
     --surface-hover: oklch(1 0 0 / 10%);               /* white/10 – interactive hover overlay */
     --panel-shadow-inset: -2px 0 12px -2px oklch(0 0 0 / 20%);
     --panel-shadow-outset:  2px 0 12px -2px oklch(0 0 0 / 20%);
+    --panel-drop-shadow-inset: drop-shadow(-2px 0 12px oklch(0 0 0 / 20%));
 
     --chart-1: oklch(0.845 0.143 164.978);
     --chart-2: oklch(0.696 0.170 162.480);
@@ -155,6 +157,12 @@
     --sidebar-accent-foreground: oklch(0.869 0.005 56.4);
     --sidebar-border:           oklch(1 0 0 / 10%);
     --sidebar-ring:             oklch(0.553 0.013 56.0);
+}
+
+@layer utilities {
+  .filter-panel-inset {
+    filter: var(--panel-drop-shadow-inset);
+  }
 }
 
 @layer base {
