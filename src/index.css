@@ -72,7 +72,7 @@
     --secondary-foreground: oklch(0.374 0.010 67.6);   /* stone-700              */
 
     --muted: oklch(0.970 0.001 106.4);                 /* stone-100 – pane bg    */
-    --muted-foreground: oklch(0.553 0.013 56.0);       /* stone-500 – dim text   */
+    --muted-foreground: oklch(0.490 0.013 56.0);       /* stone-600 – dim text, WCAG AA ≥4.5:1 */
 
     --accent: oklch(0.985 0.001 106.4);                /* stone-50  – hover tint */
     --accent-foreground: oklch(0.374 0.010 67.6);      /* stone-700              */
