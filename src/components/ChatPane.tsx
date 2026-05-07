@@ -306,7 +306,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             </Button>
           </div>
 
-          <ScrollArea className="flex-1">
+          <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
             <div className="flex flex-col gap-6 px-4 py-5">
               {(messagesByNav[activeNav] ?? []).map((msg) =>
                 msg.role === "user" ? (

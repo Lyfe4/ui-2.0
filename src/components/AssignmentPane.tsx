@@ -150,7 +150,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
       </div>
 
       {/* Tab content */}
-      <ScrollArea className="flex-1 min-h-0">
+      <ScrollArea className="flex-1 min-h-0" viewportProps={{ tabIndex: 0 }}>
         {activeTab === "assignment" && (
           <div className="flex flex-col gap-4 p-4">
             {/* Meta row */}
