@@ -149,7 +149,7 @@ export default function App() {
         )}
         {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
         <DropdownMenu>
-          <DropdownMenuTrigger className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none">
+          <DropdownMenuTrigger aria-label="Toggle panels" className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none">
             <PanelRight className="size-4" />
             <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
           </DropdownMenuTrigger>

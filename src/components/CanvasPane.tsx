@@ -33,9 +33,9 @@ interface CanvasPaneProps {
   chatCollapsed?: boolean
 }
 
-function ToolbarBtn({ children }: { children: React.ReactNode }) {
+function ToolbarBtn({ children, ...props }: React.ComponentProps<typeof Button>) {
   return (
-    <Button variant="ghost" size="icon-xs" className="text-muted-foreground">
+    <Button variant="ghost" size="icon-xs" className="text-muted-foreground" {...props}>
       {children}
     </Button>
   )
@@ -53,43 +53,43 @@ export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
       </div>
 
       <div className="flex flex-shrink-0 flex-wrap items-center gap-0.5 px-3 pt-1.5">
-        <ToolbarBtn><RotateCcw className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><RotateCw className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Undo"><RotateCcw className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Redo"><RotateCw className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><Bold className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Italic className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Underline className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Strikethrough className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Bold"><Bold className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Italic"><Italic className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Underline"><Underline className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Strikethrough"><Strikethrough className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><Highlighter className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Palette className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Type className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Highlight"><Highlighter className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Text color"><Palette className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Font style"><Type className="h-3 w-3" /></ToolbarBtn>
         <Divider />
         <Button variant="ghost" size="xs" className="text-muted-foreground">
           Paragraph <ChevronDown className="h-3 w-3" />
         </Button>
         <Divider />
-        <ToolbarBtn><List className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><ListOrdered className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Bullet list"><List className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Numbered list"><ListOrdered className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><AlignLeft className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><AlignCenter className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><AlignRight className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><AlignJustify className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Align left"><AlignLeft className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Align center"><AlignCenter className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Align right"><AlignRight className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Justify"><AlignJustify className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><Code2 className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Minus className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Table2 className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Code block"><Code2 className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Horizontal rule"><Minus className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert table"><Table2 className="h-3 w-3" /></ToolbarBtn>
       </div>
 
       <div className="flex flex-shrink-0 items-center gap-0.5 px-3 pb-1.5">
-        <ToolbarBtn><Image className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Video className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert image"><Image className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert video"><Video className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><Link className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert link"><Link className="h-3 w-3" /></ToolbarBtn>
         <Divider />
-        <ToolbarBtn><Smile className="h-3 w-3" /></ToolbarBtn>
-        <ToolbarBtn><Hash className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert emoji"><Smile className="h-3 w-3" /></ToolbarBtn>
+        <ToolbarBtn aria-label="Insert hashtag"><Hash className="h-3 w-3" /></ToolbarBtn>
       </div>
 
       <div className="h-px w-full flex-shrink-0 bg-border" />
