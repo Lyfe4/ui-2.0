@@ -13,6 +13,7 @@ import {
   Users2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -339,10 +340,10 @@ const socialSubTabs: { id: SocialSubTab; label: string; icon: React.ElementType 
 const allConversations = [...unitConversations, ...groupConversations, ...dmConversations]
 
 const statusConfig: Record<UserStatus, { dot: string; label: string; short: string; text: string }> = {
-  online:  { dot: "bg-green-500",           label: "Online",          short: "Online",  text: "text-green-600 dark:text-green-400"  },
-  away:    { dot: "bg-amber-400",           label: "Away",            short: "Away",    text: "text-amber-600 dark:text-amber-400"  },
-  dnd:     { dot: "bg-red-500",             label: "Do not disturb",  short: "DND",     text: "text-red-600   dark:text-red-400"    },
-  offline: { dot: "bg-muted-foreground/40", label: "Offline",         short: "Offline", text: "text-muted-foreground"               },
+  online:  { dot: "bg-status-online",        label: "Online",          short: "Online",  text: "text-primary-accessible dark:text-primary"  },
+  away:    { dot: "bg-warning",              label: "Away",            short: "Away",    text: "text-status-away-text"                      },
+  dnd:     { dot: "bg-destructive",          label: "Do not disturb",  short: "DND",     text: "text-destructive"                           },
+  offline: { dot: "bg-muted-foreground/40",  label: "Offline",         short: "Offline", text: "text-muted-foreground"                      },
 }
 
 const MIN_WIDTH = 260
@@ -792,16 +793,12 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                         <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
                           <span className="min-w-0 truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
                           {conv.unread && (
-                            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
-                              {conv.unread}
-                            </span>
+                            <Badge variant="notification">{conv.unread}</Badge>
                           )}
                         </div>
                       )}
                       {width < 290 && conv.unread && (
-                        <span className="mt-0.5 flex h-4 w-fit min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
-                          {conv.unread}
-                        </span>
+                        <Badge variant="notification" className="mt-0.5">{conv.unread}</Badge>
                       )}
                     </div>
                   </button>
