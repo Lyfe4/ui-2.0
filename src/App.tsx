@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronDown, ClipboardList, PanelRight, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { AssignmentPane } from "@/components/AssignmentPane"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
@@ -126,30 +128,38 @@ export default function App() {
       {/* Panel dropdown — floats over top-right corner */}
       <div className="absolute right-3 top-2 z-50 flex h-14 items-center">
         {canvasOpen && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Close canvas"
-            title="Close canvas"
-            onClick={() => setCanvasOpen(false)}
-          >
-            <X className="size-3.5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Close canvas"
+                onClick={() => setCanvasOpen(false)}
+              >
+                <X className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Close canvas</TooltipContent>
+          </Tooltip>
         )}
         {assignmentOpen && !canvasOpen && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Close assignment"
-            title="Close assignment"
-            onClick={() => setAssignmentOpen(false)}
-          >
-            <X className="size-3.5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Close assignment"
+                onClick={() => setAssignmentOpen(false)}
+              >
+                <X className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Close assignment</TooltipContent>
+          </Tooltip>
         )}
-        {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
+        {anyPanelOpen && <Separator orientation="vertical" className="mx-1 h-4" />}
         <DropdownMenu>
-          <DropdownMenuTrigger aria-label="Toggle panels" className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none">
+          <DropdownMenuTrigger aria-label="Toggle panels" className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
             <PanelRight className="size-4" />
             <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
           </DropdownMenuTrigger>

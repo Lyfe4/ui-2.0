@@ -181,6 +181,7 @@ function UnitRow({
       <Button
         variant="ghost"
         onClick={onToggle}
+        aria-expanded={isExpanded}
         className="h-auto w-full justify-start gap-2 sm:gap-4 rounded-none px-4 py-4 hover:bg-surface-hover"
       >
         <ProgressCircle percent={unit.progressPercent} />

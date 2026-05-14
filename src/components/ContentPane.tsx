@@ -3,6 +3,7 @@ import { Folder, ChevronDown, CheckCircle2, CircleDot } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -210,17 +211,17 @@ function unitStatus(unit: (typeof CURRICULUM)[number]): Status {
 function StatusIcon({ status }: { status: Status }) {
   if (status === "complete")
     return (
-      <span title="Complete" className="flex shrink-0">
-        <CheckCircle2 className="size-3.5 text-primary" />
+      <span role="img" aria-label="Complete" className="flex shrink-0">
+        <CheckCircle2 className="size-3.5 text-primary" aria-hidden />
       </span>
     )
   if (status === "in-progress")
     return (
-      <span title="In Progress" className="flex shrink-0">
-        <CircleDot className="size-3.5 text-warning" />
+      <span role="img" aria-label="In progress" className="flex shrink-0">
+        <CircleDot className="size-3.5 text-warning" aria-hidden />
       </span>
     )
-  return <span className="size-3.5 shrink-0" />
+  return <span className="size-3.5 shrink-0" aria-hidden />
 }
 
 export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
@@ -258,7 +259,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Unit */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               <Folder className="size-3.5 shrink-0 mr-0.5 text-muted-foreground" />
               {unit.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
@@ -283,7 +284,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Topic */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               {topic.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -306,7 +307,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           {/* Lesson */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none">
+            <DropdownMenuTrigger className="group/crumb flex shrink-0 cursor-pointer items-center gap-0.5 rounded-md pl-1.5 pr-0.5 py-1 text-foreground transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               {lesson.title}
               <ChevronDown className="size-3 transition-all opacity-0 group-hover/crumb:opacity-100 group-data-[state=open]/crumb:opacity-100 group-data-[state=open]/crumb:rotate-180" />
             </DropdownMenuTrigger>
@@ -327,21 +328,14 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
 
           <span className="shrink-0 select-none text-muted-foreground/60">/</span>
 
-          {/* Learning Objective — hover effect only, no chevron, no dropdown */}
-          <div className="group/objective relative flex shrink-0 items-center">
-            <div className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-surface-hover">
+          {/* Learning Objective */}
+          <Tooltip>
+            <TooltipTrigger className="flex cursor-default items-center gap-1 rounded-md pl-1.5 pr-0.5 py-1 transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
               <span className="text-foreground">Objective:</span>
-              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" />
-            </div>
-            <div className="pointer-events-none absolute left-0 top-full z-50 mt-2 hidden w-max group-hover/objective:block">
-              <div className="rounded-md border border-border bg-popover px-3 py-2 shadow-md">
-                <p className="text-xs font-medium text-popover-foreground">
-                  Understand budgeting basics
-                </p>
-                <p className="mt-0.5 min-h-[1em] text-[11px] text-muted-foreground" />
-              </div>
-            </div>
-          </div>
+              <div className="h-2.5 w-2.5 rounded-full border-2 border-border bg-background" aria-hidden />
+            </TooltipTrigger>
+            <TooltipContent>Understand budgeting basics</TooltipContent>
+          </Tooltip>
 
       </div>
 

@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -762,14 +762,13 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   // ── JSX ─────────────────────────────────────────────────────────────────────
 
   return (
-    <TooltipProvider>
-      <div
-        className={cn(
-          "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-border shadow-panel-outset my-2 overflow-hidden",
-          !isResizing && "transition-[width] duration-300 ease-in-out",
-        )}
-        style={{ width: collapsed ? 48 : width }}
-      >
+    <div
+      className={cn(
+        "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-border shadow-panel-outset my-2 overflow-hidden",
+        !isResizing && "transition-[width] duration-300 ease-in-out",
+      )}
+      style={{ width: collapsed ? 48 : width }}
+    >
         {visuallyCollapsed ? (
           /* ── Collapsed icon rail ── */
           <div className="flex w-12 flex-col items-center px-1 pb-3">
@@ -1015,7 +1014,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             </div>
           </>
         )}
-      </div>
-    </TooltipProvider>
+    </div>
   )
 }

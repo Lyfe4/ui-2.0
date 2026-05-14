@@ -27,6 +27,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 
 interface CanvasPaneProps {
@@ -42,7 +43,7 @@ function ToolbarBtn({ children, ...props }: React.ComponentProps<typeof Button>)
 }
 
 function Divider() {
-  return <div className="mx-1 h-3.5 w-px bg-border" />
+  return <Separator orientation="vertical" className="mx-1 h-3.5" />
 }
 
 export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
@@ -92,7 +93,7 @@ export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
         <ToolbarBtn aria-label="Insert hashtag"><Hash className="h-3 w-3" /></ToolbarBtn>
       </div>
 
-      <div className="h-px w-full flex-shrink-0 bg-border" />
+      <Separator />
       <div className="flex-1 overflow-y-auto p-4 min-h-0">
         <Textarea
           defaultValue="random user notes"
