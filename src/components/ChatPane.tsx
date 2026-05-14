@@ -6,6 +6,7 @@ import {
   MessageCircle,
   PanelLeftClose,
   PanelLeftOpen,
+  Reply,
   Send,
   Sparkles,
   Users,
@@ -37,6 +38,13 @@ type ChatMessage = {
   name?: string
   content: string
   time?: string
+}
+
+interface ThreadReply {
+  id: number
+  name: string
+  content: string
+  time: string
 }
 
 // ─── Mock data: Learn / Support ───────────────────────────────────────────────
@@ -273,6 +281,37 @@ const conversationMessages: Record<string, ChatMessage[]> = {
   ],
 }
 
+// ─── Mock data: Thread replies (keyed by conversation id → message id) ────────
+
+const mockThreadReplies: Record<string, Record<number, ThreadReply[]>> = {
+  townsquare: {
+    3: [
+      { id: 1, name: "You", content: "I was there! The part about protein folding was especially good.", time: "9:12 AM" },
+      { id: 2, name: "Maya", content: "Yes! And the Q&A at the end was so insightful.", time: "9:13 AM" },
+    ],
+  },
+  biol201: {
+    2: [
+      { id: 1, name: "You", content: "Which one exactly? There are a few on RTKs", time: "10:23 AM" },
+      { id: 2, name: "Jordan", content: "The one titled 'Signal Transduction Pathways' — about 18 mins", time: "10:24 AM" },
+    ],
+  },
+  "midterm-study": {
+    4: [
+      { id: 1, name: "Maya", content: "I can get there around 5:45 to help set up", time: "8:15 AM" },
+    ],
+    5: [
+      { id: 1, name: "Jordan", content: "Maybe also some flashcards on the harder topics?", time: "8:35 AM" },
+      { id: 2, name: "You", content: "Great idea, I'll make some tonight", time: "8:40 AM" },
+    ],
+  },
+  maya: {
+    3: [
+      { id: 1, name: "You", content: "That would be great! I'll message you when I finish watching", time: "Mon" },
+    ],
+  },
+}
+
 // ─── Static config ────────────────────────────────────────────────────────────
 
 const navItems = [
@@ -302,11 +341,15 @@ interface ChatPaneProps {
 
 export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [input, setInput] = useState("")
+  const [threadInput, setThreadInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>("units")
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
+  const [openThreadId, setOpenThreadId] = useState<number | null>(null)
   const [width, setWidth] = useState(DEFAULT_WIDTH)
   const [isResizing, setIsResizing] = useState(false)
+
+  // Main nav indicator
   const startX = useRef(0)
   const startWidth = useRef(0)
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -314,6 +357,14 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   const activeNavRef = useRef(activeNav)
   activeNavRef.current = activeNav
+
+  // Social sub-tab indicator
+  const socialTabRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const socialTabsRef = useRef<HTMLDivElement | null>(null)
+  const [socialIndicatorStyle, setSocialIndicatorStyle] = useState({ left: 0, width: 0 })
+  const socialSubTabRef = useRef(socialSubTab)
+  socialSubTabRef.current = socialSubTab
+
   // Lags behind `collapsed` on close so expanded content clips during animation;
   // updates immediately on open so content is revealed as width grows.
   const [visuallyCollapsed, setVisuallyCollapsed] = useState(collapsed)
@@ -367,20 +418,18 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     }
   }, [isResizing])
 
+  // ── Main nav indicator ──────────────────────────────────────────────────────
+
   const measureIndicator = useCallback(() => {
     const activeIndex = navItems.findIndex(item => item.id === activeNavRef.current)
     const btn = buttonRefs.current[activeIndex]
-    if (btn) {
-      setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
-    }
+    if (btn) setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
   }, [])
 
-  // Immediate remeasure when active tab or view changes
   useLayoutEffect(() => {
     measureIndicator()
   }, [activeNav, visuallyCollapsed, measureIndicator])
 
-  // Continuous remeasure while the container animates (covers expand/collapse + manual resize)
   useEffect(() => {
     if (visuallyCollapsed || !navRef.current) return
     const observer = new ResizeObserver(measureIndicator)
@@ -388,18 +437,115 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     return () => observer.disconnect()
   }, [visuallyCollapsed, measureIndicator])
 
+  // ── Social sub-tab indicator ────────────────────────────────────────────────
+
+  const measureSocialIndicator = useCallback(() => {
+    const activeIndex = socialSubTabs.findIndex(t => t.id === socialSubTabRef.current)
+    const btn = socialTabRefs.current[activeIndex]
+    if (btn) setSocialIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth })
+  }, [])
+
+  useLayoutEffect(() => {
+    if (activeNav !== "social" || selectedConversation !== null) return
+    measureSocialIndicator()
+  }, [socialSubTab, activeNav, selectedConversation, measureSocialIndicator])
+
+  useEffect(() => {
+    if (activeNav !== "social" || selectedConversation !== null || !socialTabsRef.current) return
+    const observer = new ResizeObserver(measureSocialIndicator)
+    observer.observe(socialTabsRef.current)
+    return () => observer.disconnect()
+  }, [activeNav, selectedConversation, measureSocialIndicator])
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+
   function handleNavClick(id: string) {
     setActiveNav(id)
     setSelectedConversation(null)
+    setOpenThreadId(null)
+  }
+
+  function handleSelectConversation(id: string) {
+    setSelectedConversation(id)
+    setOpenThreadId(null)
+  }
+
+  function toggleThread(id: number) {
+    setOpenThreadId(prev => (prev === id ? null : id))
+    setThreadInput("")
   }
 
   const activeConversation = selectedConversation
     ? allConversations.find(c => c.id === selectedConversation) ?? null
     : null
 
+  const currentThreadReplies: Record<number, ThreadReply[]> = selectedConversation
+    ? (mockThreadReplies[selectedConversation] ?? {})
+    : {}
+
   const showInput = activeNav !== "social" || selectedConversation !== null
   const showSocialList = activeNav === "social" && selectedConversation === null
   const showConversationThread = activeNav === "social" && selectedConversation !== null
+
+  // ── Render helpers ──────────────────────────────────────────────────────────
+
+  function renderThreadPanel(msgId: number) {
+    const replies = currentThreadReplies[msgId] ?? []
+    return (
+      <div className="mt-2 ml-3 flex flex-col gap-2 border-l-2 border-border/40 pl-3">
+        {replies.map((reply) => (
+          <div key={reply.id} className="flex flex-col gap-0.5">
+            <span className="text-[11px] font-medium text-muted-foreground">{reply.name}</span>
+            <div className="rounded-xl bg-muted/60 px-2.5 py-1.5 text-xs leading-relaxed text-foreground">
+              {reply.content}
+            </div>
+            <span className="text-[10px] text-muted-foreground">{reply.time}</span>
+          </div>
+        ))}
+        <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5">
+          <Input
+            value={threadInput}
+            onChange={(e) => setThreadInput(e.target.value)}
+            placeholder="Reply in thread…"
+            className="min-w-0 flex-1 border-0 bg-transparent px-0 py-0 h-auto text-xs shadow-none focus-visible:ring-0"
+          />
+          <Button variant="ghost" size="icon-xs" aria-label="Send thread reply" className="shrink-0 text-muted-foreground hover:text-foreground">
+            <Send className="h-3 w-3" />
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  function renderReplyButton(msgId: number) {
+    const isOpen = openThreadId === msgId
+    return (
+      <button
+        onClick={() => toggleThread(msgId)}
+        aria-label="Reply in thread"
+        className={cn(
+          "mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
+          "transition-all duration-150 hover:bg-muted hover:text-foreground",
+          isOpen ? "opacity-100 bg-muted text-foreground" : "opacity-0 group-hover:opacity-100",
+        )}
+      >
+        <Reply className="h-3 w-3" />
+      </button>
+    )
+  }
+
+  function renderThreadHint(msgId: number) {
+    const count = currentThreadReplies[msgId]?.length
+    if (!count || openThreadId === msgId) return null
+    return (
+      <button
+        onClick={() => toggleThread(msgId)}
+        className="mt-0.5 text-[10px] font-medium text-primary hover:underline"
+      >
+        {count} {count === 1 ? "reply" : "replies"}
+      </button>
+    )
+  }
 
   return (
     <div
@@ -480,18 +626,24 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             </Button>
           </div>
 
-          {/* ── Social: sub-tabs (list view) ── */}
+          {/* ── Social: sub-tabs with sliding indicator ── */}
           {showSocialList && (
-            <div className="flex shrink-0 border-b border-border">
-              {socialSubTabs.map(({ id, label, icon: Icon }) => (
+            <div ref={socialTabsRef} className="relative flex shrink-0 border-b border-border">
+              {/* Sliding underline bar */}
+              <div
+                className="absolute bottom-0 h-0.5 bg-primary transition-all duration-200 ease-in-out"
+                style={{ left: socialIndicatorStyle.left, width: socialIndicatorStyle.width }}
+              />
+              {socialSubTabs.map(({ id, label, icon: Icon }, index) => (
                 <button
                   key={id}
+                  ref={el => { socialTabRefs.current[index] = el }}
                   onClick={() => setSocialSubTab(id)}
                   className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 border-b-2 py-2.5 text-xs font-medium transition-colors duration-150",
+                    "flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors duration-150",
                     socialSubTab === id
-                      ? "border-primary text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground",
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Icon className="h-3 w-3 shrink-0" />
@@ -539,16 +691,13 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                 {conversationsByTab[socialSubTab].map((conv) => (
                   <button
                     key={conv.id}
-                    onClick={() => setSelectedConversation(conv.id)}
+                    onClick={() => handleSelectConversation(conv.id)}
                     className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
                   >
-                    {/* Avatar */}
                     <div
                       className={cn(
                         "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
-                        conv.isGlobal
-                          ? "bg-primary/10 text-primary"
-                          : "bg-accent text-foreground",
+                        conv.isGlobal ? "bg-primary/10 text-primary" : "bg-accent text-foreground",
                       )}
                     >
                       {conv.isGlobal ? <Globe className="h-4 w-4" /> : conv.initials}
@@ -557,7 +706,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                       )}
                     </div>
 
-                    {/* Text */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-2">
                         <span
@@ -583,32 +731,47 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                 ))}
               </div>
             ) : (
-              // Message thread (social conversation or learn/support)
+              // Message thread
               <div className="flex flex-col gap-6 px-4 py-5">
                 {(showConversationThread
                   ? conversationMessages[selectedConversation!] ?? []
                   : messagesByNav[activeNav] ?? []
                 ).map((msg) =>
                   msg.role === "user" ? (
-                    <div key={msg.id} className="flex flex-col items-end gap-1">
-                      <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                        {msg.content}
+                    // User message — right aligned, reply button to the left of bubble
+                    <div key={msg.id} className="group flex flex-col gap-1">
+                      <div className="flex items-start justify-end gap-1.5">
+                        {showConversationThread && renderReplyButton(msg.id)}
+                        <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                          {msg.content}
+                        </div>
                       </div>
                       {msg.time && (
-                        <span className="text-[10px] text-muted-foreground">{msg.time}</span>
+                        <div className="flex justify-end">
+                          <span className="text-[10px] text-muted-foreground">{msg.time}</span>
+                        </div>
                       )}
+                      {showConversationThread && renderThreadHint(msg.id)}
+                      {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
                     </div>
                   ) : msg.role === "peer" ? (
-                    <div key={msg.id} className="flex flex-col gap-1">
+                    // Peer message — left aligned, reply button to the right of bubble
+                    <div key={msg.id} className="group flex flex-col gap-1">
                       <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
-                      <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                        {msg.content}
+                      <div className="flex items-start gap-1.5">
+                        <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                          {msg.content}
+                        </div>
+                        {showConversationThread && renderReplyButton(msg.id)}
                       </div>
                       {msg.time && (
                         <span className="text-[10px] text-muted-foreground">{msg.time}</span>
                       )}
+                      {showConversationThread && renderThreadHint(msg.id)}
+                      {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
                     </div>
                   ) : (
+                    // Assistant message
                     <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
                       {msg.content.split("\n\n").map((para, i) => (
                         <p key={i}>{para}</p>
