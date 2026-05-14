@@ -47,6 +47,12 @@ interface ThreadReply {
   time: string
 }
 
+interface StoredThreadMessage {
+  id: string
+  content: string
+  time: string
+}
+
 // ─── Mock data: Learn / Support ───────────────────────────────────────────────
 
 const messagesByNav: Record<string, ChatMessage[]> = {
@@ -346,6 +352,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>("units")
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
   const [openThreadId, setOpenThreadId] = useState<number | null>(null)
+  const [localThreadMessages, setLocalThreadMessages] = useState<Record<string, StoredThreadMessage[]>>({})
   const [width, setWidth] = useState(DEFAULT_WIDTH)
   const [isResizing, setIsResizing] = useState(false)
 
@@ -381,6 +388,13 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
       if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current)
     }
   }, [collapsed])
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("lyfe-chat-threads")
+      if (stored) setLocalThreadMessages(JSON.parse(stored))
+    } catch {}
+  }, [])
 
   const handleResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -475,6 +489,23 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     setThreadInput("")
   }
 
+  function sendThreadReply(msgId: number) {
+    if (!threadInput.trim() || !selectedConversation) return
+    const key = `${selectedConversation}:${msgId}`
+    const newMsg: StoredThreadMessage = {
+      id: crypto.randomUUID(),
+      content: threadInput.trim(),
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    }
+    const updated = {
+      ...localThreadMessages,
+      [key]: [...(localThreadMessages[key] ?? []), newMsg],
+    }
+    setLocalThreadMessages(updated)
+    localStorage.setItem("lyfe-chat-threads", JSON.stringify(updated))
+    setThreadInput("")
+  }
+
   const activeConversation = selectedConversation
     ? allConversations.find(c => c.id === selectedConversation) ?? null
     : null
@@ -490,10 +521,13 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   // ── Render helpers ──────────────────────────────────────────────────────────
 
   function renderThreadPanel(msgId: number) {
-    const replies = currentThreadReplies[msgId] ?? []
+    const mockReplies = currentThreadReplies[msgId] ?? []
+    const threadKey = selectedConversation ? `${selectedConversation}:${msgId}` : ""
+    const storedReplies = localThreadMessages[threadKey] ?? []
     return (
       <div className="mt-2 ml-3 flex flex-col gap-2 border-l-2 border-border/40 pl-3">
-        {replies.map((reply) => (
+        {/* Mock (seeded) replies */}
+        {mockReplies.map((reply) => (
           <div key={reply.id} className="flex flex-col gap-0.5">
             <span className="text-[11px] font-medium text-muted-foreground">{reply.name}</span>
             <div className="rounded-xl bg-muted/60 px-2.5 py-1.5 text-xs leading-relaxed text-foreground">
@@ -502,14 +536,32 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             <span className="text-[10px] text-muted-foreground">{reply.time}</span>
           </div>
         ))}
+        {/* User-sent replies from localStorage */}
+        {storedReplies.map((reply) => (
+          <div key={reply.id} className="flex flex-col items-end gap-0.5">
+            <span className="text-[11px] font-medium text-muted-foreground">You</span>
+            <div className="rounded-xl bg-muted px-2.5 py-1.5 text-xs leading-relaxed text-foreground">
+              {reply.content}
+            </div>
+            <span className="text-[10px] text-muted-foreground">{reply.time}</span>
+          </div>
+        ))}
+        {/* Input */}
         <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5">
           <Input
             value={threadInput}
             onChange={(e) => setThreadInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendThreadReply(msgId) } }}
             placeholder="Reply in thread…"
-            className="min-w-0 flex-1 border-0 bg-transparent px-0 py-0 h-auto text-xs shadow-none focus-visible:ring-0"
+            className="min-w-0 flex-1 border-0 bg-transparent px-0 py-0.5 text-xs leading-4 shadow-none focus-visible:ring-0"
           />
-          <Button variant="ghost" size="icon-xs" aria-label="Send thread reply" className="shrink-0 text-muted-foreground hover:text-foreground">
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label="Send thread reply"
+            onClick={() => sendThreadReply(msgId)}
+            className="shrink-0 text-muted-foreground hover:text-foreground"
+          >
             <Send className="h-3 w-3" />
           </Button>
         </div>
@@ -535,7 +587,8 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   }
 
   function renderThreadHint(msgId: number) {
-    const count = currentThreadReplies[msgId]?.length
+    const threadKey = selectedConversation ? `${selectedConversation}:${msgId}` : ""
+    const count = (currentThreadReplies[msgId]?.length ?? 0) + (localThreadMessages[threadKey]?.length ?? 0)
     if (!count || openThreadId === msgId) return null
     return (
       <button
