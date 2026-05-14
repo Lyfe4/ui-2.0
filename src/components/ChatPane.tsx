@@ -1,104 +1,82 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
+  ChevronLeft,
+  Globe,
   HelpCircle,
+  MessageCircle,
   PanelLeftClose,
   PanelLeftOpen,
   Send,
   Sparkles,
   Users,
+  Users2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const messagesByNav: Record<string, { id: number; role: "user" | "assistant" | "peer"; name?: string; content: string }[]> = {
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+type SocialSubTab = "units" | "groups" | "direct"
+
+interface Conversation {
+  id: string
+  name: string
+  lastMessage: string
+  time: string
+  unread?: number
+  initials: string
+  isOnline?: boolean
+  isGlobal?: boolean
+}
+
+type ChatMessage = {
+  id: number
+  role: "user" | "assistant" | "peer"
+  name?: string
+  content: string
+  time?: string
+}
+
+// ─── Mock data: Learn / Support ───────────────────────────────────────────────
+
+const messagesByNav: Record<string, ChatMessage[]> = {
   learn: [
-    {
-      id: 1,
-      role: "user",
-      content: "can you explain how the immune system recognises pathogens?",
-    },
+    { id: 1, role: "user", content: "can you explain how the immune system recognises pathogens?" },
     {
       id: 2,
       role: "assistant",
       content:
         "Your immune system uses two main strategies.\n\nThe innate system is fast and non-specific — it spots molecular patterns shared across many pathogens, like bacterial cell-wall components, and mounts an immediate response.\n\nThe adaptive system is slower but precise. B and T cells carry receptors that match specific antigens. When a match is found those cells multiply and attack — and a small pool persists as memory cells, which is why you respond faster to something you've encountered before.",
     },
-    {
-      id: 3,
-      role: "user",
-      content: "what happens when it makes a mistake?",
-    },
+    { id: 3, role: "user", content: "what happens when it makes a mistake?" },
     {
       id: 4,
       role: "assistant",
       content:
         "Two main failure modes.\n\nAutoimmunity is when the adaptive system targets your own tissue — it mistakes self for non-self. Type 1 diabetes, lupus, and multiple sclerosis all work this way.\n\nAllergies are the innate system overreacting to harmless substances. Pollen, peanuts, dust mites — not threats, but in some people the immune system treats them like pathogens and fires off a disproportionate response.",
     },
-    {
-      id: 5,
-      role: "user",
-      content: "how does vaccination fit into all this?",
-    },
+    { id: 5, role: "user", content: "how does vaccination fit into all this?" },
     {
       id: 6,
       role: "assistant",
       content:
         "Vaccines exploit the adaptive system's memory.\n\nThey introduce an antigen — or instructions to make one — without a live infection. Your body mounts a response, generates memory B and T cells, and then clears it. If you encounter the real pathogen later, those memory cells let you respond fast enough to stop an illness from taking hold.\n\nDifferent vaccine types get the antigen in differently: live-attenuated vaccines use a weakened pathogen, subunit vaccines use just a protein fragment, and mRNA vaccines (like the COVID-19 ones) give your cells temporary instructions to produce the antigen themselves.",
     },
-    {
-      id: 7,
-      role: "user",
-      content: "why do some vaccines need boosters but others don't?",
-    },
+    { id: 7, role: "user", content: "why do some vaccines need boosters but others don't?" },
     {
       id: 8,
       role: "assistant",
       content:
         "It comes down to how long the memory response lasts, and how fast the pathogen mutates.\n\nSome vaccines — like the MMR for measles — produce a strong, durable immune memory that lasts decades, often a lifetime. Others, like flu shots, need annual updates because the influenza virus mutates so rapidly that last year's memory cells no longer recognise this year's strains.\n\nBoosters can also be needed when the initial response fades faster than expected — antibody levels drop over time, and a booster restimulates the memory cells to top them back up.",
     },
-    {
-      id: 9,
-      role: "user",
-      content: "that makes sense. what's herd immunity then?",
-    },
+    { id: 9, role: "user", content: "that makes sense. what's herd immunity then?" },
     {
       id: 10,
       role: "assistant",
       content:
         "Herd immunity is when enough people in a population are immune that transmission chains break on their own — the pathogen can't find enough susceptible hosts to keep spreading.\n\nThe threshold varies by how contagious the disease is. Measles is extremely transmissible, so you need roughly 95% immunity to stop outbreaks. Polio needs around 80–85%.\n\nIt matters because not everyone can be vaccinated — newborns, people with certain immune conditions, or those undergoing chemotherapy rely on the people around them being immune to stay protected.",
-    },
-  ],
-  social: [
-    {
-      id: 1,
-      role: "peer",
-      name: "Maya",
-      content: "has anyone started on the cell signalling unit yet? i'm completely lost on receptor kinases",
-    },
-    {
-      id: 2,
-      role: "peer",
-      name: "Jordan",
-      content: "yeah i did it last week — the Khan Academy video on RTKs is actually really good, way clearer than the textbook",
-    },
-    {
-      id: 3,
-      role: "user",
-      content: "thanks, i'll check it out. are we doing a study group before the midterm?",
-    },
-    {
-      id: 4,
-      role: "peer",
-      name: "Maya",
-      content: "yes! thursday 6pm in the library. i'll send the invite — we're planning to go through the practice exam together",
-    },
-    {
-      id: 5,
-      role: "peer",
-      name: "Jordan",
-      content: "i'll bring the flashcard deck i made, it covers everything from week 1–5",
     },
   ],
   support: [
@@ -127,15 +105,195 @@ const messagesByNav: Record<string, { id: number; role: "user" | "assistant" | "
   ],
 }
 
+// ─── Mock data: Social conversations ─────────────────────────────────────────
+
+const unitConversations: Conversation[] = [
+  {
+    id: "townsquare",
+    name: "Town Square",
+    lastMessage: "Priya: Anyone excited for tomorrow's guest lecture?",
+    time: "2m",
+    unread: 3,
+    initials: "TS",
+    isGlobal: true,
+  },
+  {
+    id: "biol201",
+    name: "BIOL 201 · Cell Biology",
+    lastMessage: "Maya: Chapter 8 notes are up!",
+    time: "14m",
+    unread: 1,
+    initials: "B2",
+  },
+  {
+    id: "chem101",
+    name: "CHEM 101 · Intro Chemistry",
+    lastMessage: "Jordan: See you all Thursday",
+    time: "1h",
+    initials: "C1",
+  },
+  {
+    id: "math210",
+    name: "MATH 210 · Calculus II",
+    lastMessage: "You: Thanks for the help!",
+    time: "3h",
+    initials: "M2",
+  },
+]
+
+const groupConversations: Conversation[] = [
+  {
+    id: "midterm-study",
+    name: "Midterm Study Group",
+    lastMessage: "Jordan: Thursday 6pm library?",
+    time: "5m",
+    unread: 2,
+    initials: "MS",
+  },
+  {
+    id: "lab-partners",
+    name: "Lab Partners",
+    lastMessage: "Priya: Got the reagents sorted",
+    time: "2h",
+    initials: "LP",
+  },
+  {
+    id: "thesis-crew",
+    name: "Thesis Writing Crew",
+    lastMessage: "You: Draft is due Friday",
+    time: "1d",
+    initials: "TW",
+  },
+]
+
+const dmConversations: Conversation[] = [
+  {
+    id: "maya",
+    name: "Maya Chen",
+    lastMessage: "See you Thursday!",
+    time: "2m",
+    unread: 1,
+    initials: "MC",
+    isOnline: true,
+  },
+  {
+    id: "jordan",
+    name: "Jordan Kim",
+    lastMessage: "No problem! I found a great MAPK article too",
+    time: "30m",
+    initials: "JK",
+    isOnline: true,
+  },
+  {
+    id: "dr-patel",
+    name: "Dr. Patel",
+    lastMessage: "Office hours moved to 3 pm today",
+    time: "2h",
+    initials: "DP",
+  },
+  {
+    id: "priya",
+    name: "Priya Sharma",
+    lastMessage: "Good luck on the midterm!",
+    time: "1d",
+    initials: "PS",
+  },
+]
+
+const conversationsByTab: Record<SocialSubTab, Conversation[]> = {
+  units: unitConversations,
+  groups: groupConversations,
+  direct: dmConversations,
+}
+
+// ─── Mock data: Social message threads ───────────────────────────────────────
+
+const conversationMessages: Record<string, ChatMessage[]> = {
+  townsquare: [
+    { id: 1, role: "peer", name: "Alex", content: "Good morning everyone! Ready for today's lecture?", time: "9:02 AM" },
+    { id: 2, role: "peer", name: "Maya", content: "Yeah, I've been reading ahead on chapter 9. Active transport is fascinating.", time: "9:05 AM" },
+    { id: 3, role: "peer", name: "Jordan", content: "Anyone else think the guest lecturer last week was amazing? Dr. Rivera's research on membrane proteins was incredible.", time: "9:11 AM" },
+    { id: 4, role: "user", content: "Agreed! Does anyone know if the recording will be posted?", time: "9:14 AM" },
+    { id: 5, role: "peer", name: "Alex", content: "I think they're uploading it this afternoon — check the announcements section.", time: "9:15 AM" },
+    { id: 6, role: "peer", name: "Priya", content: "Anyone excited for tomorrow's guest lecture?", time: "11:30 AM" },
+  ],
+  biol201: [
+    { id: 1, role: "peer", name: "Maya", content: "has anyone started the cell signalling unit? completely lost on receptor kinases", time: "10:20 AM" },
+    { id: 2, role: "peer", name: "Jordan", content: "yeah i did it last week — the Khan Academy video on RTKs is really good, way clearer than the textbook", time: "10:22 AM" },
+    { id: 3, role: "user", content: "thanks, i'll check it out. are we doing a study group before the midterm?", time: "10:25 AM" },
+    { id: 4, role: "peer", name: "Maya", content: "Chapter 8 notes are up! Just posted them in the resources section.", time: "2:14 PM" },
+  ],
+  chem101: [
+    { id: 1, role: "peer", name: "Sam", content: "reminder — lab report due by midnight tonight", time: "8:00 AM" },
+    { id: 2, role: "user", content: "thanks for the reminder! almost forgot", time: "8:45 AM" },
+    { id: 3, role: "peer", name: "Jordan", content: "See you all Thursday for the titration lab", time: "1:00 PM" },
+  ],
+  math210: [
+    { id: 1, role: "peer", name: "Sam", content: "can anyone explain integration by parts? the textbook example isn't clicking", time: "Yesterday" },
+    { id: 2, role: "peer", name: "Priya", content: "think of it as the reverse product rule — LIATE helps pick u and dv", time: "Yesterday" },
+    { id: 3, role: "user", content: "Thanks for the help!", time: "Yesterday" },
+  ],
+  "midterm-study": [
+    { id: 1, role: "peer", name: "Jordan", content: "Hey everyone, should we meet this week to prep for the midterm?", time: "Yesterday" },
+    { id: 2, role: "peer", name: "Maya", content: "Definitely! Thursday evening?", time: "Yesterday" },
+    { id: 3, role: "user", content: "Thursday works. Library study room?", time: "Yesterday" },
+    { id: 4, role: "peer", name: "Jordan", content: "Thursday 6pm library? I'll book the room.", time: "8:00 AM" },
+    { id: 5, role: "peer", name: "Maya", content: "Perfect. I'll bring practice exams from the last 3 years.", time: "8:30 AM" },
+  ],
+  "lab-partners": [
+    { id: 1, role: "peer", name: "Priya", content: "I booked the lab bench for Wednesday 2–4pm", time: "Mon" },
+    { id: 2, role: "user", content: "Great, I'll bring my protocol notes", time: "Mon" },
+    { id: 3, role: "peer", name: "Priya", content: "Got the reagents sorted — we're all set!", time: "2h ago" },
+  ],
+  "thesis-crew": [
+    { id: 1, role: "peer", name: "Sam", content: "how is everyone's lit review going?", time: "Mon" },
+    { id: 2, role: "peer", name: "Alex", content: "slowly but surely. found some great papers on JSTOR", time: "Mon" },
+    { id: 3, role: "user", content: "Draft is due Friday, almost there", time: "1d ago" },
+  ],
+  maya: [
+    { id: 1, role: "peer", name: "Maya", content: "Did you understand the receptor phosphorylation part from today's lecture?", time: "Mon" },
+    { id: 2, role: "user", content: "Kind of, but the cascade after the initial activation confused me.", time: "Mon" },
+    { id: 3, role: "peer", name: "Maya", content: "Same! Want to compare notes after I re-watch the recording?", time: "Mon" },
+    { id: 4, role: "user", content: "Yes! Also are you going to the study group Thursday?", time: "2:30 PM" },
+    { id: 5, role: "peer", name: "Maya", content: "See you Thursday!", time: "2:45 PM" },
+  ],
+  jordan: [
+    { id: 1, role: "peer", name: "Jordan", content: "The RTK video was helpful right? Told you Khan Academy was good for this stuff", time: "11:00 AM" },
+    { id: 2, role: "user", content: "Yeah it was really clear. Thanks for the rec!", time: "11:05 AM" },
+    { id: 3, role: "peer", name: "Jordan", content: "No problem! I also found a great article on the MAPK pathway if you want the link", time: "11:20 AM" },
+  ],
+  "dr-patel": [
+    { id: 1, role: "peer", name: "Dr. Patel", content: "Just a heads up — office hours today are moved to 3 pm.", time: "9:00 AM" },
+    { id: 2, role: "user", content: "Thanks for letting me know!", time: "9:10 AM" },
+  ],
+  priya: [
+    { id: 1, role: "user", content: "Good luck on your exam today!", time: "Yesterday" },
+    { id: 2, role: "peer", name: "Priya", content: "Thank you so much! You too when yours comes up.", time: "Yesterday" },
+    { id: 3, role: "peer", name: "Priya", content: "Good luck on the midterm!", time: "1d ago" },
+  ],
+}
+
+// ─── Static config ────────────────────────────────────────────────────────────
+
 const navItems = [
   { id: "learn", label: "Learn", icon: Sparkles },
   { id: "social", label: "Social", icon: Users },
   { id: "support", label: "Support", icon: HelpCircle },
 ]
 
+const socialSubTabs: { id: SocialSubTab; label: string; icon: React.ElementType }[] = [
+  { id: "units", label: "Units", icon: Users },
+  { id: "groups", label: "Groups", icon: Users2 },
+  { id: "direct", label: "Direct", icon: MessageCircle },
+]
+
+const allConversations = [...unitConversations, ...groupConversations, ...dmConversations]
+
 const MIN_WIDTH = 260
 const MAX_WIDTH = 560
 const DEFAULT_WIDTH = 384
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 interface ChatPaneProps {
   collapsed: boolean
@@ -145,6 +303,8 @@ interface ChatPaneProps {
 export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const [input, setInput] = useState("")
   const [activeNav, setActiveNav] = useState("learn")
+  const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>("units")
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
   const [width, setWidth] = useState(DEFAULT_WIDTH)
   const [isResizing, setIsResizing] = useState(false)
   const startX = useRef(0)
@@ -228,6 +388,19 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     return () => observer.disconnect()
   }, [visuallyCollapsed, measureIndicator])
 
+  function handleNavClick(id: string) {
+    setActiveNav(id)
+    setSelectedConversation(null)
+  }
+
+  const activeConversation = selectedConversation
+    ? allConversations.find(c => c.id === selectedConversation) ?? null
+    : null
+
+  const showInput = activeNav !== "social" || selectedConversation !== null
+  const showSocialList = activeNav === "social" && selectedConversation === null
+  const showConversationThread = activeNav === "social" && selectedConversation !== null
+
   return (
     <div
       className={cn(
@@ -259,7 +432,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                 aria-label={label}
                 title={label}
                 onClick={() => {
-                  setActiveNav(id)
+                  handleNavClick(id)
                   onCollapsedChange(false)
                 }}
               >
@@ -270,6 +443,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
         </div>
       ) : (
         <>
+          {/* ── Main nav ── */}
           <div className="flex h-14 items-center gap-2 px-2.5">
             <div ref={navRef} className="relative flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
               <div
@@ -281,7 +455,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                   key={id}
                   ref={el => { buttonRefs.current[index] = el }}
                   aria-pressed={activeNav === id}
-                  onClick={() => setActiveNav(id)}
+                  onClick={() => handleNavClick(id)}
                   className={cn(
                     "relative flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
                     activeNav === id
@@ -306,46 +480,167 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             </Button>
           </div>
 
-          <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
-            <div className="flex flex-col gap-6 px-4 py-5">
-              {(messagesByNav[activeNav] ?? []).map((msg) =>
-                msg.role === "user" ? (
-                  <div key={msg.id} className="flex justify-end">
-                    <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                      {msg.content}
-                    </div>
-                  </div>
-                ) : msg.role === "peer" ? (
-                  <div key={msg.id} className="flex flex-col gap-1">
-                    <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
-                    <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                      {msg.content}
-                    </div>
-                  </div>
-                ) : (
-                  <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
-                    {msg.content.split("\n\n").map((para, i) => (
-                      <p key={i}>{para}</p>
-                    ))}
-                  </div>
-                )
+          {/* ── Social: sub-tabs (list view) ── */}
+          {showSocialList && (
+            <div className="flex shrink-0 border-b border-border">
+              {socialSubTabs.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setSocialSubTab(id)}
+                  className={cn(
+                    "flex flex-1 items-center justify-center gap-1.5 border-b-2 py-2.5 text-xs font-medium transition-colors duration-150",
+                    socialSubTab === id
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <Icon className="h-3 w-3 shrink-0" />
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* ── Social: conversation thread header ── */}
+          {showConversationThread && activeConversation && (
+            <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-2">
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Back to conversations"
+                onClick={() => setSelectedConversation(null)}
+              >
+                <ChevronLeft className="size-3.5" />
+              </Button>
+              <div
+                className={cn(
+                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold",
+                  activeConversation.isGlobal
+                    ? "bg-primary/10 text-primary"
+                    : "bg-accent text-foreground",
+                )}
+              >
+                {activeConversation.isGlobal ? <Globe className="h-3 w-3" /> : activeConversation.initials}
+              </div>
+              <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+                {activeConversation.name}
+              </span>
+              {activeConversation.isOnline && (
+                <span className="shrink-0 text-xs font-medium text-green-500">Online</span>
               )}
             </div>
+          )}
+
+          {/* ── Scroll area ── */}
+          <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
+            {showSocialList ? (
+              // Conversation list
+              <div className="py-1">
+                {conversationsByTab[socialSubTab].map((conv) => (
+                  <button
+                    key={conv.id}
+                    onClick={() => setSelectedConversation(conv.id)}
+                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
+                  >
+                    {/* Avatar */}
+                    <div
+                      className={cn(
+                        "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                        conv.isGlobal
+                          ? "bg-primary/10 text-primary"
+                          : "bg-accent text-foreground",
+                      )}
+                    >
+                      {conv.isGlobal ? <Globe className="h-4 w-4" /> : conv.initials}
+                      {conv.isOnline && (
+                        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-background" />
+                      )}
+                    </div>
+
+                    {/* Text */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span
+                          className={cn(
+                            "truncate text-sm",
+                            conv.unread ? "font-semibold text-foreground" : "font-medium text-foreground",
+                          )}
+                        >
+                          {conv.name}
+                        </span>
+                        <span className="shrink-0 text-xs text-muted-foreground">{conv.time}</span>
+                      </div>
+                      <div className="mt-0.5 flex items-center justify-between gap-2">
+                        <span className="truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
+                        {conv.unread && (
+                          <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                            {conv.unread}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              // Message thread (social conversation or learn/support)
+              <div className="flex flex-col gap-6 px-4 py-5">
+                {(showConversationThread
+                  ? conversationMessages[selectedConversation!] ?? []
+                  : messagesByNav[activeNav] ?? []
+                ).map((msg) =>
+                  msg.role === "user" ? (
+                    <div key={msg.id} className="flex flex-col items-end gap-1">
+                      <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                        {msg.content}
+                      </div>
+                      {msg.time && (
+                        <span className="text-[10px] text-muted-foreground">{msg.time}</span>
+                      )}
+                    </div>
+                  ) : msg.role === "peer" ? (
+                    <div key={msg.id} className="flex flex-col gap-1">
+                      <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
+                      <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                        {msg.content}
+                      </div>
+                      {msg.time && (
+                        <span className="text-[10px] text-muted-foreground">{msg.time}</span>
+                      )}
+                    </div>
+                  ) : (
+                    <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
+                      {msg.content.split("\n\n").map((para, i) => (
+                        <p key={i}>{para}</p>
+                      ))}
+                    </div>
+                  )
+                )}
+              </div>
+            )}
           </ScrollArea>
 
-          <div className="px-3 pb-3">
-            <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type a message..."
-                className="min-w-0 flex-1 border-0 bg-transparent px-1 py-0 h-auto shadow-none focus-visible:ring-0"
-              />
-              <Button variant="ghost" size="icon-xs" aria-label="Send" className="shrink-0 text-muted-foreground hover:text-foreground">
-                <Send />
-              </Button>
+          {/* ── Input ── */}
+          {showInput && (
+            <div className="px-3 pb-3">
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type a message..."
+                  className="min-w-0 flex-1 border-0 bg-transparent px-1 py-0 h-auto shadow-none focus-visible:ring-0"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label="Send"
+                  className="shrink-0 text-muted-foreground hover:text-foreground"
+                >
+                  <Send />
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Resize handle */}
           <div
