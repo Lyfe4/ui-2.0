@@ -178,9 +178,11 @@ export default function App() {
         )}
         {anyPanelOpen && <Separator orientation="vertical" className="mx-1 h-4" />}
         <DropdownMenu>
-          <DropdownMenuTrigger aria-label="Toggle panels" className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1">
-            <PanelRight className="size-4" />
-            <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" aria-label="Toggle panels" className="gap-1 px-2">
+              <PanelRight className="size-4" />
+              <ChevronDown className="size-3 rotate-180 transition-transform group-aria-expanded/button:rotate-0" />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={2} className="min-w-[170px]">
             <DropdownMenuCheckboxItem
