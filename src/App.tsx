@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronDown, ClipboardList, PanelRight, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { AssignmentPane } from "@/components/AssignmentPane"
 import { CanvasPane } from "@/components/CanvasPane"
 import { ChatPane } from "@/components/ChatPane"
@@ -68,6 +70,12 @@ export default function App() {
 
   return (
     <div className="relative flex h-screen overflow-hidden bg-muted/50">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        Skip to main content
+      </a>
       <ChatPane
         collapsed={chatCollapsed}
         onCollapsedChange={setChatCollapsed}
@@ -88,9 +96,22 @@ export default function App() {
         {/* Left-edge resize handle */}
         {anyPanelOpen && (
           <div
+            role="slider"
+            aria-label="Right panel width"
+            aria-valuenow={Math.round(rightColumnWidth)}
+            aria-valuemin={MIN_COLUMN_WIDTH}
+            aria-valuemax={MAX_COLUMN_WIDTH}
+            aria-orientation="horizontal"
+            tabIndex={0}
             onMouseDown={handleColumnResizeStart}
-            aria-hidden
-            className="group absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize flex items-center justify-start pl-px"
+            onKeyDown={(e) => {
+              const step = e.shiftKey ? 50 : 10
+              if (e.key === "ArrowLeft") { e.preventDefault(); setRightColumnWidth(w => Math.min(MAX_COLUMN_WIDTH, w + step)) }
+              else if (e.key === "ArrowRight") { e.preventDefault(); setRightColumnWidth(w => Math.max(MIN_COLUMN_WIDTH, w - step)) }
+              else if (e.key === "Home") { e.preventDefault(); setRightColumnWidth(MAX_COLUMN_WIDTH) }
+              else if (e.key === "End") { e.preventDefault(); setRightColumnWidth(MIN_COLUMN_WIDTH) }
+            }}
+            className="group absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize flex items-center justify-start pl-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           >
             <div
               className={cn(
@@ -109,12 +130,12 @@ export default function App() {
             gridTemplateRows: `${canvasOpen ? "1fr" : "0fr"} ${assignmentOpen ? "1fr" : "0fr"}`,
           }}
         >
-          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset">
+          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset" inert={!canvasOpen}>
             <CanvasPane
               chatCollapsed={chatCollapsed}
             />
           </div>
-          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset">
+          <div className="flex flex-col min-h-0 overflow-hidden filter-panel-inset" inert={!assignmentOpen}>
             <AssignmentPane
               onClose={() => setAssignmentOpen(false)}
               showCloseButton={canvasOpen}
@@ -126,32 +147,42 @@ export default function App() {
       {/* Panel dropdown — floats over top-right corner */}
       <div className="absolute right-3 top-2 z-50 flex h-14 items-center">
         {canvasOpen && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Close canvas"
-            title="Close canvas"
-            onClick={() => setCanvasOpen(false)}
-          >
-            <X className="size-3.5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Close canvas"
+                onClick={() => setCanvasOpen(false)}
+              >
+                <X className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Close canvas</TooltipContent>
+          </Tooltip>
         )}
         {assignmentOpen && !canvasOpen && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label="Close assignment"
-            title="Close assignment"
-            onClick={() => setAssignmentOpen(false)}
-          >
-            <X className="size-3.5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Close assignment"
+                onClick={() => setAssignmentOpen(false)}
+              >
+                <X className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Close assignment</TooltipContent>
+          </Tooltip>
         )}
-        {anyPanelOpen && <div className="mx-1 h-4 w-px bg-border" />}
+        {anyPanelOpen && <Separator orientation="vertical" className="mx-1 h-4" />}
         <DropdownMenu>
-          <DropdownMenuTrigger aria-label="Toggle panels" className="group/trigger flex items-center gap-1 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-surface-hover outline-none">
-            <PanelRight className="size-4" />
-            <ChevronDown className="size-3 rotate-180 transition-transform group-data-[state=open]/trigger:rotate-0" />
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" aria-label="Toggle panels" className="gap-1 px-2">
+              <PanelRight className="size-4" />
+              <ChevronDown className="size-3 rotate-180 transition-transform group-aria-expanded/button:rotate-0" />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" sideOffset={2} className="min-w-[170px]">
             <DropdownMenuCheckboxItem

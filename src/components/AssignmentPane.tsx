@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface AssignmentPaneProps {
   onClose: () => void
@@ -104,7 +105,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
   }
 
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
+    <aside aria-label="Assignment" className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
       {/* Header */}
       <div className="flex h-14 flex-shrink-0 items-center gap-2 px-5">
         <span className="flex-1 truncate text-sm font-medium text-foreground">
@@ -124,205 +125,204 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
       </div>
 
       {/* Pill tabs */}
-      <div className="flex-shrink-0 px-4 pb-3">
-        <div ref={tabContainerRef} className="relative flex rounded-xl bg-muted p-1 gap-1">
-          <div
-            className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
-            style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
-          />
-          {tabs.map(({ id, label, icon: Icon }, index) => (
-            <button
-              key={id}
-              ref={el => { tabButtonRefs.current[index] = el }}
-              onClick={() => setActiveTab(id)}
-              className={cn(
-                "relative flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150 active:translate-y-px",
-                activeTab === id
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
-              )}
-            >
-              <Icon className="h-3 w-3 shrink-0" />
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Tab content */}
-      <ScrollArea className="flex-1 min-h-0" viewportProps={{ tabIndex: 0 }}>
-        {activeTab === "assignment" && (
-          <div className="flex flex-col gap-4 p-4">
-            {/* Meta row */}
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="accent">{mockAssignment.points} pts</Badge>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Calendar className="h-3 w-3" />
-                Due {mockAssignment.dueDate}
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                Overview
-              </span>
-              <p className="text-sm leading-relaxed text-foreground">
-                {mockAssignment.description}
-              </p>
-            </div>
-
-            {/* Instructions */}
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                Instructions
-              </span>
-              <div className="rounded-xl bg-muted px-4 py-3">
-                {mockAssignment.content.split("\n\n").map((block, i) => (
-                  <p key={i} className={cn("text-sm leading-relaxed text-foreground", i > 0 && "mt-3")}>
-                    {block}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "submit" && (
-          <div className="flex flex-col gap-4 p-4">
-            {/* Drop zone */}
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as Tab)}
+        className="flex flex-1 flex-col overflow-hidden min-h-0"
+      >
+        <div className="flex-shrink-0 px-4 pb-3">
+          <TabsList
+            ref={tabContainerRef as React.RefObject<HTMLDivElement>}
+            className="relative flex h-auto rounded-xl bg-muted p-1 gap-1"
+          >
             <div
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragLeave={() => setDragging(false)}
-              onClick={() => fileInputRef.current?.click()}
-              className={cn(
-                "flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors duration-150",
-                dragging
-                  ? "border-primary/50 bg-primary/5"
-                  : "border-border hover:border-border/80 hover:bg-muted/50",
-              )}
-            >
-              <div className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-150",
-                dragging ? "bg-primary/10" : "bg-muted",
-              )}>
-                <UploadCloud className={cn("h-5 w-5", dragging ? "text-primary" : "text-muted-foreground")} />
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-medium text-foreground">
-                  {dragging ? "Drop to upload" : "Drag & drop files here"}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  or <span className="text-primary">browse your device</span>
-                </span>
-              </div>
-              <span className="text-[11px] text-muted-foreground">PDF, DOCX, TXT up to 25 MB</span>
-            </div>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              onChange={e => addFiles(e.target.files)}
+              aria-hidden
+              className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
+              style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
             />
+            {tabs.map(({ id, label, icon: Icon }, index) => (
+              <TabsTrigger
+                key={id}
+                value={id}
+                ref={(el) => { tabButtonRefs.current[index] = el as HTMLButtonElement | null }}
+                className={cn(
+                  "relative flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
+                  activeTab === id
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
+                )}
+              >
+                <Icon className="h-3 w-3 shrink-0" />
+                {label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
-            {/* Uploaded files */}
-            {files.length > 0 && (
+        {/* Assignment tab */}
+        <TabsContent value="assignment" className="flex flex-1 flex-col overflow-hidden min-h-0">
+          <ScrollArea className="flex-1 min-h-0" viewportProps={{ tabIndex: 0 }}>
+            <div className="flex flex-col gap-4 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="accent">{mockAssignment.points} pts</Badge>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Calendar className="h-3 w-3" aria-hidden />
+                  Due {mockAssignment.dueDate}
+                </div>
+              </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  Uploaded ({files.length})
-                </span>
-                <div className="flex flex-col gap-1.5">
-                  {files.map(file => (
-                    <div
-                      key={file.id}
-                      className="flex items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 py-2.5"
-                    >
-                      <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      <div className="flex min-w-0 flex-1 flex-col">
-                        <span className="truncate text-xs font-medium text-foreground">{file.name}</span>
-                        <span className="text-[11px] text-muted-foreground">{formatBytes(file.size)}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
-                        aria-label={`Remove ${file.name}`}
-                        className="shrink-0"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Overview</span>
+                <p className="text-sm leading-relaxed text-foreground">{mockAssignment.description}</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Instructions</span>
+                <div className="rounded-xl bg-muted px-4 py-3">
+                  {mockAssignment.content.split("\n\n").map((block, i) => (
+                    <p key={i} className={cn("text-sm leading-relaxed text-foreground", i > 0 && "mt-3")}>
+                      {block}
+                    </p>
                   ))}
                 </div>
               </div>
-            )}
+            </div>
+          </ScrollArea>
+        </TabsContent>
 
-            {/* Submit button */}
-            <Button
-              disabled={files.length === 0}
-              className="w-full"
-              size="sm"
-            >
-              Submit Assignment
-            </Button>
-          </div>
-        )}
-
-        {activeTab === "feedback" && (
-          <div className="flex flex-col gap-4 p-4">
-            {mockFeedback.released ? (
-              <>
-                {/* Score card */}
-                <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                    <Star className="h-4 w-4 text-primary" />
-                  </div>
-                  <div className="flex flex-1 flex-col">
-                    <span className="text-xs text-muted-foreground">Score</span>
-                    <span className="text-sm font-semibold text-foreground">
-                      {mockFeedback.score} / {mockFeedback.maxPoints}
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="text-xs text-muted-foreground">Grade</span>
-                    <div className="flex items-center gap-1.5">
-                      <Award className="h-3.5 w-3.5 text-primary" />
-                      <span className="text-sm font-semibold text-foreground">{mockFeedback.grade}</span>
-                    </div>
-                  </div>
+        {/* Submit tab */}
+        <TabsContent value="submit" className="flex flex-1 flex-col overflow-hidden min-h-0">
+          <ScrollArea className="flex-1 min-h-0" viewportProps={{ tabIndex: 0 }}>
+            <div className="flex flex-col gap-4 p-4">
+              <div
+                role="button"
+                tabIndex={0}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={() => setDragging(false)}
+                onClick={() => fileInputRef.current?.click()}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click() }}
+                aria-label="Upload files — drag and drop or click to browse"
+                className={cn(
+                  "flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors duration-150",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  dragging
+                    ? "border-primary/50 bg-primary/5"
+                    : "border-border hover:border-border/80 hover:bg-muted/50",
+                )}
+              >
+                <div className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full transition-colors duration-150",
+                  dragging ? "bg-primary/10" : "bg-muted",
+                )}>
+                  <UploadCloud className={cn("h-5 w-5", dragging ? "text-primary" : "text-muted-foreground")} aria-hidden />
                 </div>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-medium text-foreground">
+                    {dragging ? "Drop to upload" : "Drag & drop files here"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    or <span className="text-primary">browse your device</span>
+                  </span>
+                </div>
+                <span className="text-[11px] text-muted-foreground">PDF, DOCX, TXT up to 25 MB</span>
+              </div>
 
-                {/* Feedback text */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                aria-hidden
+                onChange={e => addFiles(e.target.files)}
+              />
+
+              {files.length > 0 && (
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    Instructor Feedback
+                    Uploaded ({files.length})
                   </span>
-                  <div className="rounded-xl bg-muted px-4 py-3">
-                    <p className="text-sm leading-relaxed text-foreground">
-                      {mockFeedback.comments}
-                    </p>
+                  <div className="flex flex-col gap-1.5">
+                    {files.map(file => (
+                      <div
+                        key={file.id}
+                        className="flex items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 py-2.5"
+                      >
+                        <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+                        <div className="flex min-w-0 flex-1 flex-col">
+                          <span className="truncate text-xs font-medium text-foreground">{file.name}</span>
+                          <span className="text-[11px] text-muted-foreground">{formatBytes(file.size)}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => setFiles(prev => prev.filter(f => f.id !== file.id))}
+                          aria-label={`Remove ${file.name}`}
+                          className="shrink-0"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center gap-3 py-10 text-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                  <MessageSquare className="h-5 w-5 text-muted-foreground" />
+              )}
+
+              <Button disabled={files.length === 0} className="w-full" size="sm">
+                Submit Assignment
+              </Button>
+            </div>
+          </ScrollArea>
+        </TabsContent>
+
+        {/* Feedback tab */}
+        <TabsContent value="feedback" className="flex flex-1 flex-col overflow-hidden min-h-0">
+          <ScrollArea className="flex-1 min-h-0" viewportProps={{ tabIndex: 0 }}>
+            <div className="flex flex-col gap-4 p-4">
+              {mockFeedback.released ? (
+                <>
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                      <Star className="h-4 w-4 text-primary" aria-hidden />
+                    </div>
+                    <div className="flex flex-1 flex-col">
+                      <span className="text-xs text-muted-foreground">Score</span>
+                      <span className="text-sm font-semibold text-foreground">
+                        {mockFeedback.score} / {mockFeedback.maxPoints}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-xs text-muted-foreground">Grade</span>
+                      <div className="flex items-center gap-1.5">
+                        <Award className="h-3.5 w-3.5 text-primary" aria-hidden />
+                        <span className="text-sm font-semibold text-foreground">{mockFeedback.grade}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      Instructor Feedback
+                    </span>
+                    <div className="rounded-xl bg-muted px-4 py-3">
+                      <p className="text-sm leading-relaxed text-foreground">{mockFeedback.comments}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-3 py-10 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                    <MessageSquare className="h-5 w-5 text-muted-foreground" aria-hidden />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm font-medium text-foreground">Feedback not yet released</span>
+                    <span className="text-xs text-muted-foreground">
+                      Your instructor will release grades once marking is complete.
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm font-medium text-foreground">Feedback not yet released</span>
-                  <span className="text-xs text-muted-foreground">
-                    Your instructor will release grades once marking is complete.
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </ScrollArea>
-    </div>
+              )}
+            </div>
+          </ScrollArea>
+        </TabsContent>
+      </Tabs>
+    </aside>
   )
 }
