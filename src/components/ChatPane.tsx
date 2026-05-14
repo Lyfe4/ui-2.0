@@ -387,6 +387,11 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   const socialSubTabRef = useRef(socialSubTab)
   socialSubTabRef.current = socialSubTab
 
+  // Focus management for conversation open/close
+  const prevConversationId = useRef<string | null>(null)
+  const backButtonRef = useRef<HTMLButtonElement>(null)
+  const convButtonRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+
   // Lags behind `collapsed` on close so expanded content clips during animation;
   // updates immediately on open so content is revealed as width grows.
   const [visuallyCollapsed, setVisuallyCollapsed] = useState(collapsed)
@@ -486,9 +491,19 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     return () => observer.disconnect()
   }, [activeNav, selectedConversation, measureSocialIndicator])
 
+  useEffect(() => {
+    if (selectedConversation !== null) {
+      requestAnimationFrame(() => backButtonRef.current?.focus())
+    } else if (prevConversationId.current !== null) {
+      const id = prevConversationId.current
+      requestAnimationFrame(() => convButtonRefs.current.get(id)?.focus())
+    }
+  }, [selectedConversation])
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
   function handleNavClick(id: string) {
+    prevConversationId.current = null
     setActiveNav(id)
     setSelectedConversation(null)
     setOpenThreadId(null)
@@ -595,6 +610,7 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   function renderConversationItem(conv: Conversation) {
     return (
       <button
+        ref={(el) => { if (el) convButtonRefs.current.set(conv.id, el) }}
         onClick={() => handleSelectConversation(conv.id)}
         className={cn(
           "flex w-full items-center text-left transition-colors hover:bg-muted/60",
@@ -762,7 +778,8 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
   // ── JSX ─────────────────────────────────────────────────────────────────────
 
   return (
-    <div
+    <aside
+      aria-label="Chat"
       className={cn(
         "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-border shadow-panel-outset my-2 overflow-hidden",
         !isResizing && "transition-[width] duration-300 ease-in-out",
@@ -927,10 +944,14 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                     {activeConversation && (
                       <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-2">
                         <Button
+                          ref={backButtonRef}
                           variant="ghost"
                           size="icon-xs"
                           aria-label="Back to conversations"
-                          onClick={() => setSelectedConversation(null)}
+                          onClick={() => {
+                            prevConversationId.current = selectedConversation
+                            setSelectedConversation(null)
+                          }}
                         >
                           <ChevronLeft className="size-3.5" />
                         </Button>
@@ -996,11 +1017,25 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
 
             {/* Resize handle */}
             <div
+              role="slider"
+              aria-label="Chat panel width"
+              aria-valuenow={Math.round(width)}
+              aria-valuemin={MIN_WIDTH}
+              aria-valuemax={MAX_WIDTH}
+              aria-orientation="horizontal"
+              tabIndex={0}
               onMouseDown={handleResizeStart}
-              aria-hidden
+              onKeyDown={(e) => {
+                const step = e.shiftKey ? 50 : 10
+                if (e.key === "ArrowRight") { e.preventDefault(); setWidth(w => Math.min(MAX_WIDTH, w + step)) }
+                else if (e.key === "ArrowLeft") { e.preventDefault(); setWidth(w => Math.max(MIN_WIDTH, w - step)) }
+                else if (e.key === "Home") { e.preventDefault(); setWidth(MIN_WIDTH) }
+                else if (e.key === "End") { e.preventDefault(); setWidth(MAX_WIDTH) }
+              }}
               className={cn(
                 "group absolute right-0 top-0 h-full w-3 cursor-ew-resize rounded-r-2xl",
                 "flex items-center justify-end pr-px",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
               )}
             >
               <div
@@ -1014,6 +1049,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             </div>
           </>
         )}
-    </div>
+    </aside>
   )
 }

@@ -105,7 +105,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
   }
 
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
+    <aside aria-label="Assignment" className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
       {/* Header */}
       <div className="flex h-14 flex-shrink-0 items-center gap-2 px-5">
         <span className="flex-1 truncate text-sm font-medium text-foreground">
@@ -203,6 +203,7 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
                 aria-label="Upload files — drag and drop or click to browse"
                 className={cn(
                   "flex cursor-pointer flex-col items-center gap-2.5 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors duration-150",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   dragging
                     ? "border-primary/50 bg-primary/5"
                     : "border-border hover:border-border/80 hover:bg-muted/50",
@@ -322,6 +323,6 @@ export function AssignmentPane({ onClose, showCloseButton }: AssignmentPaneProps
           </ScrollArea>
         </TabsContent>
       </Tabs>
-    </div>
+    </aside>
   )
 }

@@ -48,7 +48,7 @@ function Divider() {
 
 export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
   return (
-    <div className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
+    <aside aria-label="Canvas" className="flex flex-1 flex-col rounded-l-2xl bg-background border border-border my-2 overflow-hidden min-h-0">
       <div className={cn("flex h-14 flex-shrink-0 items-center px-5", chatCollapsed && "pl-16")}>
         <span className="text-sm font-medium text-foreground">Canvas</span>
       </div>
@@ -109,6 +109,6 @@ export function CanvasPane({ chatCollapsed }: CanvasPaneProps) {
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </div>
-    </div>
+    </aside>
   )
 }

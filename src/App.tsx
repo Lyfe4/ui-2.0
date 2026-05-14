@@ -70,6 +70,12 @@ export default function App() {
 
   return (
     <div className="relative flex h-screen overflow-hidden bg-muted/50">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        Skip to main content
+      </a>
       <ChatPane
         collapsed={chatCollapsed}
         onCollapsedChange={setChatCollapsed}
@@ -90,9 +96,22 @@ export default function App() {
         {/* Left-edge resize handle */}
         {anyPanelOpen && (
           <div
+            role="slider"
+            aria-label="Right panel width"
+            aria-valuenow={Math.round(rightColumnWidth)}
+            aria-valuemin={MIN_COLUMN_WIDTH}
+            aria-valuemax={MAX_COLUMN_WIDTH}
+            aria-orientation="horizontal"
+            tabIndex={0}
             onMouseDown={handleColumnResizeStart}
-            aria-hidden
-            className="group absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize flex items-center justify-start pl-px"
+            onKeyDown={(e) => {
+              const step = e.shiftKey ? 50 : 10
+              if (e.key === "ArrowLeft") { e.preventDefault(); setRightColumnWidth(w => Math.min(MAX_COLUMN_WIDTH, w + step)) }
+              else if (e.key === "ArrowRight") { e.preventDefault(); setRightColumnWidth(w => Math.max(MIN_COLUMN_WIDTH, w - step)) }
+              else if (e.key === "Home") { e.preventDefault(); setRightColumnWidth(MAX_COLUMN_WIDTH) }
+              else if (e.key === "End") { e.preventDefault(); setRightColumnWidth(MIN_COLUMN_WIDTH) }
+            }}
+            className="group absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize flex items-center justify-start pl-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           >
             <div
               className={cn(

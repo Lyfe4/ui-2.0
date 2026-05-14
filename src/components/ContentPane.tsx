@@ -251,9 +251,10 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
   }
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
+    <main id="main-content" className="flex min-w-0 flex-1 flex-col overflow-hidden bg-muted/50">
       {/* Breadcrumb bar — always visible at top */}
-      <div
+      <nav
+        aria-label="Course navigation"
         className={cn("relative z-10 flex h-14 flex-wrap items-center gap-x-0.5 gap-y-1.5 bg-muted/40 backdrop-blur-sm px-4 sm:px-8 mt-2 rounded-2xl text-sm text-muted-foreground", mapOpen && "hidden")}
       >
 
@@ -337,7 +338,7 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
             <TooltipContent>Understand budgeting basics</TooltipContent>
           </Tooltip>
 
-      </div>
+      </nav>
 
       {/* Lesson content */}
       <ScrollArea className={cn("flex-1", mapOpen && "hidden")}>
@@ -359,6 +360,6 @@ export function ContentPane({ mapOpen, onToggleMap }: ContentPaneProps) {
         </h2>
         <CourseNavigator onTopicSelect={onToggleMap} />
       </div>
-    </div>
+    </main>
   )
 }
