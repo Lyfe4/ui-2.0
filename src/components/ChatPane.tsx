@@ -773,9 +773,9 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
 
                     {/* Text */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline justify-between gap-1">
+                      <div className="flex min-w-0 items-baseline justify-between gap-1">
                         <span className={cn(
-                          "truncate font-medium text-foreground",
+                          "min-w-0 truncate font-medium text-foreground",
                           width < 320 ? "text-xs" : "text-sm",
                           conv.unread && "font-semibold",
                         )}>
@@ -789,8 +789,8 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                         </span>
                       </div>
                       {width >= 290 && (
-                        <div className="mt-0.5 flex items-center justify-between gap-2">
-                          <span className="truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
+                        <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
+                          <span className="min-w-0 truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
                           {conv.unread && (
                             <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
                               {conv.unread}
