@@ -338,11 +338,11 @@ const socialSubTabs: { id: SocialSubTab; label: string; icon: React.ElementType 
 
 const allConversations = [...unitConversations, ...groupConversations, ...dmConversations]
 
-const statusConfig: Record<UserStatus, { dot: string; label: string; text: string }> = {
-  online:  { dot: "bg-green-500",       label: "Online",          text: "text-green-600 dark:text-green-400" },
-  away:    { dot: "bg-amber-400",       label: "Away",            text: "text-amber-600 dark:text-amber-400" },
-  dnd:     { dot: "bg-red-500",         label: "Do not disturb",  text: "text-red-600   dark:text-red-400"   },
-  offline: { dot: "bg-muted-foreground/40", label: "Offline",     text: "text-muted-foreground"              },
+const statusConfig: Record<UserStatus, { dot: string; label: string; short: string; text: string }> = {
+  online:  { dot: "bg-green-500",           label: "Online",          short: "Online",  text: "text-green-600 dark:text-green-400"  },
+  away:    { dot: "bg-amber-400",           label: "Away",            short: "Away",    text: "text-amber-600 dark:text-amber-400"  },
+  dnd:     { dot: "bg-red-500",             label: "Do not disturb",  short: "DND",     text: "text-red-600   dark:text-red-400"    },
+  offline: { dot: "bg-muted-foreground/40", label: "Offline",         short: "Offline", text: "text-muted-foreground"               },
 }
 
 const MIN_WIDTH = 260
@@ -688,14 +688,15 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                   ref={el => { socialTabRefs.current[index] = el }}
                   onClick={() => setSocialSubTab(id)}
                   className={cn(
-                    "flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors duration-150",
+                    "flex flex-1 items-center justify-center py-2.5 text-xs font-medium transition-colors duration-150",
+                    width >= 300 ? "gap-1.5" : "gap-0",
                     socialSubTab === id
                       ? "text-foreground"
                       : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Icon className="h-3 w-3 shrink-0" />
-                  {label}
+                  {width >= 300 && <span>{label}</span>}
                 </button>
               ))}
             </div>
@@ -726,9 +727,9 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                 <span className="truncate text-sm font-medium text-foreground">{activeConversation.name}</span>
                 {activeConversation.status && (
                   <div className="flex items-center gap-1">
-                    <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", statusConfig[activeConversation.status].dot)} />
+                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", statusConfig[activeConversation.status].dot)} />
                     <span className={cn("text-[10px] font-medium", statusConfig[activeConversation.status].text)}>
-                      {statusConfig[activeConversation.status].label}
+                      {width < 340 ? statusConfig[activeConversation.status].short : statusConfig[activeConversation.status].label}
                     </span>
                   </div>
                 )}
@@ -745,47 +746,70 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                   <button
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv.id)}
-                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted/60"
+                    className={cn(
+                      "flex w-full items-center text-left transition-colors hover:bg-muted/60",
+                      width < 320 ? "gap-2 px-2 py-2" : "gap-3 px-3 py-2.5",
+                    )}
                   >
+                    {/* Avatar */}
                     <div
                       className={cn(
-                        "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                        "relative flex shrink-0 items-center justify-center rounded-full font-semibold",
+                        width < 320 ? "h-8 w-8 text-[10px]" : "h-9 w-9 text-xs",
                         conv.isGlobal ? "bg-primary/10 text-primary" : "bg-accent text-foreground",
                       )}
                     >
-                      {conv.isGlobal ? <Globe className="h-4 w-4" /> : conv.initials}
+                      {conv.isGlobal
+                        ? <Globe className={width < 320 ? "h-3.5 w-3.5" : "h-4 w-4"} />
+                        : conv.initials}
                       {conv.status && (
-                        <span className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full ring-2 ring-background", statusConfig[conv.status].dot)} />
+                        <span className={cn(
+                          "absolute bottom-0 right-0 rounded-full ring-2 ring-background",
+                          width < 320 ? "h-2 w-2" : "h-2.5 w-2.5",
+                          statusConfig[conv.status].dot,
+                        )} />
                       )}
                     </div>
 
+                    {/* Text */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <span
-                          className={cn(
-                            "truncate text-sm",
-                            conv.unread ? "font-semibold text-foreground" : "font-medium text-foreground",
-                          )}
-                        >
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className={cn(
+                          "truncate font-medium text-foreground",
+                          width < 320 ? "text-xs" : "text-sm",
+                          conv.unread && "font-semibold",
+                        )}>
                           {conv.name}
                         </span>
-                        <span className="shrink-0 text-xs text-muted-foreground">{conv.time}</span>
+                        <span className={cn(
+                          "shrink-0 text-muted-foreground",
+                          width < 320 ? "text-[10px]" : "text-xs",
+                        )}>
+                          {conv.time}
+                        </span>
                       </div>
-                      <div className="mt-0.5 flex items-center justify-between gap-2">
-                        <span className="truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
-                        {conv.unread && (
-                          <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
-                            {conv.unread}
-                          </span>
-                        )}
-                      </div>
+                      {width >= 290 && (
+                        <div className="mt-0.5 flex items-center justify-between gap-2">
+                          <span className="truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
+                          {conv.unread && (
+                            <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                              {conv.unread}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {width < 290 && conv.unread && (
+                        <span className="mt-0.5 flex h-4 w-fit min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                          {conv.unread}
+                        </span>
+                      )}
                     </div>
                   </button>
                 ))}
               </div>
             ) : (
               // Message thread
-              <div className="flex flex-col gap-6 px-4 py-5">
+              <div className={cn("flex flex-col gap-6 py-5", width < 320 ? "px-3" : "px-4")}>
                 {(showConversationThread
                   ? conversationMessages[selectedConversation!] ?? []
                   : messagesByNav[activeNav] ?? []
