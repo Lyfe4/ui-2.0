@@ -13,10 +13,13 @@ import {
   Users2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -340,10 +343,10 @@ const socialSubTabs: { id: SocialSubTab; label: string; icon: React.ElementType 
 const allConversations = [...unitConversations, ...groupConversations, ...dmConversations]
 
 const statusConfig: Record<UserStatus, { dot: string; label: string; short: string; text: string }> = {
-  online:  { dot: "bg-status-online",        label: "Online",          short: "Online",  text: "text-primary-accessible dark:text-primary"  },
-  away:    { dot: "bg-warning",              label: "Away",            short: "Away",    text: "text-status-away-text"                      },
-  dnd:     { dot: "bg-destructive",          label: "Do not disturb",  short: "DND",     text: "text-destructive"                           },
-  offline: { dot: "bg-muted-foreground/40",  label: "Offline",         short: "Offline", text: "text-muted-foreground"                      },
+  online:  { dot: "bg-status-online",       label: "Online",         short: "Online",  text: "text-primary-accessible dark:text-primary" },
+  away:    { dot: "bg-warning",             label: "Away",           short: "Away",    text: "text-status-away-text"                    },
+  dnd:     { dot: "bg-destructive",         label: "Do not disturb", short: "DND",     text: "text-destructive"                         },
+  offline: { dot: "bg-muted-foreground/40", label: "Offline",        short: "Offline", text: "text-muted-foreground"                    },
 }
 
 const MIN_WIDTH = 260
@@ -526,10 +529,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     ? (mockThreadReplies[selectedConversation] ?? {})
     : {}
 
-  const showInput = activeNav !== "social" || selectedConversation !== null
-  const showSocialList = activeNav === "social" && selectedConversation === null
-  const showConversationThread = activeNav === "social" && selectedConversation !== null
-
   // ── Render helpers ──────────────────────────────────────────────────────────
 
   function renderThreadPanel(msgId: number) {
@@ -538,7 +537,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     const storedReplies = localThreadMessages[threadKey] ?? []
     return (
       <div className="mt-2 ml-3 flex flex-col gap-2 border-l-2 border-border/40 pl-3">
-        {/* Mock (seeded) replies */}
         {mockReplies.map((reply) => (
           <div key={reply.id} className="flex flex-col gap-0.5">
             <span className="text-[11px] font-medium text-muted-foreground">{reply.name}</span>
@@ -548,7 +546,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             <span className="text-[10px] text-muted-foreground">{reply.time}</span>
           </div>
         ))}
-        {/* User-sent replies from localStorage */}
         {storedReplies.map((reply) => (
           <div key={reply.id} className="flex flex-col items-end gap-0.5">
             <span className="text-[11px] font-medium text-muted-foreground">You</span>
@@ -558,7 +555,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
             <span className="text-[10px] text-muted-foreground">{reply.time}</span>
           </div>
         ))}
-        {/* Input */}
         <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5">
           <Input
             value={threadInput}
@@ -581,354 +577,445 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     )
   }
 
-
   function renderThreadHint(msgId: number) {
     const threadKey = selectedConversation ? `${selectedConversation}:${msgId}` : ""
     const count = (currentThreadReplies[msgId]?.length ?? 0) + (localThreadMessages[threadKey]?.length ?? 0)
     if (!count || openThreadId === msgId) return null
     return (
-      <button
+      <Button
+        variant="link"
         onClick={() => toggleThread(msgId)}
-        className="mt-0.5 text-[10px] font-medium text-primary hover:underline"
+        className="mt-0.5 h-auto px-0 py-0 text-[10px] font-medium leading-none text-primary"
       >
         {count} {count === 1 ? "reply" : "replies"}
+      </Button>
+    )
+  }
+
+  function renderConversationItem(conv: Conversation) {
+    return (
+      <button
+        onClick={() => handleSelectConversation(conv.id)}
+        className={cn(
+          "flex w-full items-center text-left transition-colors hover:bg-muted/60",
+          width < 320 ? "gap-2 px-2 py-2" : "gap-3 px-3 py-2.5",
+        )}
+      >
+        {/* Avatar with presence dot */}
+        <div className="relative shrink-0">
+          <Avatar className={width < 320 ? "h-8 w-8" : "h-9 w-9"}>
+            <AvatarFallback
+              className={cn(
+                "font-semibold",
+                width < 320 ? "text-[10px]" : "text-xs",
+                conv.isGlobal ? "bg-primary/10 text-primary" : "bg-accent text-foreground",
+              )}
+            >
+              {conv.isGlobal
+                ? <Globe className={width < 320 ? "h-3.5 w-3.5" : "h-4 w-4"} />
+                : conv.initials}
+            </AvatarFallback>
+          </Avatar>
+          {conv.status && (
+            <span
+              aria-label={statusConfig[conv.status].label}
+              className={cn(
+                "absolute bottom-0 right-0 rounded-full ring-2 ring-background",
+                width < 320 ? "h-2 w-2" : "h-2.5 w-2.5",
+                statusConfig[conv.status].dot,
+              )}
+            />
+          )}
+        </div>
+
+        {/* Name / time / preview / badge */}
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-baseline justify-between gap-1">
+            <span className={cn(
+              "min-w-0 truncate font-medium text-foreground",
+              width < 320 ? "text-xs" : "text-sm",
+              conv.unread && "font-semibold",
+            )}>
+              {conv.name}
+            </span>
+            <span className={cn(
+              "shrink-0 text-muted-foreground",
+              width < 320 ? "text-[10px]" : "text-xs",
+            )}>
+              {conv.time}
+            </span>
+          </div>
+          {width >= 290 && (
+            <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
+              <span className="min-w-0 truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
+              {conv.unread && <Badge variant="notification">{conv.unread}</Badge>}
+            </div>
+          )}
+          {width < 290 && conv.unread && (
+            <Badge variant="notification" className="mt-0.5">{conv.unread}</Badge>
+          )}
+        </div>
       </button>
     )
   }
 
-  return (
-    <div
-      className={cn(
-        "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-border shadow-panel-outset my-2 overflow-hidden",
-        !isResizing && "transition-[width] duration-300 ease-in-out",
-      )}
-      style={{ width: collapsed ? 48 : width }}
-    >
-      {visuallyCollapsed ? (
-        <div className="flex w-12 flex-col items-center px-1 pb-3">
-          <div className="flex h-14 items-center justify-center">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Expand chat"
-              title="Expand chat"
-              onClick={() => onCollapsedChange(false)}
-            >
-              <PanelLeftOpen className="size-3.5" />
-            </Button>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            {navItems.map(({ id, label, icon: Icon }) => (
-              <Button
-                key={id}
-                variant="ghost"
-                size="icon-sm"
-                aria-label={label}
-                title={label}
-                onClick={() => {
-                  handleNavClick(id)
-                  onCollapsedChange(false)
-                }}
-              >
-                <Icon />
-              </Button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* ── Main nav ── */}
-          <div className="flex h-14 items-center gap-2 px-2.5">
-            <div ref={navRef} className="relative flex flex-1 items-center gap-1 rounded-xl bg-muted p-1">
-              <div
-                className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
-                style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
-              />
-              {navItems.map(({ id, label, icon: Icon }, index) => (
-                <button
-                  key={id}
-                  ref={el => { buttonRefs.current[index] = el }}
-                  aria-pressed={activeNav === id}
-                  onClick={() => handleNavClick(id)}
-                  className={cn(
-                    "relative flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
-                    activeNav === id
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  <Icon className="h-3 w-3 shrink-0" />
-                  {width >= 300 && <span>{label}</span>}
-                </button>
-              ))}
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Collapse chat"
-              title="Collapse chat"
-              onClick={() => onCollapsedChange(true)}
-            >
-              <PanelLeftClose className="size-3.5" />
-            </Button>
-          </div>
-
-          {/* ── Social: sub-tabs with sliding indicator ── */}
-          {showSocialList && (
-            <div ref={socialTabsRef} className="relative flex shrink-0 border-b border-border">
-              {/* Sliding underline bar */}
-              <div
-                className="absolute bottom-0 h-0.5 bg-primary transition-all duration-200 ease-in-out"
-                style={{ left: socialIndicatorStyle.left, width: socialIndicatorStyle.width }}
-              />
-              {socialSubTabs.map(({ id, label, icon: Icon }, index) => (
-                <button
-                  key={id}
-                  ref={el => { socialTabRefs.current[index] = el }}
-                  onClick={() => setSocialSubTab(id)}
-                  className={cn(
-                    "flex flex-1 items-center justify-center py-2.5 text-xs font-medium transition-colors duration-150",
-                    width >= 300 ? "gap-1.5" : "gap-0",
-                    socialSubTab === id
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <Icon className="h-3 w-3 shrink-0" />
-                  {width >= 300 && <span>{label}</span>}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* ── Social: conversation thread header ── */}
-          {showConversationThread && activeConversation && (
-            <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-2">
+  function renderMessages(messages: ChatMessage[], inConversation: boolean) {
+    return messages.map((msg) =>
+      msg.role === "user" ? (
+        <div key={msg.id} className="group flex flex-col gap-0.5">
+          <div className="flex items-center justify-end gap-2">
+            {inConversation && (
               <Button
                 variant="ghost"
                 size="icon-xs"
-                aria-label="Back to conversations"
-                onClick={() => setSelectedConversation(null)}
-              >
-                <ChevronLeft className="size-3.5" />
-              </Button>
-              <div
+                onClick={() => toggleThread(msg.id)}
+                aria-label="Reply in thread"
+                aria-pressed={openThreadId === msg.id}
                 className={cn(
-                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold",
-                  activeConversation.isGlobal
-                    ? "bg-primary/10 text-primary"
-                    : "bg-accent text-foreground",
+                  "transition-all duration-150",
+                  openThreadId === msg.id
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100",
                 )}
               >
-                {activeConversation.isGlobal ? <Globe className="h-3 w-3" /> : activeConversation.initials}
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate text-sm font-medium text-foreground">{activeConversation.name}</span>
-                {activeConversation.status && (
-                  <div className="flex items-center gap-1">
-                    <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", statusConfig[activeConversation.status].dot)} />
-                    <span className={cn("text-[10px] font-medium", statusConfig[activeConversation.status].text)}>
-                      {width < 340 ? statusConfig[activeConversation.status].short : statusConfig[activeConversation.status].label}
-                    </span>
-                  </div>
-                )}
-              </div>
+                <Reply className="h-3 w-3" />
+              </Button>
+            )}
+            <div className="max-w-[78%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+              {msg.content}
+              {msg.time && inConversation && (
+                <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  {msg.time}
+                </div>
+              )}
             </div>
-          )}
+          </div>
+          {inConversation && renderThreadHint(msg.id)}
+          {inConversation && openThreadId === msg.id && renderThreadPanel(msg.id)}
+        </div>
+      ) : msg.role === "peer" ? (
+        <div key={msg.id} className="group flex flex-col gap-0.5">
+          <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
+          <div className="flex items-center gap-2">
+            <div className="max-w-[78%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+              {msg.content}
+              {msg.time && inConversation && (
+                <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  {msg.time}
+                </div>
+              )}
+            </div>
+            {inConversation && (
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={() => toggleThread(msg.id)}
+                aria-label="Reply in thread"
+                aria-pressed={openThreadId === msg.id}
+                className={cn(
+                  "transition-all duration-150",
+                  openThreadId === msg.id
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100",
+                )}
+              >
+                <Reply className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
+          {inConversation && renderThreadHint(msg.id)}
+          {inConversation && openThreadId === msg.id && renderThreadPanel(msg.id)}
+        </div>
+      ) : (
+        <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
+          {msg.content.split("\n\n").map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </div>
+      )
+    )
+  }
 
-          {/* ── Scroll area ── */}
-          <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
-            {showSocialList ? (
-              // Conversation list
-              <div className="py-1">
-                {conversationsByTab[socialSubTab].map((conv) => (
-                  <button
-                    key={conv.id}
-                    onClick={() => handleSelectConversation(conv.id)}
-                    className={cn(
-                      "flex w-full items-center text-left transition-colors hover:bg-muted/60",
-                      width < 320 ? "gap-2 px-2 py-2" : "gap-3 px-3 py-2.5",
-                    )}
+  function renderInput() {
+    return (
+      <div className="px-3 pb-3">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message..."
+            className="min-w-0 flex-1 border-0 bg-transparent px-1 py-0 h-auto shadow-none focus-visible:ring-0"
+          />
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label="Send message"
+            className="shrink-0 text-muted-foreground hover:text-foreground"
+          >
+            <Send />
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // ── JSX ─────────────────────────────────────────────────────────────────────
+
+  return (
+    <TooltipProvider>
+      <div
+        className={cn(
+          "relative flex flex-shrink-0 flex-col rounded-r-2xl bg-background border border-border shadow-panel-outset my-2 overflow-hidden",
+          !isResizing && "transition-[width] duration-300 ease-in-out",
+        )}
+        style={{ width: collapsed ? 48 : width }}
+      >
+        {visuallyCollapsed ? (
+          /* ── Collapsed icon rail ── */
+          <div className="flex w-12 flex-col items-center px-1 pb-3">
+            <div className="flex h-14 items-center justify-center">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label="Expand chat"
+                    onClick={() => onCollapsedChange(false)}
                   >
-                    {/* Avatar */}
-                    <div
+                    <PanelLeftOpen className="size-3.5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">Expand chat</TooltipContent>
+              </Tooltip>
+            </div>
+            <div className="flex flex-col gap-1">
+              {navItems.map(({ id, label, icon: Icon }) => (
+                <Tooltip key={id}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={label}
+                      onClick={() => {
+                        handleNavClick(id)
+                        onCollapsedChange(false)
+                      }}
+                    >
+                      <Icon />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{label}</TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* ── Expanded view ── */}
+            <Tabs
+              value={activeNav}
+              onValueChange={handleNavClick}
+              className="flex flex-1 flex-col overflow-hidden"
+            >
+              {/* Main nav row */}
+              <div className="flex h-14 shrink-0 items-center gap-2 px-2.5">
+                <TabsList
+                  ref={navRef as React.RefObject<HTMLDivElement>}
+                  className="relative flex h-auto flex-1 items-center gap-1 rounded-xl bg-muted p-1"
+                >
+                  {/* Sliding pill indicator */}
+                  <div
+                    aria-hidden
+                    className="absolute rounded-lg bg-background shadow-sm transition-all duration-200 ease-in-out"
+                    style={{ left: indicatorStyle.left, width: indicatorStyle.width, top: 4, bottom: 4 }}
+                  />
+                  {navItems.map(({ id, label, icon: Icon }, index) => (
+                    <TabsTrigger
+                      key={id}
+                      value={id}
+                      ref={(el) => { buttonRefs.current[index] = el as HTMLButtonElement | null }}
                       className={cn(
-                        "relative flex shrink-0 items-center justify-center rounded-full font-semibold",
-                        width < 320 ? "h-8 w-8 text-[10px]" : "h-9 w-9 text-xs",
-                        conv.isGlobal ? "bg-primary/10 text-primary" : "bg-accent text-foreground",
+                        "relative flex flex-1 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-colors duration-150",
+                        activeNav === id
+                          ? "text-foreground"
+                          : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
                       )}
                     >
-                      {conv.isGlobal
-                        ? <Globe className={width < 320 ? "h-3.5 w-3.5" : "h-4 w-4"} />
-                        : conv.initials}
-                      {conv.status && (
-                        <span className={cn(
-                          "absolute bottom-0 right-0 rounded-full ring-2 ring-background",
-                          width < 320 ? "h-2 w-2" : "h-2.5 w-2.5",
-                          statusConfig[conv.status].dot,
-                        )} />
-                      )}
-                    </div>
+                      <Icon className="h-3 w-3 shrink-0" />
+                      {width >= 300 && <span>{label}</span>}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-                    {/* Text */}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex min-w-0 items-baseline justify-between gap-1">
-                        <span className={cn(
-                          "min-w-0 truncate font-medium text-foreground",
-                          width < 320 ? "text-xs" : "text-sm",
-                          conv.unread && "font-semibold",
-                        )}>
-                          {conv.name}
-                        </span>
-                        <span className={cn(
-                          "shrink-0 text-muted-foreground",
-                          width < 320 ? "text-[10px]" : "text-xs",
-                        )}>
-                          {conv.time}
-                        </span>
-                      </div>
-                      {width >= 290 && (
-                        <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
-                          <span className="min-w-0 truncate text-xs text-muted-foreground">{conv.lastMessage}</span>
-                          {conv.unread && (
-                            <Badge variant="notification">{conv.unread}</Badge>
-                          )}
-                        </div>
-                      )}
-                      {width < 290 && conv.unread && (
-                        <Badge variant="notification" className="mt-0.5">{conv.unread}</Badge>
-                      )}
-                    </div>
-                  </button>
-                ))}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="Collapse chat"
+                      onClick={() => onCollapsedChange(true)}
+                    >
+                      <PanelLeftClose className="size-3.5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Collapse chat</TooltipContent>
+                </Tooltip>
               </div>
-            ) : (
-              // Message thread
-              <div className={cn("flex flex-col gap-6 py-5", width < 320 ? "px-3" : "px-4")}>
-                {(showConversationThread
-                  ? conversationMessages[selectedConversation!] ?? []
-                  : messagesByNav[activeNav] ?? []
-                ).map((msg) =>
-                  msg.role === "user" ? (
-                    // User bubble — reply button vertically centred to the left, time fades in inside bubble
-                    <div key={msg.id} className="group flex flex-col gap-0.5">
-                      <div className="flex items-center justify-end gap-2">
-                        {showConversationThread && (
-                          <button
-                            onClick={() => toggleThread(msg.id)}
-                            aria-label="Reply in thread"
-                            className={cn(
-                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
-                              "transition-all duration-150 hover:bg-muted hover:text-foreground",
-                              openThreadId === msg.id
-                                ? "opacity-100 bg-muted text-foreground"
-                                : "opacity-0 group-hover:opacity-100",
-                            )}
-                          >
-                            <Reply className="h-3 w-3" />
-                          </button>
-                        )}
-                        <div className="max-w-[78%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                          {msg.content}
-                          {msg.time && showConversationThread && (
-                            <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-                              {msg.time}
-                            </div>
+
+              {/* ── Learn tab ── */}
+              <TabsContent value="learn" className="flex flex-1 flex-col overflow-hidden">
+                <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
+                  <div className={cn("flex flex-col gap-6 py-5", width < 320 ? "px-3" : "px-4")}>
+                    {renderMessages(messagesByNav["learn"] ?? [], false)}
+                  </div>
+                </ScrollArea>
+                {renderInput()}
+              </TabsContent>
+
+              {/* ── Social tab ── */}
+              <TabsContent value="social" className="flex flex-1 flex-col overflow-hidden">
+                {selectedConversation === null ? (
+                  /* Conversation list with sub-tabs */
+                  <Tabs
+                    value={socialSubTab}
+                    onValueChange={(v) => setSocialSubTab(v as SocialSubTab)}
+                    className="flex flex-1 flex-col overflow-hidden"
+                  >
+                    <TabsList
+                      ref={socialTabsRef as React.RefObject<HTMLDivElement>}
+                      className="relative flex h-auto shrink-0 rounded-none border-b border-border bg-transparent p-0"
+                    >
+                      {/* Sliding underline indicator */}
+                      <div
+                        aria-hidden
+                        className="absolute bottom-0 h-0.5 bg-primary transition-all duration-200 ease-in-out"
+                        style={{ left: socialIndicatorStyle.left, width: socialIndicatorStyle.width }}
+                      />
+                      {socialSubTabs.map(({ id, label, icon: Icon }, index) => (
+                        <TabsTrigger
+                          key={id}
+                          value={id}
+                          ref={(el) => { socialTabRefs.current[index] = el as HTMLButtonElement | null }}
+                          className={cn(
+                            "flex flex-1 items-center justify-center py-2.5 text-xs font-medium transition-colors duration-150",
+                            width >= 300 ? "gap-1.5" : "gap-0",
+                            socialSubTab === id
+                              ? "text-foreground"
+                              : "text-muted-foreground hover:text-foreground",
                           )}
-                        </div>
-                      </div>
-                      {showConversationThread && renderThreadHint(msg.id)}
-                      {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
-                    </div>
-                  ) : msg.role === "peer" ? (
-                    // Peer bubble — reply button vertically centred to the right, time fades in inside bubble
-                    <div key={msg.id} className="group flex flex-col gap-0.5">
-                      <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="max-w-[78%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
-                          {msg.content}
-                          {msg.time && showConversationThread && (
-                            <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-                              {msg.time}
-                            </div>
-                          )}
-                        </div>
-                        {showConversationThread && (
-                          <button
-                            onClick={() => toggleThread(msg.id)}
-                            aria-label="Reply in thread"
-                            className={cn(
-                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
-                              "transition-all duration-150 hover:bg-muted hover:text-foreground",
-                              openThreadId === msg.id
-                                ? "opacity-100 bg-muted text-foreground"
-                                : "opacity-0 group-hover:opacity-100",
-                            )}
-                          >
-                            <Reply className="h-3 w-3" />
-                          </button>
-                        )}
-                      </div>
-                      {showConversationThread && renderThreadHint(msg.id)}
-                      {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
-                    </div>
-                  ) : (
-                    // Assistant message
-                    <div key={msg.id} className="flex flex-col gap-3 text-sm leading-relaxed text-foreground">
-                      {msg.content.split("\n\n").map((para, i) => (
-                        <p key={i}>{para}</p>
+                        >
+                          <Icon className="h-3 w-3 shrink-0" />
+                          {width >= 300 && <span>{label}</span>}
+                        </TabsTrigger>
                       ))}
-                    </div>
-                  )
+                    </TabsList>
+
+                    {(["units", "groups", "direct"] as SocialSubTab[]).map((tab) => (
+                      <TabsContent key={tab} value={tab} className="flex flex-1 flex-col overflow-hidden">
+                        <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
+                          <ul role="list" className="py-1">
+                            {conversationsByTab[tab].map((conv) => (
+                              <li key={conv.id}>{renderConversationItem(conv)}</li>
+                            ))}
+                          </ul>
+                        </ScrollArea>
+                      </TabsContent>
+                    ))}
+                  </Tabs>
+                ) : (
+                  /* Conversation thread */
+                  <>
+                    {activeConversation && (
+                      <div className="flex shrink-0 items-center gap-2 border-b border-border px-2 py-2">
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          aria-label="Back to conversations"
+                          onClick={() => setSelectedConversation(null)}
+                        >
+                          <ChevronLeft className="size-3.5" />
+                        </Button>
+                        <div className="relative">
+                          <Avatar className="h-6 w-6 shrink-0">
+                            <AvatarFallback
+                              className={cn(
+                                "text-[10px] font-semibold",
+                                activeConversation.isGlobal
+                                  ? "bg-primary/10 text-primary"
+                                  : "bg-accent text-foreground",
+                              )}
+                            >
+                              {activeConversation.isGlobal
+                                ? <Globe className="h-3 w-3" />
+                                : activeConversation.initials}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                        <div className="flex min-w-0 flex-1 flex-col">
+                          <span className="truncate text-sm font-medium text-foreground">
+                            {activeConversation.name}
+                          </span>
+                          {activeConversation.status && (
+                            <div className="flex items-center gap-1">
+                              <span
+                                aria-hidden
+                                className={cn(
+                                  "h-1.5 w-1.5 shrink-0 rounded-full",
+                                  statusConfig[activeConversation.status].dot,
+                                )}
+                              />
+                              <span className={cn("text-[10px] font-medium", statusConfig[activeConversation.status].text)}>
+                                {width < 340
+                                  ? statusConfig[activeConversation.status].short
+                                  : statusConfig[activeConversation.status].label}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
+                      <div className={cn("flex flex-col gap-6 py-5", width < 320 ? "px-3" : "px-4")}>
+                        {renderMessages(conversationMessages[selectedConversation!] ?? [], true)}
+                      </div>
+                    </ScrollArea>
+                    {renderInput()}
+                  </>
                 )}
-              </div>
-            )}
-          </ScrollArea>
+              </TabsContent>
 
-          {/* ── Input ── */}
-          {showInput && (
-            <div className="px-3 pb-3">
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2">
-                <Input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type a message..."
-                  className="min-w-0 flex-1 border-0 bg-transparent px-1 py-0 h-auto shadow-none focus-visible:ring-0"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label="Send"
-                  className="shrink-0 text-muted-foreground hover:text-foreground"
-                >
-                  <Send />
-                </Button>
-              </div>
-            </div>
-          )}
+              {/* ── Support tab ── */}
+              <TabsContent value="support" className="flex flex-1 flex-col overflow-hidden">
+                <ScrollArea className="flex-1" viewportProps={{ tabIndex: 0 }}>
+                  <div className={cn("flex flex-col gap-6 py-5", width < 320 ? "px-3" : "px-4")}>
+                    {renderMessages(messagesByNav["support"] ?? [], false)}
+                  </div>
+                </ScrollArea>
+                {renderInput()}
+              </TabsContent>
+            </Tabs>
 
-          {/* Resize handle */}
-          <div
-            onMouseDown={handleResizeStart}
-            aria-hidden
-            className={cn(
-              "group absolute right-0 top-0 h-full w-3 cursor-ew-resize rounded-r-2xl",
-              "flex items-center justify-end pr-px",
-            )}
-          >
+            {/* Resize handle */}
             <div
+              onMouseDown={handleResizeStart}
+              aria-hidden
               className={cn(
-                "h-10 w-[3px] rounded-full transition-all duration-150",
-                isResizing
-                  ? "bg-primary/50 opacity-100"
-                  : "bg-foreground/15 opacity-0 group-hover:opacity-100",
+                "group absolute right-0 top-0 h-full w-3 cursor-ew-resize rounded-r-2xl",
+                "flex items-center justify-end pr-px",
               )}
-            />
-          </div>
-        </>
-      )}
-    </div>
+            >
+              <div
+                className={cn(
+                  "h-10 w-[3px] rounded-full transition-all duration-150",
+                  isResizing
+                    ? "bg-primary/50 opacity-100"
+                    : "bg-foreground/15 opacity-0 group-hover:opacity-100",
+                )}
+              />
+            </div>
+          </>
+        )}
+      </div>
+    </TooltipProvider>
   )
 }
