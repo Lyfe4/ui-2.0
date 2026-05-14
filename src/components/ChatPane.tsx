@@ -569,22 +569,6 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
     )
   }
 
-  function renderReplyButton(msgId: number) {
-    const isOpen = openThreadId === msgId
-    return (
-      <button
-        onClick={() => toggleThread(msgId)}
-        aria-label="Reply in thread"
-        className={cn(
-          "mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
-          "transition-all duration-150 hover:bg-muted hover:text-foreground",
-          isOpen ? "opacity-100 bg-muted text-foreground" : "opacity-0 group-hover:opacity-100",
-        )}
-      >
-        <Reply className="h-3 w-3" />
-      </button>
-    )
-  }
 
   function renderThreadHint(msgId: number) {
     const threadKey = selectedConversation ? `${selectedConversation}:${msgId}` : ""
@@ -791,35 +775,65 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                   : messagesByNav[activeNav] ?? []
                 ).map((msg) =>
                   msg.role === "user" ? (
-                    // User message — right aligned, reply button to the left of bubble
-                    <div key={msg.id} className="group flex flex-col gap-1">
-                      <div className="flex items-start justify-end gap-1.5">
-                        {showConversationThread && renderReplyButton(msg.id)}
-                        <div className="max-w-[82%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                    // User bubble — reply button vertically centred to the left, time fades in inside bubble
+                    <div key={msg.id} className="group flex flex-col gap-0.5">
+                      <div className="flex items-center justify-end gap-2">
+                        {showConversationThread && (
+                          <button
+                            onClick={() => toggleThread(msg.id)}
+                            aria-label="Reply in thread"
+                            className={cn(
+                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
+                              "transition-all duration-150 hover:bg-muted hover:text-foreground",
+                              openThreadId === msg.id
+                                ? "opacity-100 bg-muted text-foreground"
+                                : "opacity-0 group-hover:opacity-100",
+                            )}
+                          >
+                            <Reply className="h-3 w-3" />
+                          </button>
+                        )}
+                        <div className="max-w-[78%] rounded-2xl bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
                           {msg.content}
+                          {msg.time && showConversationThread && (
+                            <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                              {msg.time}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      {msg.time && (
-                        <div className="flex justify-end">
-                          <span className="text-[10px] text-muted-foreground">{msg.time}</span>
-                        </div>
-                      )}
                       {showConversationThread && renderThreadHint(msg.id)}
                       {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
                     </div>
                   ) : msg.role === "peer" ? (
-                    // Peer message — left aligned, reply button to the right of bubble
-                    <div key={msg.id} className="group flex flex-col gap-1">
+                    // Peer bubble — reply button vertically centred to the right, time fades in inside bubble
+                    <div key={msg.id} className="group flex flex-col gap-0.5">
                       <span className="text-xs font-medium text-muted-foreground">{msg.name}</span>
-                      <div className="flex items-start gap-1.5">
-                        <div className="max-w-[82%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
+                      <div className="flex items-center gap-2">
+                        <div className="max-w-[78%] rounded-2xl bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-foreground">
                           {msg.content}
+                          {msg.time && showConversationThread && (
+                            <div className="mt-1 select-none text-right text-[10px] leading-none text-foreground/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                              {msg.time}
+                            </div>
+                          )}
                         </div>
-                        {showConversationThread && renderReplyButton(msg.id)}
+                        {showConversationThread && (
+                          <button
+                            onClick={() => toggleThread(msg.id)}
+                            aria-label="Reply in thread"
+                            className={cn(
+                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-muted-foreground",
+                              "transition-all duration-150 hover:bg-muted hover:text-foreground",
+                              openThreadId === msg.id
+                                ? "opacity-100 bg-muted text-foreground"
+                                : "opacity-0 group-hover:opacity-100",
+                            )}
+                          >
+                            <Reply className="h-3 w-3" />
+                          </button>
+                        )}
                       </div>
-                      {msg.time && (
-                        <span className="text-[10px] text-muted-foreground">{msg.time}</span>
-                      )}
                       {showConversationThread && renderThreadHint(msg.id)}
                       {showConversationThread && openThreadId === msg.id && renderThreadPanel(msg.id)}
                     </div>
