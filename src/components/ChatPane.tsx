@@ -21,6 +21,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 type SocialSubTab = "units" | "groups" | "direct"
 
+type UserStatus = "online" | "away" | "dnd" | "offline"
+
 interface Conversation {
   id: string
   name: string
@@ -28,7 +30,7 @@ interface Conversation {
   time: string
   unread?: number
   initials: string
-  isOnline?: boolean
+  status?: UserStatus
   isGlobal?: boolean
 }
 
@@ -188,7 +190,7 @@ const dmConversations: Conversation[] = [
     time: "2m",
     unread: 1,
     initials: "MC",
-    isOnline: true,
+    status: "online",
   },
   {
     id: "jordan",
@@ -196,7 +198,7 @@ const dmConversations: Conversation[] = [
     lastMessage: "No problem! I found a great MAPK article too",
     time: "30m",
     initials: "JK",
-    isOnline: true,
+    status: "away",
   },
   {
     id: "dr-patel",
@@ -204,6 +206,7 @@ const dmConversations: Conversation[] = [
     lastMessage: "Office hours moved to 3 pm today",
     time: "2h",
     initials: "DP",
+    status: "dnd",
   },
   {
     id: "priya",
@@ -211,6 +214,7 @@ const dmConversations: Conversation[] = [
     lastMessage: "Good luck on the midterm!",
     time: "1d",
     initials: "PS",
+    status: "offline",
   },
 ]
 
@@ -333,6 +337,13 @@ const socialSubTabs: { id: SocialSubTab; label: string; icon: React.ElementType 
 ]
 
 const allConversations = [...unitConversations, ...groupConversations, ...dmConversations]
+
+const statusConfig: Record<UserStatus, { dot: string; label: string; text: string }> = {
+  online:  { dot: "bg-green-500",       label: "Online",          text: "text-green-600 dark:text-green-400" },
+  away:    { dot: "bg-amber-400",       label: "Away",            text: "text-amber-600 dark:text-amber-400" },
+  dnd:     { dot: "bg-red-500",         label: "Do not disturb",  text: "text-red-600   dark:text-red-400"   },
+  offline: { dot: "bg-muted-foreground/40", label: "Offline",     text: "text-muted-foreground"              },
+}
 
 const MIN_WIDTH = 260
 const MAX_WIDTH = 560
@@ -711,12 +722,17 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
               >
                 {activeConversation.isGlobal ? <Globe className="h-3 w-3" /> : activeConversation.initials}
               </div>
-              <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-                {activeConversation.name}
-              </span>
-              {activeConversation.isOnline && (
-                <span className="shrink-0 text-xs font-medium text-green-500">Online</span>
-              )}
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate text-sm font-medium text-foreground">{activeConversation.name}</span>
+                {activeConversation.status && (
+                  <div className="flex items-center gap-1">
+                    <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", statusConfig[activeConversation.status].dot)} />
+                    <span className={cn("text-[10px] font-medium", statusConfig[activeConversation.status].text)}>
+                      {statusConfig[activeConversation.status].label}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -738,8 +754,8 @@ export function ChatPane({ collapsed, onCollapsedChange }: ChatPaneProps) {
                       )}
                     >
                       {conv.isGlobal ? <Globe className="h-4 w-4" /> : conv.initials}
-                      {conv.isOnline && (
-                        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-background" />
+                      {conv.status && (
+                        <span className={cn("absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full ring-2 ring-background", statusConfig[conv.status].dot)} />
                       )}
                     </div>
 
